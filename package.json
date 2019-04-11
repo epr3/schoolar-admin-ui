@@ -11,18 +11,21 @@
   "dependencies": {
     "@vuex-orm/core": "^0.31.8",
     "axios": "^0.18.0",
+    "bootstrap": "^4.3.1",
     "core-js": "^2.6.5",
     "register-service-worker": "^1.6.2",
     "vue": "^2.6.6",
     "vue-class-component": "^6.0.0",
     "vue-property-decorator": "^8.0.0",
     "vue-router": "^3.0.1",
+    "vuelidate": "^0.7.4",
     "vuex": "^3.0.1",
     "vuex-class": "^0.3.2"
   },
   "devDependencies": {
     "@types/jest": "^23.1.4",
     "@types/normalizr": "^2.0.18",
+    "@types/vuelidate": "^0.7.4",
     "@vue/cli-plugin-babel": "^3.5.0",
     "@vue/cli-plugin-pwa": "^3.5.0",
     "@vue/cli-plugin-typescript": "^3.5.0",

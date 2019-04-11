@@ -1,9 +1,6 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <label>Email<input type="email" v-model="email" /></label>
-    <label>Password<input type="password" v-model="password" /></label>
-    <button @click="loginMethod">Login</button>
     <button @click="getProfile">Get User</button>
     {{ profile }}
     <p>
