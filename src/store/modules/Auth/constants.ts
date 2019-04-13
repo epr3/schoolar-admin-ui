@@ -1,5 +1,6 @@
 export const LOGIN = 'LOGIN' as string;
-export const AUTH_CHECK = 'AUTH_CHECK' as string;
+export const AUTH_CHECK_LOGIN = 'AUTH_CHECK_LOGIN' as string;
+export const AUTH_CHECK_LOGOUT = 'AUTH_CHECK_LOGOUT' as string;
 export const LOGOUT = 'LOGOUT' as string;
 
 export const SET_ERROR = 'SET_ERROR' as string;

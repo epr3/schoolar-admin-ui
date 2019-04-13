@@ -1,3 +1,4 @@
+import { AUTH_CHECK_LOGOUT } from './modules/Auth/constants';
 import Vue from 'vue';
 import Vuex from 'vuex';
 import VuexORM from '@vuex-orm/core';
@@ -18,6 +19,9 @@ database.register(UserModel);
 export default new Vuex.Store<{}>({
   state: {},
   mutations: {
+    AUTH_CHECK_LOGOUT() {
+      UserModel.deleteAll();
+    },
     LOGOUT() {
       UserModel.deleteAll();
     }

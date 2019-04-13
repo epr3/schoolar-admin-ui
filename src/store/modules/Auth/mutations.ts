@@ -3,6 +3,7 @@ import { MutationTree } from 'vuex';
 import { AuthState } from '.';
 
 const mutations: MutationTree<AuthState> = {
+  [constants.AUTH_CHECK_LOGIN]: (state: AuthState) => state,
   [constants.START_LOADING](state: AuthState) {
     state.loading = true;
   },

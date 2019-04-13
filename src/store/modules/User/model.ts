@@ -6,8 +6,7 @@ export default class User extends Model {
   public static fields() {
     return {
       id: this.attr(''),
-      email: this.attr(''),
-      name: this.attr('')
+      email: this.attr('')
     };
   }
 }
