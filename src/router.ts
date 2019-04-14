@@ -18,6 +18,15 @@ const router = new Router({
       }
     },
     {
+      path: '/faculties/:id',
+      name: 'facultyTabs',
+      meta: {
+        auth: true
+      },
+      component: () =>
+        import(/* webpackChunkName: "facultyTabs" */ './views/FacultyTabs.vue')
+    },
+    {
       path: '/accounts',
       name: 'accounts',
       meta: {

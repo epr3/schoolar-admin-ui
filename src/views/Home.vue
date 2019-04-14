@@ -1,7 +1,7 @@
 <template>
   <guest-layout>
     <div class="row">
-      <div class="col-sm-8 offset-2 mt-5">
+      <div class="col-sm-4 offset-4 mt-5">
         <div v-if="!showFacultyForm" class="card card__home">
           <img src="https://via.placeholder.com/50" alt="logo" class="card-img-top">
           <div class="card-body">
