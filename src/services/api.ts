@@ -13,6 +13,12 @@ const create = () => {
   const getProfile = () => api.get('/profile');
   const deleteLogout = () => api.delete('/logout');
 
+  const getFaculties = () => api.get('/faculties');
+  const getFacultyById = (id: string) => api.get(`/faculties/${id}`);
+  const postFaculty = (facultyObj: object) => api.post('/faculties', facultyObj);
+  const updateFaculty = (id: string, facultyObj: object) => api.put(`/faculties/${id}`, facultyObj);
+  const deleteFaculty = (id: string) => api.delete(`/faculties/${id}`);
+
   api.interceptors.request.use(
     config => {
       if (config.url !== '/login') {
@@ -44,7 +50,12 @@ const create = () => {
   return {
     postLogin,
     getProfile,
-    deleteLogout
+    deleteLogout,
+    getFacultyById,
+    getFaculties,
+    postFaculty,
+    updateFaculty,
+    deleteFaculty
   };
 };
 

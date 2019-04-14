@@ -1,5 +1,21 @@
 <template>
-  <button @click="$emit('click')" type="button" :disabled="disabled" class="btn" :class="btnStyle">
+  <router-link
+    tag="button"
+    v-if="routerPath"
+    :to="routerPath"
+    class="btn"
+    :class="btnStyle"
+  >
+    <slot></slot>
+  </router-link>
+  <button
+    v-else
+    @click="$emit('click')"
+    type="button"
+    :disabled="disabled"
+    class="btn"
+    :class="btnStyle"
+  >
     <slot></slot>
   </button>
 </template>
@@ -14,6 +30,7 @@ export default class BaseButton extends Vue {
   @Prop({ type: Boolean, default: false }) private readonly outline?: boolean;
   @Prop({ type: Boolean, default: false }) private readonly block?: boolean;
   @Prop({ type: Boolean, default: false }) private readonly disabled?: boolean;
+  @Prop({ type: String, default: '' }) private readonly routerPath?: string;
 
   get btnStyle() {
     let style = '';

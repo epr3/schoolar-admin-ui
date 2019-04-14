@@ -1,25 +1,81 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
-  </div>
+  <guest-layout>
+    <div class="row">
+      <div class="col-sm-8 offset-2 mt-5">
+        <div v-if="!showFacultyForm" class="card card__home">
+          <img src="https://via.placeholder.com/50" alt="logo" class="card-img-top">
+          <div class="card-body">
+            <base-button
+              class="mb-2"
+              block
+              type="primary"
+              @click="toggleShowFacultyForm"
+            >Create a new faculty</base-button>
+            <base-button router-path="/accounts" class="mb-2" block type="secondary">Manage accounts</base-button>
+            <div
+              class="dropdown"
+              :class="{ show: showFacultyDropdown }"
+              v-if="faculties.length"
+              @click="toggleShowFacultyDropdown"
+            >
+              <base-button block type="info">Select an existing faculty</base-button>
+              <div class="dropdown-menu" :class="{ show: showFacultyDropdown }">
+                <router-link
+                  v-for="item in faculties"
+                  :key="item.id"
+                  class="dropdown-item"
+                  :to="`/faculties/${item.id}`"
+                >{{ item.name }}</router-link>
+              </div>
+            </div>
+          </div>
+        </div>
+        <create-faculty-form v-else @reset:form="toggleShowFacultyForm"/>
+      </div>
+    </div>
+  </guest-layout>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { Action, Getter } from 'vuex-class';
 
-import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
+import GuestLayout from '@/layouts/GuestLayout.vue';
+
+import BaseButton from '@/components/BaseButton.vue';
+
+import CreateFacultyForm from '@/containers/CreateFacultyForm.vue';
 
 @Component({
   components: {
-    HelloWorld,
-  },
+    GuestLayout,
+    BaseButton,
+    CreateFacultyForm
+  }
 })
 export default class Home extends Vue {
-  @Action('getProfile', {namespace: 'User'}) private getProfile: any;
+  private showFacultyForm = false;
+  private showFacultyDropdown = false;
+  @Action('getFaculties', { namespace: 'Faculty' }) private getFaculties: any;
+  @Action('getProfile', { namespace: 'User' }) private getProfile: any;
+  @Getter('faculties/query', { namespace: 'entities' })
+  private facultyQuery: any;
+
+  get faculties() {
+    return this.facultyQuery().all();
+  }
+
   private mounted() {
     this.getProfile();
+    this.getFaculties();
+  }
+
+  private toggleShowFacultyForm() {
+    this.showFacultyForm = !this.showFacultyForm;
+  }
+
+  private toggleShowFacultyDropdown() {
+    this.showFacultyDropdown = !this.showFacultyDropdown;
   }
 }
 </script>

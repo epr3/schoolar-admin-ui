@@ -1,6 +1,6 @@
 import * as constants from './constants';
 import { UserState } from '.';
-import User from './model';
+import User, { IUser } from './model';
 import { MutationTree } from 'vuex';
 
 const mutations: MutationTree<UserState> = {
@@ -14,9 +14,9 @@ const mutations: MutationTree<UserState> = {
     state.loading = false;
     state.error = payload.message;
   },
-  [constants.GET_USER](state: UserState, payload: object) {
+  [constants.GET_USER](state: UserState, payload: IUser) {
     state.loading = false;
-    User.insert({ data: payload });
+    User.insertOrUpdate({ data: payload });
   }
 };
 

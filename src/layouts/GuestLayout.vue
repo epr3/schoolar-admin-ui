@@ -1,5 +1,5 @@
 <template>
-  <div class="container d-flex align-items-center container__login">
+  <div class="container container__login">
     <slot></slot>
   </div>
 </template>
