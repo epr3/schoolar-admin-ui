@@ -30,7 +30,7 @@
             </div>
           </div>
         </div>
-        <create-faculty-form v-else @reset:form="toggleShowFacultyForm"/>
+        <faculty-form v-else @reset:form="toggleShowFacultyForm"/>
       </div>
     </div>
   </guest-layout>
@@ -44,13 +44,13 @@ import GuestLayout from '@/layouts/GuestLayout.vue';
 
 import BaseButton from '@/components/BaseButton.vue';
 
-import CreateFacultyForm from '@/containers/CreateFacultyForm.vue';
+import FacultyForm from '@/containers/FacultyForm.vue';
 
 @Component({
   components: {
     GuestLayout,
     BaseButton,
-    CreateFacultyForm
+    FacultyForm
   }
 })
 export default class Home extends Vue {

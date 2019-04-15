@@ -16,7 +16,7 @@ const mutations: MutationTree<UserState> = {
   },
   [constants.GET_USER](state: UserState, payload: IUser) {
     state.loading = false;
-    User.insertOrUpdate({ data: payload });
+    User.create({ data: payload });
   }
 };
 

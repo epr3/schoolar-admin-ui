@@ -20,7 +20,7 @@ const mutations: MutationTree<FacultyState> = {
   },
   [constants.GET_FACULTIES](state: FacultyState, payload: IFaculty) {
     state.loading = false;
-    Faculty.insert({ data: payload });
+    Faculty.create({ data: payload });
   },
   [constants.GET_FACULTY_BY_ID](state: FacultyState, payload: IFaculty) {
     state.loading = false;

@@ -11,10 +11,8 @@ const actions: ActionTree<AuthState, {}> = {
       localStorage.getItem(process.env.VUE_APP_REFRESH_TOKEN)
     ) {
       commit(constants.AUTH_CHECK_LOGIN);
-      router.replace('/');
     } else {
       commit(constants.AUTH_CHECK_LOGOUT, null, { root: true });
-      router.replace('/login');
     }
   },
   async login({ commit }, payload: { email: string; password: string }) {
