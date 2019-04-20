@@ -13,6 +13,8 @@ import Faculty from './modules/Faculty';
 import Group from './modules/Group';
 import Subject from './modules/Subject';
 
+import Modal from './modules/Modal';
+
 import api from '../services/api';
 
 Vue.use(Vuex);
@@ -47,7 +49,8 @@ export default new Vuex.Store<{}>({
     User,
     Faculty,
     Group,
-    Subject
+    Subject,
+    Modal
   },
   plugins: [VuexORM.install(database)]
 });

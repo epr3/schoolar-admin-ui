@@ -1,17 +1,44 @@
 <template>
-  <table class="table">
-    <thead>
-      <tr>
-        <th v-for="(item, index) in Object.keys(items[0])" :key="index">{{ item }}</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="(item, index) in items" :key="index">
-        <td v-for="(cell, index) in Object.values(item)" :key="index">{{ cell }}</td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="container">
+    <div class="row px-3">
+      <slot name="filter"></slot>
+    </div>
+    <table class="table mt-4">
+      <template v-if="items.length">
+        <thead>
+          <tr>
+            <th v-for="(item, index) in Object.keys(items[0])" :key="index">{{ item }}</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in items" :key="index">
+            <td v-for="(cell, index) in Object.values(item)" :key="index">{{ cell }}</td>
+            <td>
+              <slot name="actions" :item="item"/>
+            </td>
+          </tr>
+        </tbody>
+      </template>
+      <template v-else>
+        <tbody>
+          <tr>
+            <td>No data to show.</td>
+          </tr>
+        </tbody>
+      </template>
+    </table>
+  </div>
 </template>
+
+<style scoped lang="scss">
+th, td {
+  &::first-letter {
+    text-transform: capitalize;
+  }
+}
+</style>
+
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
