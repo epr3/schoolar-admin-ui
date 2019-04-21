@@ -20,11 +20,11 @@ import { validationMixin } from 'vuelidate';
 
 @Component
 export default class BaseInput extends Vue {
-  @Prop(String) private readonly label?: string;
-  @Prop(String) private readonly type!: string;
+  @Prop({ type: String, required: true }) private readonly label?: string;
+  @Prop({ type: String, required: true }) private readonly type!: string;
   @Prop({ type: String, default: ''}) private readonly placeholder?: string;
-  @Prop({ type: String, default: ''}) private readonly value!: string;
-  @Prop(Object) private readonly v!: typeof validationMixin;
+  @Prop({ type: [String, Number] , default: ''}) private readonly value!: string | number;
+  @Prop({ type: Object, required: true }) private readonly v!: typeof validationMixin;
 
   get model() {
     return this.value;

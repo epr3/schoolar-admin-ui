@@ -10,6 +10,8 @@
       <div class="btn-group">
         <base-button type="info" @click="editGroupAction(id)">Edit</base-button>
         <base-button type="danger" @click="deleteGroupAction(id)">Delete</base-button>
+        <base-button :routerPath="`/groups/${id}/events`" type="primary">Events</base-button>
+        <base-button type="secondary">Students</base-button>
       </div>
     </template>
   </base-table>
@@ -35,7 +37,7 @@ export default class GroupTab extends Vue {
   @Action('getGroups', { namespace: 'Group' }) private getGroups: any;
   @Action('deleteGroup', { namespace: 'Group' }) private deleteGroup: any;
   @Mutation('OPEN_MODAL', { namespace: 'Modal' }) private openModal: any;
-  @Getter('groups/query', { namespace: 'entities' }) private groupQuery: any;
+  @Getter('groups/all', { namespace: 'entities' }) private groupQuery: any;
   @Mutation('CLOSE_MODAL', { namespace: 'Modal' }) private modalClose: any;
 
   private openModalAction(props: object) {
@@ -68,9 +70,11 @@ export default class GroupTab extends Vue {
   }
 
   get groups() {
-    return this.groupQuery()
-      .all()
-      .map((item: Model) => item.$toJson());
+    return this.groupQuery().map((item: Model) => {
+      const json = item.$toJson();
+      delete json.events;
+      return json;
+    });
   }
 
   private mounted() {

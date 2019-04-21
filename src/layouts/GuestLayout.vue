@@ -1,6 +1,7 @@
 <template>
   <div class="container container__login">
     <slot></slot>
+    <modal-container/>
   </div>
 </template>
 
@@ -9,4 +10,17 @@
   height: 100vh;
 }
 </style>
+
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
+
+import ModalContainer from '@/containers/ModalContainer.vue';
+
+@Component({
+  components: {
+    ModalContainer
+  }
+})
+export default class GuestLayout extends Vue {}
+</script>
 

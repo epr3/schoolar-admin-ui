@@ -14,6 +14,10 @@ const mutations: MutationTree<GroupState> = {
     state.loading = false;
     state.error = payload.message;
   },
+  [constants.GET_GROUP_BY_ID] (state:  GroupState, payload: IGroup) {
+    state.loading = false;
+    Group.insertOrUpdate({ data: payload });
+  },
   [constants.POST_GROUP](state: GroupState, payload: IGroup) {
     state.loading = false;
     Group.insert({ data: payload });

@@ -14,8 +14,8 @@ export default class Faculty extends Model {
     return {
       id: this.attr(''),
       name: this.attr(''),
-      groups: this.hasMany(Group, 'faculty_id'),
-      subjects: this.hasMany(Subject, 'faculty_id')
+      groups: this.hasMany(Group, 'facultyId'),
+      subjects: this.hasMany(Subject, 'facultyId')
     };
   }
 }

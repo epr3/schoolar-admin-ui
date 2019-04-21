@@ -5,8 +5,8 @@
   >
     <template #modal-body>
       <form>
-        <base-input label="Number" type="text" :v="$v.number" placeholder="1111" v-model="number"/>
-        <base-input label="Year" type="text" :v="$v.year" placeholder="2M" v-model="year"/>
+        <base-input label="Name" type="text" :v="$v.name" placeholder="Something" v-model="name"/>
+        <base-input label="Credits" type="number" :v="$v.credits" placeholder="1" v-model="credits"/>
       </form>
     </template>
     <template #modal-footer>
@@ -34,30 +34,30 @@ import BaseModalContent from '@/components/BaseModalContent.vue';
     BaseInput
   },
   validations: {
-    number: {
+    name: {
       required
     },
-    year: {
+    credits: {
       required
     }
   }
 })
 export default class GroupModal extends Vue {
-  private number = '';
-  private year = '';
+  private name = '';
+  private credits = 0;
   @State('modalOpen', { namespace: 'Modal' }) private modalOpen: any;
   @State('modalComponent', { namespace: 'Modal' }) private modalComponent: any;
   @Mutation('CLOSE_MODAL', { namespace: 'Modal' }) private modalClose: any;
   @Prop({ type: String, default: '' }) private id: any;
-  @Action('postGroup', { namespace: 'Group' }) private postGroup: any;
-  @Action('updateGroup', { namespace: 'Group' }) private updateGroup: any;
-  @Getter('groups/find', { namespace: 'entities' }) private groupQuery: any;
+  @Action('postSubject', { namespace: 'Subject' }) private postSubject: any;
+  @Action('updateSubject', { namespace: 'Subject' }) private updateSubject: any;
+  @Getter('subjects/find', { namespace: 'entities' }) private subjectQuery: any;
 
   private mounted() {
     if (this.id) {
-      const group = this.groupQuery(this.id);
-      this.number = group.number;
-      this.year = group.year;
+      const subject = this.subjectQuery(this.id);
+      this.name = subject.name;
+      this.credits = subject.credits;
     }
   }
 
@@ -68,14 +68,14 @@ export default class GroupModal extends Vue {
   private submitMethod() {
     if (!this.$v.$invalid) {
       const object = {
-        number: this.number,
-        year: this.year,
+        name: this.name,
+        credits: this.credits,
         facultyId: this.$route.params.id
       };
       if (this.id) {
-        this.updateGroup({ id: this.id, object });
+        this.updateSubject({ id: this.id, object });
       } else {
-        this.postGroup({ ...object });
+        this.postSubject({ ...object });
       }
       this.modalClose();
     }

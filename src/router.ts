@@ -10,6 +10,14 @@ const router = new Router({
   mode: 'history',
   routes: [
     {
+      path: '/groups/:id/events',
+      name: 'groupEvents',
+      meta: {
+        auth: true
+      },
+      component: () => import(/* webpackChunkName: "events" */ './views/Events.vue')
+    },
+    {
       path: '/faculties/:id',
       name: 'facultyTabs',
       meta: {

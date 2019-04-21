@@ -15,11 +15,13 @@
             <div class="tab-pane" :class="{ show: tab === 1, active: tab === 1 }" v-if="tab === 1">
               <group-tab />
             </div>
+            <div class="tab-pane" :class="{ show: tab === 2, active: tab === 2 }" v-if="tab === 2">
+              <subject-tab />
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <modal-container />
   </guest-layout>
 </template>
 
@@ -30,13 +32,13 @@ import { Action, Getter } from 'vuex-class';
 import GuestLayout from '@/layouts/GuestLayout.vue';
 
 import GroupTab from '@/containers/GroupTab.vue';
-import ModalContainer from '@/containers/ModalContainer.vue';
+import SubjectTab from '@/containers/SubjectTab.vue';
 
 @Component({
   components: {
     GuestLayout,
     GroupTab,
-    ModalContainer
+    SubjectTab
   }
 })
 export default class FacultyTabs extends Vue {

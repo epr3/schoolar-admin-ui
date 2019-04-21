@@ -4,6 +4,15 @@ import { ActionTree } from 'vuex';
 import { API } from '@/store';
 
 const actions: ActionTree<GroupState, {}> = {
+  async getGroupById({ commit }, payload: string) {
+    commit(constants.START_LOADING);
+    try {
+      const response = await API.getGroupById(payload);
+      commit(constants.GET_GROUP_BY_ID, response.data);
+    } catch (e) {
+      commit(constants.SET_ERROR, e);
+    }
+  },
   async getGroups({ commit }, payload: string) {
     commit(constants.START_LOADING);
     try {
