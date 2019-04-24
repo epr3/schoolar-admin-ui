@@ -1,5 +1,5 @@
 <template>
-  <div class="form-grou">
+  <div class="form-group">
     <select class="custom-select" v-model="model" :value="value">
       <option :value="null">{{ label }}</option>
       <option v-for="item in options" :value="item.value" :key="item.id">{{ item.label }}</option>

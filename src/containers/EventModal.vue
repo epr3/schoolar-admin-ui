@@ -6,12 +6,40 @@
     <template #modal-body>
       <form>
         <base-input label="Room" type="text" :v="$v.room" placeholder="2000" v-model="room"/>
-        <base-input label="Interval" type="number" :v="$v.interval" placeholder="1" v-model="interval"/>
-        <base-select label="Frequency" :v="$v.frequency" v-model="frequency" :options="[{id: 1, label: Daily, value: 'DAILY'}, {id: 2, label: Weekly, value: 'WEEKLY'}]" />
-        <base-checkbox id="notifiable" label="Is Notifiable" :v="$v.isNotifiable" v-model="isNotifiable"/>
+        <!-- <base-input
+          label="Interval"
+          type="number"
+          :v="$v.interval"
+          placeholder="1"
+          v-model="interval"
+        /> -->
+        <!-- <base-select
+          label="Frequency"
+          :v="$v.frequency"
+          v-model="frequency"
+          :options="[{id: 1, label: Daily, value: 'DAILY'}, {id: 2, label: Weekly, value: 'WEEKLY'}]"
+        /> -->
+        <base-checkbox
+          id="notifiable"
+          label="Is Notifiable"
+          :v="$v.isNotifiable"
+          v-model="isNotifiable"
+        />
         <base-checkbox id="full-day" label="Is Full Day" :v="$v.isFullDay" v-model="isFullDay"/>
-        <base-select label="Subject" :v="$v.subjectId" v-model="subjectId" :options="subjectSelect" />
-        <base-select label="Professor" :v="$v.professorId" v-model="proffesorId" :options="professorSelect" />
+        <base-select
+          label="Subject"
+          :v="$v.subjectId"
+          v-model="subjectId"
+          :options="subjectSelect"
+        />
+        <!-- <base-select label="Professor" :v="$v.professorId" v-model="proffesorId" :options="professorSelect" /> -->
+        <base-date-time-picker
+          label="Start date"
+          :v="$v.startDate"
+          v-model="startDate"
+          type="datetime"
+          format="[on] MM-DD-YYYY [at] HH:mm"
+        />
       </form>
     </template>
     <template #modal-footer>
@@ -33,6 +61,7 @@ import BaseInput from '@/components/BaseInput.vue';
 import BaseSelect from '@/components/BaseSelect.vue';
 import BaseCheckbox from '@/components/BaseCheckbox.vue';
 import BaseButton from '@/components/BaseButton.vue';
+import BaseDateTimePicker from '@/components/BaseDateTimePicker.vue';
 
 import BaseModalContent from '@/components/BaseModalContent.vue';
 
@@ -43,20 +72,37 @@ import BaseModalContent from '@/components/BaseModalContent.vue';
     BaseButton,
     BaseInput,
     BaseCheckbox,
-    BaseSelect
+    BaseSelect,
+    BaseDateTimePicker
   },
   validations: {
+    room: {
+      required
+    },
+    isNotifiable: {
+      required
+    },
     isFullDay: {
       required
     },
+    professorId: {
+      required
+    },
     subjectId: {
+      required
+    },
+    startDate: {
       required
     }
   }
 })
 export default class EventModal extends Vue {
+  private room = '';
   private isFullDay = false;
+  private isNotifiable = false;
   private subjectId = null;
+  private professorId = null;
+  private startDate = '';
 
   @State('modalOpen', { namespace: 'Modal' }) private modalOpen: any;
   @State('modalComponent', { namespace: 'Modal' }) private modalComponent: any;
@@ -66,7 +112,8 @@ export default class EventModal extends Vue {
   @Action('updateEvent', { namespace: 'Event' }) private updateEvent: any;
   @Action('getSubjects', { namespace: 'Subject' }) private getSubjects: any;
   @Getter('events/all', { namespace: 'entities' }) private eventQuery: any;
-  @Getter('faculties/query', { namespace: 'entities' }) private facultyQuery: any;
+  @Getter('faculties/query', { namespace: 'entities' })
+  private facultyQuery: any;
   @Getter('subjects/all', { namespace: 'entities' }) private subjectQuery: any;
 
   private mounted() {
@@ -77,11 +124,13 @@ export default class EventModal extends Vue {
   }
 
   get subjectSelect() {
-    return this.subjectQuery().map((item: Model) => item.$toJson()).map((item: ISubject) => ({
-      id: item.id,
-      label: item.name,
-      value: item.id
-    }))
+    return this.subjectQuery()
+      .map((item: Model) => item.$toJson())
+      .map((item: ISubject) => ({
+        id: item.id,
+        label: item.name,
+        value: item.id
+      }));
   }
 
   private modalCloseAction() {

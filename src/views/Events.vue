@@ -1,19 +1,33 @@
 <template>
   <guest-layout>
-    <div class="container">
+    <div class="container-fluid">
       <div class="card">
         <div class="card-body">
           <base-button type="primary" @click="openModalAction">Add Event</base-button>
         </div>
         <div class="card-body">
           <div class="row">
-            <div class="col-sm-1">test</div>
-            <div class="col-sm-1"></div>
-            <div class="col-sm-1"></div>
-            <div class="col-sm-1"></div>
-            <div class="col-sm-1"></div>
-            <div class="col-sm-1"></div>
-            <div class="col-sm-1"></div>
+            <div class="col">
+              <event-card v-for="i in 6" :key="i"/>
+            </div>
+            <div class="col-md col-sm-12">
+              <event-card v-for="i in 6" :key="i"/>
+            </div>
+            <div class="col-md col-sm-12">
+              <event-card v-for="i in 6" :key="i"/>
+            </div>
+            <div class="col-md col-sm-12">
+              <event-card v-for="i in 6" :key="i"/>
+            </div>
+            <div class="col-md col-sm-12">
+              <event-card v-for="i in 6" :key="i"/>
+            </div>
+            <div class="col-md col-sm-12">
+              <event-card v-for="i in 6" :key="i"/>
+            </div>
+            <div class="col-md col-sm-12">
+              <event-card v-for="i in 6" :key="i"/>
+            </div>
           </div>
         </div>
       </div>
@@ -27,12 +41,15 @@ import { Action, Mutation } from 'vuex-class';
 
 import BaseButton from '@/components/BaseButton.vue';
 
+import EventCard from '@/components/EventCard.vue';
+
 import GuestLayout from '@/layouts/GuestLayout.vue';
 
 @Component({
   components: {
     GuestLayout,
-    BaseButton
+    BaseButton,
+    EventCard
   }
 })
 export default class Events extends Vue {

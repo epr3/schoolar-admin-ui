@@ -1,5 +1,5 @@
 <template>
-  <div class="container container__login">
+  <div class="container-fluid container__login">
     <slot></slot>
     <modal-container/>
   </div>
