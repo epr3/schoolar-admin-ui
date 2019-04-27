@@ -1,4 +1,6 @@
 import axios from 'axios';
+import router from '../router';
+import store from '../store';
 
 const create = () => {
   const api = axios.create({
@@ -12,6 +14,13 @@ const create = () => {
   const postLogin = (loginObj: object) => api.post('/login', loginObj);
   const getProfile = () => api.get('/profile');
   const deleteLogout = () => api.delete('/logout');
+
+  const getProfessors = () => api.get('/professors');
+  const postProfessor = (professorObj: object) =>
+    api.post('/professors', professorObj);
+  const deleteProfessor = (id: string) => api.delete(`/professors/${id}`);
+  const updateProfessor = (id: string, professorObj: object) =>
+    api.put(`/professors/${id}`, professorObj);
 
   const getFaculties = () => api.get('/faculties');
   const getFacultyById = (id: string) => api.get(`/faculties/${id}`);
@@ -65,8 +74,43 @@ const create = () => {
       // Do something with response data
       return response;
     },
-    error => {
-      // Do something with response error
+    async error => {
+      const status = error.response ? error.response.status : null;
+      if (
+        status === 401 &&
+        error.config &&
+        !error.config.__isRetryRequest &&
+        !error.config.url.includes('/refresh')
+      ) {
+        const refreshToken = localStorage.getItem(
+          process.env.VUE_APP_REFRESH_TOKEN
+        );
+        if (!refreshToken) {
+          return Promise.reject(error);
+        }
+        try {
+          const response = await api.post('/refresh', { refreshToken });
+          localStorage.setItem(
+            process.env.VUE_APP_ACCESS_TOKEN,
+            response.data.accessToken
+          );
+          localStorage.setItem(
+            process.env.VUE_APP_REFRESH_TOKEN,
+            response.data.refreshToken
+          );
+          error.config.__isRetryRequest = true;
+          return api(error.config);
+        } catch (e) {
+          return Promise.reject(e);
+        }
+      }
+
+      if (error.config.url.includes('/refresh')) {
+        localStorage.removeItem(process.env.VUE_APP_ACCESS_TOKEN);
+        localStorage.removeItem(process.env.VUE_APP_REFRESH_TOKEN);
+        store.commit('LOGOUT');
+        router.replace('/login');
+      }
       return Promise.reject(error);
     }
   );
@@ -92,7 +136,11 @@ const create = () => {
     updateEvent,
     deleteEvent,
     getEventsByGroupId,
-    getGroupById
+    getGroupById,
+    getProfessors,
+    postProfessor,
+    updateProfessor,
+    deleteProfessor
   };
 };
 
