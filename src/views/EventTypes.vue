@@ -3,17 +3,17 @@
     <div class="container">
       <div class="card">
         <div class="card-body">
-          <base-table :items="professors">
+          <base-table :items="eventTypes">
             <template #filter>
               <div class="col-sm-4">
-                <base-button size="lg" type="primary" @click="openModalAction">Add Professor</base-button>
+                <base-button size="lg" type="primary" @click="openModalAction">Add Event Type</base-button>
               </div>
               <div class="col-sm-8">Sort + per page</div>
             </template>
             <template #actions="{ item: { id }}">
               <div class="btn-group">
-                <base-button type="info" @click="editProfessorAction(id)">Edit</base-button>
-                <base-button type="danger" @click="deleteProfessorAction(id)">Delete</base-button>
+                <base-button type="info" @click="editEventTypeAction(id)">Edit</base-button>
+                <base-button type="danger" @click="deleteEventTypeAction(id)">Delete</base-button>
               </div>
             </template>
           </base-table>
@@ -42,16 +42,16 @@ import ConfirmationModal from '@/components/ConfirmationModal.vue';
     GuestLayout
   }
 })
-export default class Accounts extends Vue {
-  @Action('getProfessors', { namespace: 'Professor' }) private getProfessors: any;
-  @Action('deleteProfessor', { namespace: 'Professor' }) private deleteProfessor: any;
+export default class EventTypes extends Vue {
+  @Action('getEventTypes', { namespace: 'EventType' }) private getEventTypes: any;
+  @Action('deleteEventType', { namespace: 'EventType' }) private deleteEventType: any;
   @Mutation('OPEN_MODAL', { namespace: 'Modal' }) private openModal: any;
-  @Getter('professors/all', { namespace: 'entities' }) private professorQuery: any;
+  @Getter('eventTypes/all', { namespace: 'entities' }) private eventTypesQuery: any;
   @Mutation('CLOSE_MODAL', { namespace: 'Modal' }) private modalClose: any;
 
   private openModalAction(props: object) {
     this.openModal({
-      component: () => import('@/containers/ProfessorModal.vue'),
+      component: () => import('@/containers/EventTypeModal.vue'),
       props
     });
   }
@@ -63,27 +63,27 @@ export default class Accounts extends Vue {
     });
   }
 
-  private editProfessorAction(id: string) {
+  private editEventTypeAction(id: string) {
     this.openModalAction({ id });
   }
 
-  private deleteProfessorAction(id: string) {
+  private deleteEventTypeAction(id: string) {
     this.openConfirmationModal({
       modalTitle: 'Delete professor',
       modalCloseAction: this.modalClose,
       modalSuccessAction: async () => {
-        await this.deleteProfessor(id);
+        await this.deleteEventType(id);
         this.modalClose();
       }
     });
   }
 
-  get professors() {
-    return this.professorQuery().map((item: Model) => item.$toJson());
+  get eventTypes() {
+    return this.eventTypesQuery().map((item: Model) => item.$toJson());
   }
 
   private mounted() {
-    this.getProfessors();
+    this.getEventTypes();
   }
 }
 </script>

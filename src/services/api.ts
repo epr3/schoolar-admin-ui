@@ -52,6 +52,11 @@ const create = () => {
     api.put(`/subjects/${id}`, subjectObj);
   const deleteSubject = (id: string) => api.delete(`/subjects/${id}`);
 
+  const getEventTypes = () => api.get('/event_types');
+  const postEventType = (eventTypeObj: object) => api.post('/event_types', eventTypeObj);
+  const updateEventType = (id: string, eventTypeObj: object) => api.put(`/event_types/${id}`, eventTypeObj);
+  const deleteEventType = (id: string) => api.delete(`/event_types/${id}`);
+
   api.interceptors.request.use(
     config => {
       if (config.url !== '/login') {
@@ -140,7 +145,11 @@ const create = () => {
     getProfessors,
     postProfessor,
     updateProfessor,
-    deleteProfessor
+    deleteProfessor,
+    getEventTypes,
+    postEventType,
+    updateEventType,
+    deleteEventType
   };
 };
 

@@ -8,6 +8,7 @@ import GroupModel from './modules/Group/model';
 import SubjectModel from './modules/Subject/model';
 import EventModel from './modules/Event/model';
 import ProfessorModel from './modules/Professor/model';
+import EventTypeModel from './modules/EventType/model';
 
 import Auth from './modules/Auth';
 import User from './modules/User';
@@ -16,6 +17,7 @@ import Group from './modules/Group';
 import Subject from './modules/Subject';
 import Event from './modules/Event';
 import Professor from './modules/Professor';
+import EventType from './modules/EventType';
 
 import Modal from './modules/Modal';
 
@@ -32,6 +34,7 @@ database.register(GroupModel);
 database.register(SubjectModel);
 database.register(EventModel);
 database.register(ProfessorModel);
+database.register(EventTypeModel);
 
 export default new Vuex.Store<{}>({
   state: {},
@@ -43,6 +46,7 @@ export default new Vuex.Store<{}>({
       SubjectModel.deleteAll();
       EventModel.deleteAll();
       ProfessorModel.deleteAll();
+      EventTypeModel.deleteAll();
     },
     LOGOUT() {
       UserModel.deleteAll();
@@ -51,6 +55,7 @@ export default new Vuex.Store<{}>({
       SubjectModel.deleteAll();
       EventModel.deleteAll();
       ProfessorModel.deleteAll();
+      EventTypeModel.deleteAll();
     }
   },
   actions: {},
@@ -62,6 +67,7 @@ export default new Vuex.Store<{}>({
     Subject,
     Event,
     Professor,
+    EventType,
     Modal
   },
   plugins: [VuexORM.install(database)]

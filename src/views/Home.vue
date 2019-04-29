@@ -3,7 +3,6 @@
     <div class="row">
       <div class="col-sm-4 offset-4 mt-5">
         <div v-if="!showFacultyForm" class="card card__home">
-          <img src="https://via.placeholder.com/50" alt="logo" class="card-img-top">
           <div class="card-body">
             <base-button
               class="mb-2"
@@ -12,6 +11,7 @@
               @click="toggleShowFacultyForm"
             >Create a new faculty</base-button>
             <base-button router-path="/accounts" class="mb-2" block type="secondary">Manage accounts</base-button>
+            <base-button router-path="/event_types" class="mb-2" block type="secondary">Manage event types</base-button>
             <div
               class="dropdown"
               :class="{ show: showFacultyDropdown }"

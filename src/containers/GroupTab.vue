@@ -37,7 +37,7 @@ export default class GroupTab extends Vue {
   @Action('getGroups', { namespace: 'Group' }) private getGroups: any;
   @Action('deleteGroup', { namespace: 'Group' }) private deleteGroup: any;
   @Mutation('OPEN_MODAL', { namespace: 'Modal' }) private openModal: any;
-  @Getter('groups/all', { namespace: 'entities' }) private groupQuery: any;
+  @Getter('groups/query', { namespace: 'entities' }) private groupQuery: any;
   @Mutation('CLOSE_MODAL', { namespace: 'Modal' }) private modalClose: any;
 
   private openModalAction(props: object) {
@@ -70,9 +70,9 @@ export default class GroupTab extends Vue {
   }
 
   get groups() {
-    return this.groupQuery().map((item: Model) => {
+    return this.groupQuery().withAll().get().map((item: Model) => {
       const json = item.$toJson();
-      delete json.events;
+      // delete json.events;
       return json;
     });
   }

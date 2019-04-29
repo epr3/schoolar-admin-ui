@@ -20,7 +20,10 @@ const mutations: MutationTree<EventState> = {
   },
   [constants.GET_EVENTS](state: EventState, payload: IEvent) {
     state.loading = false;
-    Event.create({ data: payload });
+    Event.create({
+      data: payload,
+      insertOrUpdate: ['group', 'subject', 'event_type', 'professor']
+    });
   },
   [constants.UPDATE_EVENT](state: EventState, payload: IEvent) {
     state.loading = false;

@@ -1,4 +1,4 @@
-import { Model } from '@vuex-orm/core';
+import { Model, Fields } from '@vuex-orm/core';
 
 import Event from '../Event/model';
 
@@ -11,7 +11,7 @@ export interface ISubject {
 export default class Subject extends Model {
   public static entity = 'subjects';
 
-  public static fields() {
+  public static fields(): Fields {
     return {
       id: this.attr(''),
       name: this.attr(''),
