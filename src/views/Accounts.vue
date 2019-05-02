@@ -23,68 +23,63 @@
   </guest-layout>
 </template>
 
-<script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { Action, Getter, Mutation } from 'vuex-class';
-import { Model } from '@vuex-orm/core';
+<script>
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 
 import GuestLayout from '@/layouts/GuestLayout.vue';
 
 import BaseTable from '@/components/BaseTable.vue';
 import BaseButton from '@/components/BaseButton.vue';
-import ConfirmationModal from '@/components/ConfirmationModal.vue';
 
-@Component({
+export default {
+  name: 'accounts',
   components: {
     BaseTable,
     BaseButton,
-    ConfirmationModal,
     GuestLayout
-  }
-})
-export default class Accounts extends Vue {
-  @Action('getProfessors', { namespace: 'Professor' }) private getProfessors: any;
-  @Action('deleteProfessor', { namespace: 'Professor' }) private deleteProfessor: any;
-  @Mutation('OPEN_MODAL', { namespace: 'Modal' }) private openModal: any;
-  @Getter('professors/all', { namespace: 'entities' }) private professorQuery: any;
-  @Mutation('CLOSE_MODAL', { namespace: 'Modal' }) private modalClose: any;
-
-  private openModalAction(props: object) {
-    this.openModal({
-      component: () => import('@/containers/ProfessorModal.vue'),
-      props
-    });
-  }
-
-  private openConfirmationModal(props: object) {
-    this.openModal({
-      component: () => import('@/components/ConfirmationModal.vue'),
-      props
-    });
-  }
-
-  private editProfessorAction(id: string) {
-    this.openModalAction({ id });
-  }
-
-  private deleteProfessorAction(id: string) {
-    this.openConfirmationModal({
-      modalTitle: 'Delete professor',
-      modalCloseAction: this.modalClose,
-      modalSuccessAction: async () => {
-        await this.deleteProfessor(id);
-        this.modalClose();
-      }
-    });
-  }
-
-  get professors() {
-    return this.professorQuery().map((item: Model) => item.$toJson());
-  }
-
-  private mounted() {
+  },
+  mounted() {
     this.getProfessors();
+  },
+  computed: {
+    ...mapGetters({
+      professorQuery: 'entities/professors/all'
+    }),
+    professors() {
+      return this.professorQuery().map(item => item.$toJson());
+    }
+  },
+  methods: {
+    ...mapMutations({
+      openModal: 'Modal/OPEN_MODAL',
+      modalClose: 'Modal/CLOSE_MODAL'
+    }),
+    ...mapActions('Professor', ['getProfessors', 'deleteProfessor']),
+    openModalAction(props) {
+      this.openModal({
+        component: () => import('@/containers/ProfessorModal.vue'),
+        props
+      });
+    },
+    openConfirmationModal(props) {
+      this.openModal({
+        component: () => import('@/components/ConfirmationModal.vue'),
+        props
+      });
+    },
+    editProfessorAction(id) {
+      this.openModalAction({ id });
+    },
+    deleteProfessorAction(id) {
+      this.openConfirmationModal({
+        modalTitle: 'Delete professor',
+        modalCloseAction: this.modalClose,
+        modalSuccessAction: async () => {
+          await this.deleteProfessor(id);
+          this.modalClose();
+        }
+      });
+    }
   }
-}
+};
 </script>
-

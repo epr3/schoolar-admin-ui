@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid container__login">
     <slot></slot>
-    <modal-container/>
+    <modal-container />
   </div>
 </template>
 
@@ -11,16 +11,13 @@
 }
 </style>
 
-<script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-
+<script>
 import ModalContainer from '@/containers/ModalContainer.vue';
 
-@Component({
+export default {
+  name: 'guest-layout',
   components: {
     ModalContainer
   }
-})
-export default class GuestLayout extends Vue {}
+};
 </script>
-

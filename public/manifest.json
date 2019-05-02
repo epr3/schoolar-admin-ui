@@ -1,6 +1,6 @@
 {
-  "name": "schoolar-admin-ui",
-  "short_name": "schoolar-admin-ui",
+  "name": "admin-ui-donor",
+  "short_name": "admin-ui-donor",
   "icons": [
     {
       "src": "./img/icons/android-chrome-192x192.png",

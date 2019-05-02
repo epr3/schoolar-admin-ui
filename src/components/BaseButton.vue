@@ -1,11 +1,5 @@
 <template>
-  <router-link
-    tag="button"
-    v-if="routerPath"
-    :to="routerPath"
-    class="btn"
-    :class="btnStyle"
-  >
+  <router-link tag="button" v-if="routerPath" :to="routerPath" class="btn" :class="btnStyle">
     <slot></slot>
   </router-link>
   <button
@@ -20,43 +14,61 @@
   </button>
 </template>
 
-<script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
-
-@Component
-export default class BaseButton extends Vue {
-  @Prop({ type: String, default: '' }) private readonly type?: string;
-  @Prop({ type: String, default: '' }) private readonly size?: string;
-  @Prop({ type: Boolean, default: false }) private readonly outline?: boolean;
-  @Prop({ type: Boolean, default: false }) private readonly block?: boolean;
-  @Prop({ type: Boolean, default: false }) private readonly disabled?: boolean;
-  @Prop({ type: String, default: '' }) private readonly routerPath?: string;
-
-  get btnStyle() {
-    let style = '';
-
-    if (this.size) {
-      style += `btn-${this.size} `;
+<script>
+export default {
+  name: 'base-button',
+  props: {
+    size: {
+      type: String,
+      default: ''
+    },
+    type: {
+      type: String,
+      default: ''
+    },
+    outline: {
+      type: Boolean,
+      default: false
+    },
+    block: {
+      type: Boolean,
+      default: false
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
+    routerPath: {
+      type: String,
+      default: ''
     }
+  },
+  computed: {
+    btnStyle() {
+      let style = '';
 
-    if (this.type) {
-      if (this.outline) {
-        style += `btn-outline-${this.type} `;
-      } else {
-        style += `btn-${this.type} `;
+      if (this.size) {
+        style += `btn-${this.size} `;
       }
-    }
 
-    if (this.block) {
-      style += 'btn-block ';
-    }
+      if (this.type) {
+        if (this.outline) {
+          style += `btn-outline-${this.type} `;
+        } else {
+          style += `btn-${this.type} `;
+        }
+      }
 
-    if (this.disabled) {
-      style += 'btn-disabled ';
-    }
+      if (this.block) {
+        style += 'btn-block ';
+      }
 
-    return style.slice(0, -1);
+      if (this.disabled) {
+        style += 'btn-disabled ';
+      }
+
+      return style.slice(0, -1);
+    }
   }
-}
+};
 </script>
-

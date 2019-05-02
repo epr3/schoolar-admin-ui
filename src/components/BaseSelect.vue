@@ -7,25 +7,37 @@
   </div>
 </template>
 
-<script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
-import { validationMixin } from 'vuelidate';
-
-@Component
-export default class BaseSelect extends Vue {
-  @Prop({ type: String, required: true }) private readonly label?: string;
-  @Prop({ type: String, default: null }) private readonly value!: string;
-  @Prop({ type: Object, required: true })
-  private readonly v!: typeof validationMixin;
-  @Prop({ type: Array, required: true }) private readonly options!: object[];
-
-  get model() {
-    return this.value;
+<script>
+export default {
+  name: 'base-select',
+  props: {
+    label: {
+      type: String,
+      required: true
+    },
+    value: {
+      type: String,
+      default: null
+    },
+    v: {
+      type: Object,
+      required: true
+    },
+    options: {
+      type: Array,
+      required: true
+    }
+  },
+  computed: {
+    model: {
+      get() {
+        return this.value;
+      },
+      set(value) {
+        this.v.$touch();
+        this.$emit('input', value);
+      }
+    }
   }
-
-  set model(value) {
-    this.v.$touch();
-    this.$emit('input', value);
-  }
-}
+};
 </script>

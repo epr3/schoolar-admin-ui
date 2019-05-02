@@ -23,9 +23,8 @@
   </guest-layout>
 </template>
 
-<script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { Action, Getter } from 'vuex-class';
+<script>
+import { mapActions } from 'vuex';
 import { validationMixin } from 'vuelidate';
 import { required, email } from 'vuelidate/lib/validators';
 
@@ -33,11 +32,24 @@ import GuestLayout from '@/layouts/GuestLayout.vue';
 import BaseInput from '@/components/BaseInput.vue';
 import BaseButton from '@/components/BaseButton.vue';
 
-@Component({
+export default {
+  name: 'login',
+  data: () => ({
+    email: '',
+    password: ''
+  }),
   components: {
     BaseInput,
     GuestLayout,
     BaseButton
+  },
+  methods: {
+    ...mapActions('Auth', ['login']),
+    loginMethod() {
+      if (!this.$v.$invalid) {
+        this.login({ email: this.email, password: this.password });
+      }
+    }
   },
   mixins: [validationMixin],
   validations: {
@@ -49,15 +61,5 @@ import BaseButton from '@/components/BaseButton.vue';
       required
     }
   }
-})
-export default class Login extends Vue {
-  private email = '';
-  private password = '';
-  @Action('login', { namespace: 'Auth' }) private login: any;
-  private loginMethod() {
-    if (!this.$v.$invalid) {
-      this.login({ email: this.email, password: this.password });
-    }
-  }
-}
+};
 </script>

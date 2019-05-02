@@ -38,16 +38,16 @@
   </div>
 </template>
 
-<script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-
-@Component
-export default class AuthLayout extends Vue {
-  private showNavbar = false;
-
-  private toggleNavbar() {
-    this.showNavbar = !this.showNavbar;
+<script>
+export default {
+  name: 'auth-layout',
+  data: () => ({
+    showNavbar: false
+  }),
+  methods: {
+    toggleNavbar() {
+      this.showNavbar = !this.showNavbar;
+    }
   }
-}
+};
 </script>
-

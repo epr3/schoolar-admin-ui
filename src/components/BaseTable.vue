@@ -32,20 +32,21 @@
 </template>
 
 <style scoped lang="scss">
-th, td {
+th td {
   &::first-letter {
     text-transform: capitalize;
   }
 }
 </style>
 
-
-<script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
-
-@Component
-export default class BaseTable extends Vue {
-  @Prop({ required: true, type: Array }) private readonly items!: object[];
-}
+<script>
+export default {
+  name: 'base-table',
+  props: {
+    items: {
+      required: true,
+      type: Array
+    }
+  }
+};
 </script>
-

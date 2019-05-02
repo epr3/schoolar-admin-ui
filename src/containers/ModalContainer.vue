@@ -7,7 +7,7 @@
       :class="{ fade: modalOpen, show: modalOpen }"
     >
       <div @click.stop class="modal-dialog">
-        <component :is="modalComponent" v-bind="modalProps" />
+        <component :is="modalComponent" v-bind="modalProps"/>
       </div>
     </div>
   </portal>
@@ -22,16 +22,18 @@
 }
 </style>
 
+<script>
+import { mapState, mapMutations } from 'vuex';
 
-<script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { State, Mutation } from 'vuex-class';
-
-@Component
-export default class ModalContainer extends Vue {
-  @State('modalOpen', { namespace: 'Modal' }) private modalOpen: any;
-  @State('modalComponent', { namespace: 'Modal' }) private modalComponent: any;
-  @State('modalProps', { namespace: 'Modal' }) private modalProps: any;
-  @Mutation('CLOSE_MODAL', { namespace: 'Modal' }) private modalClose: any;
-}
+export default {
+  name: 'modal-container',
+  computed: {
+    ...mapState('Modal', ['modalOpen', 'modalComponent', 'modalProps'])
+  },
+  methods: {
+    ...mapMutations({
+      modalClose: 'Modal/CLOSE_MODAL'
+    })
+  }
+};
 </script>

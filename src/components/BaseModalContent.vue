@@ -7,21 +7,26 @@
       </button>
     </div>
     <div v-if="$slots['modal-body']" class="modal-body">
-      <slot name="modal-body" />
+      <slot name="modal-body"/>
     </div>
     <div v-if="$slots['modal-footer']" class="modal-footer">
-      <slot name="modal-footer" />
+      <slot name="modal-footer"/>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import { Vue, Prop, Component } from 'vue-property-decorator';
-
-@Component
-export default class BaseModalContent extends Vue {
-  @Prop({ required: true, type: String}) private readonly modalTitle!: string;
-  @Prop({ required: true, type: Function }) private readonly modalCloseAction!: () => void;
-}
+<script>
+export default {
+  name: 'base-modal-content',
+  props: {
+    modalTitle: {
+      required: true,
+      type: String
+    },
+    modalCloseAction: {
+      required: true,
+      type: Function
+    }
+  }
+};
 </script>
-

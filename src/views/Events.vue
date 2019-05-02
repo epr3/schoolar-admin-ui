@@ -9,7 +9,7 @@
           <div class="row">
             <div class="col" v-for="day in days" :key="day">{{ day }}</div>
           </div>
-          <div class="row">
+          <div class="row" v-if="events">
             <div class="col" v-for="(item, index) in events" :key="index">
               <event-card
                 v-for="event in item"
@@ -32,10 +32,8 @@
   </guest-layout>
 </template>
 
-<script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { Action, Mutation, Getter } from 'vuex-class';
-import { Model } from '@vuex-orm/core';
+<script>
+import { mapActions, mapMutations, mapGetters } from 'vuex';
 
 import { DateTime } from 'luxon';
 
@@ -44,66 +42,73 @@ import BaseButton from '@/components/BaseButton.vue';
 import EventCard from '@/components/EventCard.vue';
 
 import GuestLayout from '@/layouts/GuestLayout.vue';
-import { IEvent } from '../store/modules/Event/model';
 
-@Component({
+export default {
+  name: 'events',
+  data: () => ({
+    days: [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday'
+    ]
+  }),
+  mounted() {
+    this.getEvents(this.$route.params.id);
+  },
   components: {
     GuestLayout,
     BaseButton,
     EventCard
+  },
+  computed: {
+    ...mapGetters({
+      eventQuery: 'entities/events/query'
+    }),
+    events() {
+      const events = this.eventQuery()
+        .withAll()
+        .all()
+        .map(item => item.$toJson());
+      return this.days.reduce((acc, val) => {
+        acc[val] = events
+          .filter(
+            item => DateTime.fromISO(item.startDate).toFormat('cccc') === val
+          )
+          .map(item => ({
+            type: item.event_type.type,
+            subject: item.subject.name,
+            professor: `${item.professor.title} ${item.professor.name} ${
+              item.professor.surname
+            }`,
+            group: item.group.number,
+            startDate: DateTime.fromISO(item.startDate).toFormat('dd-LL-yyyy'),
+            endDate: DateTime.fromISO(item.endDate).toFormat('dd-LL-yyyy'),
+            startTime: DateTime.fromISO(item.startTime).toFormat('HH:mm'),
+            endTime: DateTime.fromISO(item.endTime).toFormat('HH:mm'),
+            color: item.event_type.color
+          }));
+        return acc;
+      }, {});
+    }
+  },
+  methods: {
+    ...mapMutations({
+      openModal: 'Modal/OPEN_MODAL'
+    }),
+    ...mapActions({
+      getEvents: 'Event/getEvents',
+      getGroupById: 'Group/getGroupById'
+    }),
+    openModalAction(props) {
+      this.openModal({
+        component: () => import('@/containers/EventModal.vue'),
+        props
+      });
+    }
   }
-})
-export default class Events extends Vue {
-  private days = [
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday'
-  ];
-  @Mutation('OPEN_MODAL', { namespace: 'Modal' }) private openModal: any;
-  @Action('getGroupById', { namespace: 'Group' }) private getGroupById: any;
-  @Action('getEvents', { namespace: 'Event' }) private getEvents: any;
-  @Getter('events/query', { namespace: 'entities' }) private eventQuery: any;
-
-  private openModalAction(props: object) {
-    this.openModal({
-      component: () => import('@/containers/EventModal.vue'),
-      props
-    });
-  }
-  private mounted() {
-    this.getEvents(this.$route.params.id);
-  }
-
-  get events() {
-    const events = this.eventQuery()
-      .withAll()
-      .all()
-      .map((item: Model) => item.$toJson());
-    return this.days.reduce<{ [val: string]: string }>((acc, val: string) => {
-      acc[val] = events
-        .filter(
-          (item: IEvent) =>
-            DateTime.fromISO(item.startDate).toFormat('cccc') === val
-        )
-        .map((item: IEvent) => ({
-          type: item.event_type.type,
-          subject: item.subject.name,
-          professor: `${item.professor.title} ${item.professor.name} ${
-            item.professor.surname
-          }`,
-          group: item.group.number,
-          startDate: DateTime.fromISO(item.startDate).toFormat('dd-LL-yyyy'),
-          endDate: DateTime.fromISO(item.endDate).toFormat('dd-LL-yyyy'),
-          startTime: DateTime.fromISO(item.startTime).toFormat('HH:mm'),
-          endTime: DateTime.fromISO(item.endTime).toFormat('HH:mm'),
-          color: item.event_type.color
-        }));
-      return acc;
-    }, {});
-  }
-}
+};
 </script>

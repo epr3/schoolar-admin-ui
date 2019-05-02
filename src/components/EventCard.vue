@@ -15,20 +15,46 @@
   </div>
 </template>
 
-<script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
-
-@Component
-export default class EventCard extends Vue {
-  @Prop({ type: String, required: true }) private readonly type!: string;
-  @Prop({ type: String, required: true }) private readonly subject!: string;
-  @Prop({ type: String, required: true }) private readonly professor!: string;
-  @Prop({ type: String, required: true }) private readonly group!: string;
-  @Prop({ type: String, required: true }) private readonly startDate!: string;
-  @Prop({ type: String, required: true }) private readonly endDate!: string;
-  @Prop({ type: String, required: true }) private readonly startTime!: string;
-  @Prop({ type: String, required: true }) private readonly endTime!: string;
-  @Prop({ type: String, required: true }) private readonly color!: string;
-}
+<script>
+export default {
+  name: 'event-card',
+  props: {
+    type: {
+      type: String,
+      required: true
+    },
+    subject: {
+      type: String,
+      required: true
+    },
+    professor: {
+      type: String,
+      required: true
+    },
+    group: {
+      type: String,
+      required: true
+    },
+    startDate: {
+      type: String,
+      required: true
+    },
+    endDate: {
+      type: String,
+      required: true
+    },
+    startTime: {
+      type: String,
+      required: true
+    },
+    endTime: {
+      type: String,
+      required: true
+    },
+    color: {
+      type: String,
+      required: true
+    }
+  }
+};
 </script>
-

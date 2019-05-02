@@ -15,9 +15,8 @@
   </base-modal-content>
 </template>
 
-<script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
-import { State, Mutation, Action, Getter } from 'vuex-class';
+<script>
+import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
 import { validationMixin } from 'vuelidate';
 import { required } from 'vuelidate/lib/validators';
 
@@ -26,12 +25,63 @@ import BaseButton from '@/components/BaseButton.vue';
 
 import BaseModalContent from '@/components/BaseModalContent.vue';
 
-@Component({
+export default {
+  name: 'group-modal',
+  data: () => ({
+    number: '',
+    year: ''
+  }),
+  props: {
+    id: {
+      type: String,
+      default: ''
+    }
+  },
+  mounted() {
+    if (this.id) {
+      const group = this.groupQuery(this.id);
+      this.number = group.number;
+      this.year = group.year;
+    }
+  },
   mixins: [validationMixin],
   components: {
     BaseModalContent,
     BaseButton,
     BaseInput
+  },
+  computed: {
+    ...mapState('Modal', ['modalOpen', 'modalComponent']),
+    ...mapGetters({
+      groupQuery: 'entities/groups/find'
+    })
+  },
+  methods: {
+    ...mapMutations({
+      modalClose: 'Modal/CLOSE_MODAL'
+    }),
+    ...mapActions({
+      postGroup: 'Group/postGroup',
+      updateGroup: 'Group/updateGroup'
+    }),
+    modalCloseAction() {
+      this.modalClose();
+    },
+    submitMethod() {
+      if (!this.$v.$invalid) {
+        const object = {
+          number: this.number,
+          year: this.year,
+          facultyId: this.$route.params.id
+        };
+        if (this.id) {
+          this.updateGroup({ id: this.id, object });
+        } else {
+          this.postGroup({ ...object });
+        }
+        this.modalClose();
+      }
+    }
   },
   validations: {
     number: {
@@ -41,45 +91,5 @@ import BaseModalContent from '@/components/BaseModalContent.vue';
       required
     }
   }
-})
-export default class GroupModal extends Vue {
-  private number = '';
-  private year = '';
-  @State('modalOpen', { namespace: 'Modal' }) private modalOpen: any;
-  @State('modalComponent', { namespace: 'Modal' }) private modalComponent: any;
-  @Mutation('CLOSE_MODAL', { namespace: 'Modal' }) private modalClose: any;
-  @Prop({ type: String, default: '' }) private id: any;
-  @Action('postGroup', { namespace: 'Group' }) private postGroup: any;
-  @Action('updateGroup', { namespace: 'Group' }) private updateGroup: any;
-  @Getter('groups/find', { namespace: 'entities' }) private groupQuery: any;
-
-  private mounted() {
-    if (this.id) {
-      const group = this.groupQuery(this.id);
-      this.number = group.number;
-      this.year = group.year;
-    }
-  }
-
-  private modalCloseAction() {
-    this.modalClose();
-  }
-
-  private submitMethod() {
-    if (!this.$v.$invalid) {
-      const object = {
-        number: this.number,
-        year: this.year,
-        facultyId: this.$route.params.id
-      };
-      if (this.id) {
-        this.updateGroup({ id: this.id, object });
-      } else {
-        this.postGroup({ ...object });
-      }
-      this.modalClose();
-    }
-  }
-}
+};
 </script>
-

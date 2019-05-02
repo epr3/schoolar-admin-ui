@@ -11,7 +11,12 @@
               @click="toggleShowFacultyForm"
             >Create a new faculty</base-button>
             <base-button router-path="/accounts" class="mb-2" block type="secondary">Manage accounts</base-button>
-            <base-button router-path="/event_types" class="mb-2" block type="secondary">Manage event types</base-button>
+            <base-button
+              router-path="/event_types"
+              class="mb-2"
+              block
+              type="secondary"
+            >Manage event types</base-button>
             <div
               class="dropdown"
               :class="{ show: showFacultyDropdown }"
@@ -36,9 +41,8 @@
   </guest-layout>
 </template>
 
-<script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { Action, Getter } from 'vuex-class';
+<script>
+import { mapActions, mapGetters } from 'vuex';
 
 import GuestLayout from '@/layouts/GuestLayout.vue';
 
@@ -46,36 +50,38 @@ import BaseButton from '@/components/BaseButton.vue';
 
 import FacultyForm from '@/containers/FacultyForm.vue';
 
-@Component({
+export default {
+  name: 'home',
+  data: () => ({
+    showFacultyForm: false,
+    showFacultyDropdown: false
+  }),
   components: {
     GuestLayout,
     BaseButton,
     FacultyForm
-  }
-})
-export default class Home extends Vue {
-  private showFacultyForm = false;
-  private showFacultyDropdown = false;
-  @Action('getFaculties', { namespace: 'Faculty' }) private getFaculties: any;
-  @Action('getProfile', { namespace: 'User' }) private getProfile: any;
-  @Getter('faculties/query', { namespace: 'entities' })
-  private facultyQuery: any;
-
-  get faculties() {
-    return this.facultyQuery().all();
-  }
-
-  private mounted() {
+  },
+  mounted() {
     this.getProfile();
     this.getFaculties();
+  },
+  computed: {
+    ...mapGetters({
+      facultyQuery: 'entities/faculties/query'
+    }),
+    faculties() {
+      return this.facultyQuery().all();
+    }
+  },
+  methods: {
+    ...mapActions('User', ['getProfile']),
+    ...mapActions('Faculty', ['getFaculties']),
+    toggleShowFacultyForm() {
+      this.showFacultyForm = !this.showFacultyForm;
+    },
+    toggleShowFacultyDropdown() {
+      this.showFacultyDropdown = !this.showFacultyDropdown;
+    }
   }
-
-  private toggleShowFacultyForm() {
-    this.showFacultyForm = !this.showFacultyForm;
-  }
-
-  private toggleShowFacultyDropdown() {
-    this.showFacultyDropdown = !this.showFacultyDropdown;
-  }
-}
+};
 </script>

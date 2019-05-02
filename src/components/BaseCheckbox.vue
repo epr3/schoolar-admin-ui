@@ -16,25 +16,38 @@
   </div>
 </template>
 
-<script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
-import { validationMixin } from 'vuelidate';
-
-@Component
-export default class BaseCheckbox extends Vue {
-  @Prop({ type: String, required: true }) private readonly id!: string;
-  @Prop({ type: String, required: true }) private readonly label!: string;
-  @Prop({ type: Boolean, default: false }) private readonly value!: string;
-  @Prop({ type: Object, required: true })
-  private readonly v!: typeof validationMixin;
-
-  get model() {
-    return this.value;
+<script>
+export default {
+  name: 'base-checkbox',
+  props: {
+    id: {
+      type: String,
+      required: true
+    },
+    label: {
+      type: String,
+      required: true
+    },
+    value: {
+      type: Boolean,
+      default: false
+    },
+    v: {
+      type: Object,
+      required: true
+    }
+  },
+  computed: {
+    model: {
+      get() {
+        return this.value;
+      },
+      set(value) {
+        this.v.$touch();
+        this.$emit('input', value);
+      }
+    }
   }
-
-  set model(value) {
-    this.v.$touch();
-    this.$emit('input', value);
-  }
-}
+};
 </script>
+

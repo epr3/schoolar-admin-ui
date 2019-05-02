@@ -16,16 +16,19 @@
   </div>
 </template>
 
-<script lang="ts">
-import { Component, Vue, Emit } from 'vue-property-decorator';
-import { Action, Getter } from 'vuex-class';
+<script>
+import { mapActions, mapGetters } from 'vuex';
 import { validationMixin } from 'vuelidate';
 import { required } from 'vuelidate/lib/validators';
 
 import BaseInput from '@/components/BaseInput.vue';
 import BaseButton from '@/components/BaseButton.vue';
 
-@Component({
+export default {
+  name: 'faculty-form',
+  data: () => ({
+    name: ''
+  }),
   components: {
     BaseInput,
     BaseButton
@@ -35,18 +38,16 @@ import BaseButton from '@/components/BaseButton.vue';
     name: {
       required
     }
-  }
-})
-export default class CreateFacultyForm extends Vue {
-  private name = '';
-  @Action('postFaculty', { namespace: 'Faculty' }) private postFaculty: any;
-
-  @Emit('reset:form')
-  private postFacultyMethod() {
-    if (!this.$v.$invalid) {
-      this.postFaculty({ name: this.name });
-      this.name = '';
+  },
+  methods: {
+    ...mapActions('Faculty', ['postFaculty']),
+    postFacultyMethod() {
+      this.$emit('reset:form');
+      if (!this.$v.$invalid) {
+        this.postFaculty({ name: this.name });
+        this.name = '';
+      }
     }
   }
-}
+};
 </script>

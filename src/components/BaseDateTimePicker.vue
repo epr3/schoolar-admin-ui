@@ -18,34 +18,49 @@
   </div>
 </template>
 
-<script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
-import { validationMixin } from 'vuelidate';
-
+<script>
 import DatePicker from 'vue2-datepicker';
 
-@Component({
+export default {
   components: {
     DatePicker
+  },
+  props: {
+    label: {
+      type: String,
+      required: true
+    },
+    type: {
+      type: String,
+      required: true
+    },
+    format: {
+      type: String,
+      required: true
+    },
+    placeholder: {
+      type: String,
+      default: ''
+    },
+    value: {
+      type: [Date, String],
+      default: ''
+    },
+    v: {
+      type: Object,
+      required: true
+    }
+  },
+  computed: {
+    model: {
+      get() {
+        return this.value;
+      },
+      set(value) {
+        this.v.$touch();
+        this.$emit('input', value);
+      }
+    }
   }
-})
-export default class BaseDateTimePicker extends Vue {
-  @Prop({ type: String, required: true }) private readonly label?: string;
-  @Prop({ type: String, required: true }) private readonly type!: string;
-  @Prop({ type: String, required: true }) private readonly format!: string;
-  @Prop({ type: String, default: ''}) private readonly placeholder?: string;
-  @Prop({ type: [Date, String] , default: ''}) private readonly value!: string;
-  @Prop({ type: Object, required: true }) private readonly v!: typeof validationMixin;
-
-  get model() {
-    return this.value;
-  }
-
-  set model(value) {
-    this.v.$touch();
-    this.$emit('input', value);
-  }
-
-}
+};
 </script>
-

@@ -1,5 +1,5 @@
 <template>
-  <base-table :items="groups">
+  <base-table :items="subjects">
     <template #filter>
       <div class="col-sm-4">
         <base-button size="lg" type="primary" @click="openModalAction">Add Subject</base-button>
@@ -15,69 +15,65 @@
   </base-table>
 </template>
 
-<script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { Action, Getter, Mutation } from 'vuex-class';
-import { Model } from '@vuex-orm/core';
+<script>
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 
 import BaseTable from '@/components/BaseTable.vue';
 import BaseButton from '@/components/BaseButton.vue';
-import ConfirmationModal from '@/components/ConfirmationModal.vue';
 
-@Component({
+export default {
+  name: 'subject-tab',
+  mounted() {
+    this.getSubjects(this.$route.params.id);
+  },
   components: {
     BaseTable,
-    BaseButton,
-    ConfirmationModal
-  }
-})
-export default class SubjectTab extends Vue {
-  @Action('getSubjects', { namespace: 'Subject' }) private getSubjects: any;
-  @Action('deleteSubject', { namespace: 'Subject' }) private deleteSubject: any;
-  @Mutation('OPEN_MODAL', { namespace: 'Modal' }) private openModal: any;
-  @Getter('subjects/all', { namespace: 'entities' }) private subjectQuery: any;
-  @Mutation('CLOSE_MODAL', { namespace: 'Modal' }) private modalClose: any;
+    BaseButton
+  },
+  computed: {
+    ...mapGetters({
+      subjectQuery: 'entities/subjects/all'
+    }),
+    subjects() {
+      return this.subjectQuery().map(item => {
+        const json = item.$toJson();
+        delete json.events;
+        return json;
+      });
+    }
+  },
+  methods: {
+    ...mapMutations({
+      openModal: 'Modal/OPEN_MODAL',
+      modalClose: 'Modal/CLOSE_MODAL'
+    }),
+    ...mapActions('Subject', ['getSubjects', 'deleteSubject']),
+    openModalAction(props) {
+      this.openModal({
+        component: () => import('@/containers/SubjectModal.vue'),
+        props
+      });
+    },
 
-  private openModalAction(props: object) {
-    this.openModal({
-      component: () => import('@/containers/SubjectModal.vue'),
-      props
-    });
+    openConfirmationModal(props) {
+      this.openModal({
+        component: () => import('@/components/ConfirmationModal.vue'),
+        props
+      });
+    },
+    editSubjectAction(id) {
+      this.openModalAction({ id });
+    },
+    deleteSubjectAction(id) {
+      this.openConfirmationModal({
+        modalTitle: 'Delete subject',
+        modalCloseAction: this.modalClose,
+        modalSuccessAction: async () => {
+          await this.deleteSubject(id);
+          this.modalClose();
+        }
+      });
+    }
   }
-
-  private openConfirmationModal(props: object) {
-    this.openModal({
-      component: () => import('@/components/ConfirmationModal.vue'),
-      props
-    });
-  }
-
-  private editSubjectAction(id: string) {
-    this.openModalAction({ id });
-  }
-
-  private deleteSubjectAction(id: string) {
-    this.openConfirmationModal({
-      modalTitle: 'Delete subject',
-      modalCloseAction: this.modalClose,
-      modalSuccessAction: async () => {
-        await this.deleteSubject(id);
-        this.modalClose();
-      }
-    });
-  }
-
-  get groups() {
-    return this.subjectQuery().map((item: Model) => {
-      const json = item.$toJson();
-      delete json.events;
-      return json;
-    });
-  }
-
-  private mounted() {
-    this.getSubjects(this.$route.params.id);
-  }
-}
+};
 </script>
-

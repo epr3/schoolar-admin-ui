@@ -17,69 +17,74 @@
   </base-table>
 </template>
 
-<script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { Action, Getter, Mutation } from 'vuex-class';
-import { Model } from '@vuex-orm/core';
+<script>
+import { mapActions, mapMutations, mapGetters } from 'vuex';
 
 import BaseTable from '@/components/BaseTable.vue';
 import BaseButton from '@/components/BaseButton.vue';
-import ConfirmationModal from '@/components/ConfirmationModal.vue';
 
-@Component({
+export default {
+  name: 'group-tab',
+  mounted() {
+    this.getGroups(this.$route.params.id);
+  },
   components: {
     BaseTable,
-    BaseButton,
-    ConfirmationModal
-  }
-})
-export default class GroupTab extends Vue {
-  @Action('getGroups', { namespace: 'Group' }) private getGroups: any;
-  @Action('deleteGroup', { namespace: 'Group' }) private deleteGroup: any;
-  @Mutation('OPEN_MODAL', { namespace: 'Modal' }) private openModal: any;
-  @Getter('groups/query', { namespace: 'entities' }) private groupQuery: any;
-  @Mutation('CLOSE_MODAL', { namespace: 'Modal' }) private modalClose: any;
+    BaseButton
+  },
+  computed: {
+    ...mapGetters({
+      groupQuery: 'entities/groups/query'
+    }),
+    groups() {
+      return this.groupQuery()
+        .withAll()
+        .get()
+        .map(item => {
+          const json = item.$toJson();
+          // delete json.events;
+          return json;
+        });
+    }
+  },
+  methods: {
+    ...mapMutations({
+      modalClose: 'Modal/CLOSE_MODAL',
+      openModal: 'Modal/OPEN_MODAL'
+    }),
+    ...mapActions({
+      getGroups: 'Group/getGroups',
+      deleteGroup: 'Group/deleteGroup'
+    }),
 
-  private openModalAction(props: object) {
-    this.openModal({
-      component: () => import('@/containers/GroupModal.vue'),
-      props
-    });
-  }
+    openModalAction(props) {
+      this.openModal({
+        component: () => import('@/containers/GroupModal.vue'),
+        props
+      });
+    },
 
-  private openConfirmationModal(props: object) {
-    this.openModal({
-      component: () => import('@/components/ConfirmationModal.vue'),
-      props
-    });
-  }
+    openConfirmationModal(props) {
+      this.openModal({
+        component: () => import('@/components/ConfirmationModal.vue'),
+        props
+      });
+    },
 
-  private editGroupAction(id: string) {
-    this.openModalAction({ id });
-  }
+    editGroupAction(id) {
+      this.openModalAction({ id });
+    },
 
-  private deleteGroupAction(id: string) {
-    this.openConfirmationModal({
-      modalTitle: 'Delete group',
-      modalCloseAction: this.modalClose,
-      modalSuccessAction: async () => {
-        await this.deleteGroup(id);
-        this.modalClose();
-      }
-    });
+    deleteGroupAction(id) {
+      this.openConfirmationModal({
+        modalTitle: 'Delete group',
+        modalCloseAction: this.modalClose,
+        modalSuccessAction: async () => {
+          await this.deleteGroup(id);
+          this.modalClose();
+        }
+      });
+    }
   }
-
-  get groups() {
-    return this.groupQuery().withAll().get().map((item: Model) => {
-      const json = item.$toJson();
-      // delete json.events;
-      return json;
-    });
-  }
-
-  private mounted() {
-    this.getGroups(this.$route.params.id);
-  }
-}
+};
 </script>
-

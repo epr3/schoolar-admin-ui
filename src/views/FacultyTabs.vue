@@ -13,10 +13,10 @@
           </ul>
           <div class="tab-content p-5">
             <div class="tab-pane" :class="{ show: tab === 1, active: tab === 1 }" v-if="tab === 1">
-              <group-tab />
+              <group-tab/>
             </div>
             <div class="tab-pane" :class="{ show: tab === 2, active: tab === 2 }" v-if="tab === 2">
-              <subject-tab />
+              <subject-tab/>
             </div>
           </div>
         </div>
@@ -25,24 +25,20 @@
   </guest-layout>
 </template>
 
-<script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { Action, Getter } from 'vuex-class';
-
+<script>
 import GuestLayout from '@/layouts/GuestLayout.vue';
 
 import GroupTab from '@/containers/GroupTab.vue';
 import SubjectTab from '@/containers/SubjectTab.vue';
 
-@Component({
+export default {
+  data: () => ({
+    tab: 1
+  }),
   components: {
     GuestLayout,
     GroupTab,
     SubjectTab
   }
-})
-export default class FacultyTabs extends Vue {
-  private tab = 1;
-}
+};
 </script>
-

@@ -115,15 +115,11 @@
   </base-modal-content>
 </template>
 
-<script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
-import { State, Mutation, Action, Getter } from 'vuex-class';
+<script>
+import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
 import { validationMixin } from 'vuelidate';
 import { required } from 'vuelidate/lib/validators';
-import { Model } from '@vuex-orm/core';
 import { DateTime } from 'luxon';
-
-import { ISubject } from '../store/modules/Subject/model';
 
 import BaseInput from '@/components/BaseInput.vue';
 import BaseSelect from '@/components/BaseSelect.vue';
@@ -132,10 +128,118 @@ import BaseButton from '@/components/BaseButton.vue';
 import BaseDateTimePicker from '@/components/BaseDateTimePicker.vue';
 
 import BaseModalContent from '@/components/BaseModalContent.vue';
-import { IProfessor } from '../store/modules/Professor/model';
-import { IEventType } from '../store/modules/EventType/model';
 
-@Component({
+export default {
+  data: () => ({
+    interval: '',
+    frequency: null,
+    room: '',
+    isFullDay: false,
+    isNotifiable: false,
+    subjectId: null,
+    professorId: null,
+    eventTypeId: null,
+    startDate: new Date(),
+    endDate: new Date(),
+    startTime: new Date(),
+    endTime: new Date()
+  }),
+  props: {
+    id: {
+      type: String,
+      default: ''
+    }
+  },
+  computed: {
+    ...mapState('Modal', ['modalOpen', 'modalComponent']),
+    ...mapGetters({
+      eventQuery: 'entities/events/all',
+      facultyQuery: 'entities/faculties/query',
+      subjectQuery: 'entities/subjects/all',
+      professorQuery: 'entities/professors/all',
+      eventTypeQuery: 'entities/event_types/all'
+    }),
+    professorSelect() {
+      return this.professorQuery()
+        .map(item => item.$toJson())
+        .map(item => ({
+          id: item.id,
+          label: `${item.title} ${item.name} ${item.surname}`,
+          value: item.id
+        }));
+    },
+
+    subjectSelect() {
+      return this.subjectQuery()
+        .map(item => item.$toJson())
+        .map(item => ({
+          id: item.id,
+          label: item.name,
+          value: item.id
+        }));
+    },
+
+    eventTypeSelect() {
+      return this.eventTypeQuery()
+        .map(item => item.$toJson())
+        .map(item => ({
+          id: item.id,
+          label: item.type,
+          value: item.id
+        }));
+    }
+  },
+  methods: {
+    ...mapMutations({
+      modalClose: 'Modal/CLOSE_MODAL'
+    }),
+    ...mapActions({
+      postEvent: 'Event/postEvent',
+      updateEvent: 'Event/updateEvent',
+      getFaculties: 'Faculty/getFaculties',
+      getSubjects: 'Subject/getSubjects',
+      getProfessors: 'Professor/getProfessors',
+      getEventTypes: 'EventType/getEventTypes'
+    }),
+    modalCloseAction() {
+      this.modalClose();
+    },
+    submitMethod() {
+      if (!this.$v.$invalid) {
+        const object = {
+          interval: parseInt(this.interval, 10),
+          frequency: this.frequency,
+          room: this.room,
+          isFullDay: this.isFullDay,
+          isNotifiable: this.isNotifiable,
+          subjectId: this.subjectId,
+          professorId: this.professorId,
+          eventTypeId: this.eventTypeId,
+          startDate: DateTime.fromJSDate(this.startDate).toISODate(),
+          endDate: DateTime.fromJSDate(this.endDate).toISODate(),
+          startTime: DateTime.fromJSDate(this.startTime).toISOTime(),
+          endTime: DateTime.fromJSDate(this.endTime).toISOTime(),
+          groupId: this.$route.params.id
+        };
+
+        if (this.id) {
+          this.updateEvent({ id: this.id, object });
+        } else {
+          this.postEvent({ ...object });
+        }
+        this.modalClose();
+      }
+    }
+  },
+  async mounted() {
+    await this.getFaculties();
+    this.getSubjects(this.facultyQuery().first().id);
+    this.getEventTypes();
+    this.getProfessors();
+    if (this.id) {
+      const event = this.eventQuery(this.id);
+    }
+  },
   mixins: [validationMixin],
   components: {
     BaseModalContent,
@@ -183,112 +287,6 @@ import { IEventType } from '../store/modules/EventType/model';
       required
     }
   }
-})
-export default class EventModal extends Vue {
-  private interval = '';
-  private frequency = null;
-  private room = '';
-  private isFullDay = false;
-  private isNotifiable = false;
-  private subjectId = null;
-  private professorId = null;
-  private eventTypeId = null;
-  private startDate = new Date();
-  private endDate = new Date();
-  private startTime = new Date();
-  private endTime = new Date();
-
-  @State('modalOpen', { namespace: 'Modal' }) private modalOpen: any;
-  @State('modalComponent', { namespace: 'Modal' }) private modalComponent: any;
-  @Mutation('CLOSE_MODAL', { namespace: 'Modal' }) private modalClose: any;
-  @Prop({ type: String, default: '' }) private id: any;
-  @Action('postEvent', { namespace: 'Event' }) private postEvent: any;
-  @Action('updateEvent', { namespace: 'Event' }) private updateEvent: any;
-  @Action('getFaculties', { namespace: 'Faculty' }) private getFaculties: any;
-  @Action('getSubjects', { namespace: 'Subject' }) private getSubjects: any;
-  @Action('getProfessors', { namespace: 'Professor' })
-  private getProfessors: any;
-  @Action('getEventTypes', { namespace: 'EventType' })
-  private getEventTypes: any;
-  @Getter('events/all', { namespace: 'entities' }) private eventQuery: any;
-  @Getter('faculties/query', { namespace: 'entities' })
-  private facultyQuery: any;
-  @Getter('subjects/all', { namespace: 'entities' }) private subjectQuery: any;
-  @Getter('professors/all', { namespace: 'entities' })
-  private professorQuery: any;
-  @Getter('event_types/all', { namespace: 'entities' })
-  private eventTypeQuery: any;
-
-  private async mounted() {
-    await this.getFaculties();
-    this.getSubjects(this.facultyQuery().first().id);
-    this.getEventTypes();
-    this.getProfessors();
-    if (this.id) {
-      const event = this.eventQuery(this.id);
-    }
-  }
-
-  get professorSelect() {
-    return this.professorQuery()
-      .map((item: Model) => item.$toJson())
-      .map((item: IProfessor) => ({
-        id: item.id,
-        label: `${item.title} ${item.name} ${item.surname}`,
-        value: item.id
-      }));
-  }
-
-  get subjectSelect() {
-    return this.subjectQuery()
-      .map((item: Model) => item.$toJson())
-      .map((item: ISubject) => ({
-        id: item.id,
-        label: item.name,
-        value: item.id
-      }));
-  }
-
-  get eventTypeSelect() {
-    return this.eventTypeQuery()
-      .map((item: Model) => item.$toJson())
-      .map((item: IEventType) => ({
-        id: item.id,
-        label: item.type,
-        value: item.id
-      }));
-  }
-
-  private modalCloseAction() {
-    this.modalClose();
-  }
-
-  private submitMethod() {
-    if (!this.$v.$invalid) {
-      const object = {
-        interval: parseInt(this.interval, 10),
-        frequency: this.frequency,
-        room: this.room,
-        isFullDay: this.isFullDay,
-        isNotifiable: this.isNotifiable,
-        subjectId: this.subjectId,
-        professorId: this.professorId,
-        eventTypeId: this.eventTypeId,
-        startDate: DateTime.fromJSDate(this.startDate).toISODate(),
-        endDate: DateTime.fromJSDate(this.endDate).toISODate(),
-        startTime: DateTime.fromJSDate(this.startTime).toISOTime(),
-        endTime: DateTime.fromJSDate(this.endTime).toISOTime(),
-        groupId: this.$route.params.id
-      };
-
-      if (this.id) {
-        this.updateEvent({ id: this.id, object });
-      } else {
-        this.postEvent({ ...object });
-      }
-      this.modalClose();
-    }
-  }
-}
+};
 </script>
 

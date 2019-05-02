@@ -1,0 +1,11 @@
+export const SET_ERROR = 'SET_ERROR';
+export const UNSET_ERROR = 'UNSET_ERROR';
+
+export const START_LOADING = 'START_LOADING';
+export const STOP_LOADING = 'STOP_LOADING';
+
+export const GET_FACULTY_BY_ID = 'GET_FACULTY_BY_ID';
+export const GET_FACULTIES = 'GET_FACULTIES';
+export const POST_FACULTY = 'POST_FACULTY';
+export const DELETE_FACULTY = 'DELETE_FACULTY';
+export const UPDATE_FACULTY = 'UPDATE_FACULTY';

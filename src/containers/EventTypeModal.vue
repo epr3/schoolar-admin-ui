@@ -6,7 +6,7 @@
     <template #modal-body>
       <form>
         <base-input label="Type" type="text" :v="$v.type" placeholder="Seminar" v-model="type"/>
-        <base-color-picker label="Color" :v="$v.color" v-model="color" />
+        <base-color-picker label="Color" :v="$v.color" v-model="color"/>
       </form>
     </template>
     <template #modal-footer>
@@ -15,9 +15,8 @@
   </base-modal-content>
 </template>
 
-<script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
-import { State, Mutation, Action, Getter } from 'vuex-class';
+<script>
+import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
 import { validationMixin } from 'vuelidate';
 import { required } from 'vuelidate/lib/validators';
 
@@ -27,7 +26,25 @@ import BaseButton from '@/components/BaseButton.vue';
 
 import BaseModalContent from '@/components/BaseModalContent.vue';
 
-@Component({
+export default {
+  name: 'event-type-modal',
+  data: () => ({
+    type: '',
+    color: ''
+  }),
+  mounted() {
+    if (this.id) {
+      const eventType = this.eventTypeQuery(this.id);
+      this.type = eventType.type;
+      this.color = eventType.color;
+    }
+  },
+  props: {
+    id: {
+      type: String,
+      default: ''
+    }
+  },
   mixins: [validationMixin],
   components: {
     BaseModalContent,
@@ -42,45 +59,38 @@ import BaseModalContent from '@/components/BaseModalContent.vue';
     color: {
       required
     }
-  }
-})
-export default class EventTypeModal extends Vue {
-  private type = '';
-  private color = '';
-  @State('modalOpen', { namespace: 'Modal' }) private modalOpen: any;
-  @State('modalComponent', { namespace: 'Modal' }) private modalComponent: any;
-  @Mutation('CLOSE_MODAL', { namespace: 'Modal' }) private modalClose: any;
-  @Prop({ type: String, default: '' }) private id: any;
-  @Action('postEventType', { namespace: 'EventType' }) private postEventType: any;
-  @Action('updateEventType', { namespace: 'EventType' }) private updateEventType: any;
-  @Getter('eventTypes/find', { namespace: 'entities' }) private eventTypeQuery: any;
-
-  private mounted() {
-    if (this.id) {
-      const eventType = this.eventTypeQuery(this.id);
-      this.type = eventType.type;
-      this.color = eventType.color;
-    }
-  }
-
-  private modalCloseAction() {
-    this.modalClose();
-  }
-
-  private submitMethod() {
-    if (!this.$v.$invalid) {
-      const object = {
-        type: this.type,
-        color: this.color
-      };
-      if (this.id) {
-        this.updateEventType({ id: this.id, object });
-      } else {
-        this.postEventType({ ...object });
-      }
+  },
+  computed: {
+    ...mapState('Modal', ['modalOpen', 'modalComponent']),
+    ...mapGetters({
+      eventTypeQuery: 'entities/event_types/find'
+    })
+  },
+  methods: {
+    ...mapMutations({
+      modalClose: 'Modal/CLOSE_MODAL'
+    }),
+    ...mapActions({
+      postEventType: 'EventType/postEventType',
+      updateEventType: 'EventType/updateEventType'
+    }),
+    modalCloseAction() {
       this.modalClose();
+    },
+    submitMethod() {
+      if (!this.$v.$invalid) {
+        const object = {
+          type: this.type,
+          color: this.color
+        };
+        if (this.id) {
+          this.updateEventType({ id: this.id, object });
+        } else {
+          this.postEventType({ ...object });
+        }
+        this.modalClose();
+      }
     }
   }
-}
+};
 </script>
-

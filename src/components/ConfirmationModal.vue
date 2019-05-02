@@ -7,22 +7,29 @@
   </base-modal-content>
 </template>
 
-<script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator';
-
+<script>
 import BaseModalContent from './BaseModalContent.vue';
 import BaseButton from './BaseButton.vue';
 
-@Component({
+export default {
+  name: 'confirmation-modal',
   components: {
     BaseModalContent,
     BaseButton
+  },
+  props: {
+    modalTitle: {
+      required: true,
+      type: String
+    },
+    modalCloseAction: {
+      required: true,
+      type: Function
+    },
+    modalSuccessAction: {
+      required: true,
+      type: Function
+    }
   }
-})
-export default class ConfirmationModal extends Vue {
-  @Prop({ required: true, type: String }) private readonly modalTitle!: string;
-  @Prop({ required: true, type: Function }) private readonly modalCloseAction!: any;
-  @Prop({ required: true, type: Function }) private readonly modalSuccessAction!: any;
-}
+};
 </script>
-
