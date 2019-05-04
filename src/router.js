@@ -1,61 +1,61 @@
-import Vue from "vue";
-import Router from "vue-router";
-import Home from "./views/Home.vue";
-import Login from "./views/Login.vue";
+import Vue from 'vue';
+import Router from 'vue-router';
+import Home from './views/Home.vue';
+import Login from './views/Login.vue';
 
 Vue.use(Router);
 
 const router = new Router({
   base: process.env.BASE_URL,
-  mode: "history",
+  mode: 'history',
   routes: [
     {
-      path: "/event_types",
-      name: "eventTypes",
+      path: '/event_types',
+      name: 'eventTypes',
       meta: {
         auth: true
       },
       component: () =>
-        import(/* webpackChunkName: "events" */ "./views/EventTypes.vue")
+        import(/* webpackChunkName: "events" */ './views/EventTypes.vue')
     },
     {
-      path: "/groups/:id/events",
-      name: "groupEvents",
+      path: '/groups/:id/events',
+      name: 'groupEvents',
       meta: {
         auth: true
       },
       component: () =>
-        import(/* webpackChunkName: "events" */ "./views/Events.vue")
+        import(/* webpackChunkName: "events" */ './views/Events.vue')
     },
     {
-      path: "/faculties/:id",
-      name: "facultyTabs",
+      path: '/faculties/:id',
+      name: 'facultyTabs',
       meta: {
         auth: true
       },
       component: () =>
-        import(/* webpackChunkName: "facultyTabs" */ "./views/FacultyTabs.vue")
+        import(/* webpackChunkName: "facultyTabs" */ './views/FacultyTabs.vue')
     },
     {
-      path: "/accounts",
-      name: "accounts",
+      path: '/accounts',
+      name: 'accounts',
       meta: {
         auth: true
       },
       component: () =>
-        import(/* webpackChunkName: "accounts" */ "./views/Accounts.vue")
+        import(/* webpackChunkName: "accounts" */ './views/Accounts.vue')
     },
     {
-      path: "/login",
-      name: "login",
+      path: '/login',
+      name: 'login',
       component: Login,
       meta: {
         guest: true
       }
     },
     {
-      path: "/",
-      name: "home",
+      path: '/',
+      name: 'home',
       component: Home,
       meta: {
         auth: true
@@ -73,7 +73,7 @@ router.beforeEach((to, from, next) => {
       next();
     } else {
       next({
-        path: "/login",
+        path: '/login',
         params: { nextUrl: to.fullPath }
       });
     }
@@ -81,7 +81,7 @@ router.beforeEach((to, from, next) => {
     if (localStorage.getItem(process.env.VUE_APP_ACCESS_TOKEN) === null) {
       next();
     } else {
-      next({ name: "home" });
+      next({ name: 'home' });
     }
   }
 });
