@@ -3,7 +3,9 @@
     <div class="container-fluid">
       <div class="card">
         <div class="card-body">
-          <base-button type="primary" @click="openModalAction">Add Event</base-button>
+          <base-button type="primary" @click="openModalAction"
+            >Add Event</base-button
+          >
         </div>
         <div class="card-body">
           <div class="row">

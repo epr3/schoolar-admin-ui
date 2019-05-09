@@ -5,7 +5,13 @@
   >
     <template #modal-body>
       <form>
-        <base-input label="Name" type="text" :v="$v.name" placeholder="John" v-model="name"/>
+        <base-input
+          label="Name"
+          type="text"
+          :v="$v.name"
+          placeholder="John"
+          v-model="name"
+        />
         <base-input
           label="Surname"
           type="text"
@@ -20,7 +26,13 @@
           placeholder="example@ie.ase.ro"
           v-model="email"
         />
-        <base-input label="Title" type="text" :v="$v.title" placeholder="Ph.D." v-model="title"/>
+        <base-input
+          label="Title"
+          type="text"
+          :v="$v.title"
+          placeholder="Ph.D."
+          v-model="title"
+        />
         <base-input
           label="Telephone"
           type="text"

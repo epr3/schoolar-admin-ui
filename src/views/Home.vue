@@ -9,33 +9,44 @@
               block
               type="primary"
               @click="toggleShowFacultyForm"
-            >Create a new faculty</base-button>
-            <base-button router-path="/accounts" class="mb-2" block type="secondary">Manage accounts</base-button>
+              >Create a new faculty</base-button
+            >
+            <base-button
+              router-path="/accounts"
+              class="mb-2"
+              block
+              type="secondary"
+              >Manage accounts</base-button
+            >
             <base-button
               router-path="/event_types"
               class="mb-2"
               block
               type="secondary"
-            >Manage event types</base-button>
+              >Manage event types</base-button
+            >
             <div
               class="dropdown"
               :class="{ show: showFacultyDropdown }"
               v-if="faculties.length"
               @click="toggleShowFacultyDropdown"
             >
-              <base-button block type="info">Select an existing faculty</base-button>
+              <base-button block type="info"
+                >Select an existing faculty</base-button
+              >
               <div class="dropdown-menu" :class="{ show: showFacultyDropdown }">
                 <router-link
                   v-for="item in faculties"
                   :key="item.id"
                   class="dropdown-item"
                   :to="`/faculties/${item.id}`"
-                >{{ item.name }}</router-link>
+                  >{{ item.name }}</router-link
+                >
               </div>
             </div>
           </div>
         </div>
-        <faculty-form v-else @reset:form="toggleShowFacultyForm"/>
+        <faculty-form v-else @reset:form="toggleShowFacultyForm" />
       </div>
     </div>
   </guest-layout>

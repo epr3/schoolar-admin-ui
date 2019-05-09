@@ -2,6 +2,7 @@ import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
 import store from './store';
+import { createProvider } from './plugins/vue-apollo';
 import './registerServiceWorker';
 import './plugins/portal-vue';
 
@@ -11,9 +12,7 @@ Vue.config.productionTip = false;
 
 new Vue({
   router,
+  apolloProvider: createProvider(),
   store,
-  mounted() {
-    store.dispatch('Auth/authCheck');
-  },
   render: h => h(App)
 }).$mount('#app');

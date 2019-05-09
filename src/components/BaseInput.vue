@@ -9,7 +9,7 @@
       }"
       v-model="model"
       :placeholder="placeholder"
-    >
+    />
     <div v-if="v.$error" class="invalid-feedback">Field is invalid!</div>
   </div>
 </template>
@@ -52,4 +52,3 @@ export default {
   }
 };
 </script>
-

@@ -6,14 +6,20 @@
           <base-table :items="professors">
             <template #filter>
               <div class="col-sm-4">
-                <base-button size="lg" type="primary" @click="openModalAction">Add Professor</base-button>
+                <base-button size="lg" type="primary" @click="openModalAction"
+                  >Add Professor</base-button
+                >
               </div>
               <div class="col-sm-8">Sort + per page</div>
             </template>
             <template #actions="{ item: { id }}">
               <div class="btn-group">
-                <base-button type="info" @click="editProfessorAction(id)">Edit</base-button>
-                <base-button type="danger" @click="deleteProfessorAction(id)">Delete</base-button>
+                <base-button type="info" @click="editProfessorAction(id)"
+                  >Edit</base-button
+                >
+                <base-button type="danger" @click="deleteProfessorAction(id)"
+                  >Delete</base-button
+                >
               </div>
             </template>
           </base-table>

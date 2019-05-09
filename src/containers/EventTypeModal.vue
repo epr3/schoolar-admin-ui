@@ -5,8 +5,14 @@
   >
     <template #modal-body>
       <form>
-        <base-input label="Type" type="text" :v="$v.type" placeholder="Seminar" v-model="type"/>
-        <base-color-picker label="Color" :v="$v.color" v-model="color"/>
+        <base-input
+          label="Type"
+          type="text"
+          :v="$v.type"
+          placeholder="Seminar"
+          v-model="type"
+        />
+        <base-color-picker label="Color" :v="$v.color" v-model="color" />
       </form>
     </template>
     <template #modal-footer>

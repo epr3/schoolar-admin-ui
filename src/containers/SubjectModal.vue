@@ -5,7 +5,13 @@
   >
     <template #modal-body>
       <form>
-        <base-input label="Name" type="text" :v="$v.name" placeholder="Something" v-model="name"/>
+        <base-input
+          label="Name"
+          type="text"
+          :v="$v.name"
+          placeholder="Something"
+          v-model="name"
+        />
         <base-input
           label="Credits"
           type="number"

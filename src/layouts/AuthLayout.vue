@@ -23,7 +23,9 @@
             <router-link class="nav-link" to="/accounts">Accounts</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/faculties">Faculties</router-link>
+            <router-link class="nav-link" to="/faculties"
+              >Faculties</router-link
+            >
           </li>
           <li class="nav-item">
             <router-link class="nav-link" to="/groups">Groups</router-link>

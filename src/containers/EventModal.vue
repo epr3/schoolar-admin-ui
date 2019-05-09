@@ -7,7 +7,13 @@
       <form>
         <div class="form-row">
           <div class="col">
-            <base-input label="Room" type="text" :v="$v.room" placeholder="2000" v-model="room"/>
+            <base-input
+              label="Room"
+              type="text"
+              :v="$v.room"
+              placeholder="2000"
+              v-model="room"
+            />
           </div>
           <div class="col">
             <base-input
@@ -26,7 +32,10 @@
               label="Frequency"
               :v="$v.frequency"
               v-model="frequency"
-              :options="[{id: 1, label: 'Daily', value: 'DAILY'}, {id: 2, label: 'Weekly', value: 'WEEKLY'}]"
+              :options="[
+                { id: 1, label: 'Daily', value: 'DAILY' },
+                { id: 2, label: 'Weekly', value: 'WEEKLY' }
+              ]"
             />
           </div>
         </div>
@@ -38,7 +47,12 @@
               :v="$v.isNotifiable"
               v-model="isNotifiable"
             />
-            <base-checkbox id="full-day" label="Is Full Day" :v="$v.isFullDay" v-model="isFullDay"/>
+            <base-checkbox
+              id="full-day"
+              label="Is Full Day"
+              :v="$v.isFullDay"
+              v-model="isFullDay"
+            />
           </div>
         </div>
         <div class="form-row">
@@ -289,4 +303,3 @@ export default {
   }
 };
 </script>
-

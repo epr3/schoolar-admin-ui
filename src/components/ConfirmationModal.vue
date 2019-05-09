@@ -1,5 +1,8 @@
 <template>
-  <base-modal-content :modal-title="modalTitle" :modal-close-action="modalCloseAction">
+  <base-modal-content
+    :modal-title="modalTitle"
+    :modal-close-action="modalCloseAction"
+  >
     <template #modal-footer>
       <base-button type="success" @click="modalSuccessAction">Yes</base-button>
       <base-button type="danger" @click="modalCloseAction">No</base-button>

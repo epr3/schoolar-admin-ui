@@ -24,7 +24,8 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import LOGIN from '../graphql/Login.gql';
+import { onLogin } from '../plugins/vue-apollo.js';
 import { validationMixin } from 'vuelidate';
 import { required, email } from 'vuelidate/lib/validators';
 
@@ -44,10 +45,27 @@ export default {
     BaseButton
   },
   methods: {
-    ...mapActions('Auth', ['login']),
-    loginMethod() {
+    async loginMethod() {
       if (!this.$v.$invalid) {
-        this.login({ email: this.email, password: this.password });
+        try {
+          this.$apollo.mutate({
+            mutation: LOGIN,
+            variables: {
+              email: this.email,
+              password: this.password
+            },
+            update: (_, { data: { login } }) => {
+              onLogin(
+                this.$apollo.$client,
+                login.accessToken,
+                login.refreshToken
+              );
+              this.$router.replace('/');
+            }
+          });
+        } catch (e) {
+          console.error(e);
+        }
       }
     }
   },

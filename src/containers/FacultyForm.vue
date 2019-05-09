@@ -10,7 +10,9 @@
           placeholder="Faculty of Something"
           v-model="name"
         />
-        <base-button type="primary" @click="postFacultyMethod">Submit</base-button>
+        <base-button type="primary" @click="postFacultyMethod"
+          >Submit</base-button
+        >
       </form>
     </div>
   </div>

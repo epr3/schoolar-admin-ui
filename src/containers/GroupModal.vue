@@ -5,8 +5,20 @@
   >
     <template #modal-body>
       <form>
-        <base-input label="Number" type="text" :v="$v.number" placeholder="1111" v-model="number"/>
-        <base-input label="Year" type="text" :v="$v.year" placeholder="2M" v-model="year"/>
+        <base-input
+          label="Number"
+          type="text"
+          :v="$v.number"
+          placeholder="1111"
+          v-model="number"
+        />
+        <base-input
+          label="Year"
+          type="text"
+          :v="$v.year"
+          placeholder="2M"
+          v-model="year"
+        />
       </form>
     </template>
     <template #modal-footer>

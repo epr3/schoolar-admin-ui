@@ -1,7 +1,7 @@
 <template>
   <div class="form-group">
     <label v-if="label">{{ label }}</label>
-    <color-picker v-model="model" :value="value"/>
+    <color-picker v-model="model" :value="value" />
   </div>
 </template>
 
