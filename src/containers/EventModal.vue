@@ -7,13 +7,7 @@
       <form>
         <div class="form-row">
           <div class="col">
-            <base-input
-              label="Room"
-              type="text"
-              :v="$v.room"
-              placeholder="2000"
-              v-model="room"
-            />
+            <base-input label="Room" type="text" :v="$v.room" placeholder="2000" v-model="room"/>
           </div>
           <div class="col">
             <base-input
@@ -47,12 +41,7 @@
               :v="$v.isNotifiable"
               v-model="isNotifiable"
             />
-            <base-checkbox
-              id="full-day"
-              label="Is Full Day"
-              :v="$v.isFullDay"
-              v-model="isFullDay"
-            />
+            <base-checkbox id="full-day" label="Is Full Day" :v="$v.isFullDay" v-model="isFullDay"/>
           </div>
         </div>
         <div class="form-row">
@@ -130,10 +119,17 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
+import gql from 'graphql-tag';
+import { mapState, mapMutations } from 'vuex';
 import { validationMixin } from 'vuelidate';
 import { required } from 'vuelidate/lib/validators';
 import { DateTime } from 'luxon';
+
+import PROFESSORS_QUERY from '../graphql/Professor/Professors.gql';
+import SUBJECTS_QUERY from '../graphql/Subject/Subjects.gql';
+import EVENT_TYPES_QUERY from '../graphql/EventType/EventTypes.gql';
+import EVENTS_QUERY from '../graphql/Event/Events.gql';
+import POST_EVENT from '../graphql/Event/PostEvent.gql';
 
 import BaseInput from '@/components/BaseInput.vue';
 import BaseSelect from '@/components/BaseSelect.vue';
@@ -144,20 +140,48 @@ import BaseDateTimePicker from '@/components/BaseDateTimePicker.vue';
 import BaseModalContent from '@/components/BaseModalContent.vue';
 
 export default {
-  data: () => ({
-    interval: '',
-    frequency: null,
-    room: '',
-    isFullDay: false,
-    isNotifiable: false,
-    subjectId: null,
-    professorId: null,
-    eventTypeId: null,
-    startDate: new Date(),
-    endDate: new Date(),
-    startTime: new Date(),
-    endTime: new Date()
-  }),
+  data() {
+    return {
+      interval: '',
+      frequency: null,
+      room: '',
+      isFullDay: false,
+      isNotifiable: false,
+      subjectId: null,
+      professorId: null,
+      eventTypeId: null,
+      startDate: new Date(),
+      endDate: new Date(),
+      startTime: new Date(),
+      endTime: new Date(),
+      professors: [],
+      subjects: [],
+      eventTypes: [],
+      facultyId: this.$route.params.facultyId
+    };
+  },
+  async mounted() {
+    if (this.id) {
+      // const response = await this.$apollo.query({
+      //   query: EVENT_QUERY,
+      //   variables: { id: this.id }
+      // });
+    }
+  },
+  apollo: {
+    professors: PROFESSORS_QUERY,
+    subjects: {
+      query: gql`
+        ${SUBJECTS_QUERY}
+      `,
+      variables() {
+        return {
+          facultyId: this.facultyId
+        };
+      }
+    },
+    eventTypes: EVENT_TYPES_QUERY
+  },
   props: {
     id: {
       type: String,
@@ -166,92 +190,81 @@ export default {
   },
   computed: {
     ...mapState('Modal', ['modalOpen', 'modalComponent']),
-    ...mapGetters({
-      eventQuery: 'entities/events/all',
-      facultyQuery: 'entities/faculties/query',
-      subjectQuery: 'entities/subjects/all',
-      professorQuery: 'entities/professors/all',
-      eventTypeQuery: 'entities/event_types/all'
-    }),
     professorSelect() {
-      return this.professorQuery()
-        .map(item => item.$toJson())
-        .map(item => ({
-          id: item.id,
-          label: `${item.title} ${item.name} ${item.surname}`,
-          value: item.id
-        }));
+      return this.professors.map(item => ({
+        id: item.id,
+        label: `${item.title} ${item.name} ${item.surname}`,
+        value: item.id
+      }));
     },
 
     subjectSelect() {
-      return this.subjectQuery()
-        .map(item => item.$toJson())
-        .map(item => ({
-          id: item.id,
-          label: item.name,
-          value: item.id
-        }));
+      return this.subjects.map(item => ({
+        id: item.id,
+        label: item.name,
+        value: item.id
+      }));
     },
 
     eventTypeSelect() {
-      return this.eventTypeQuery()
-        .map(item => item.$toJson())
-        .map(item => ({
-          id: item.id,
-          label: item.type,
-          value: item.id
-        }));
+      return this.eventTypes.map(item => ({
+        id: item.id,
+        label: item.type,
+        value: item.id
+      }));
     }
   },
   methods: {
     ...mapMutations({
       modalClose: 'Modal/CLOSE_MODAL'
     }),
-    ...mapActions({
-      postEvent: 'Event/postEvent',
-      updateEvent: 'Event/updateEvent',
-      getFaculties: 'Faculty/getFaculties',
-      getSubjects: 'Subject/getSubjects',
-      getProfessors: 'Professor/getProfessors',
-      getEventTypes: 'EventType/getEventTypes'
-    }),
     modalCloseAction() {
       this.modalClose();
     },
     submitMethod() {
       if (!this.$v.$invalid) {
-        const object = {
-          interval: parseInt(this.interval, 10),
-          frequency: this.frequency,
-          room: this.room,
-          isFullDay: this.isFullDay,
-          isNotifiable: this.isNotifiable,
-          subjectId: this.subjectId,
-          professorId: this.professorId,
-          eventTypeId: this.eventTypeId,
-          startDate: DateTime.fromJSDate(this.startDate).toISODate(),
-          endDate: DateTime.fromJSDate(this.endDate).toISODate(),
-          startTime: DateTime.fromJSDate(this.startTime).toISOTime(),
-          endTime: DateTime.fromJSDate(this.endTime).toISOTime(),
-          groupId: this.$route.params.id
-        };
-
         if (this.id) {
-          this.updateEvent({ id: this.id, object });
+          // this.updateEvent({ id: this.id, object });
         } else {
-          this.postEvent({ ...object });
+          try {
+            this.$apollo.mutate({
+              mutation: POST_EVENT,
+              variables: {
+                event: {
+                  interval: parseInt(this.interval),
+                  frequency: this.frequency,
+                  room: this.room,
+                  isFullDay: this.isFullDay,
+                  isNotifiable: this.isNotifiable,
+                  subjectId: this.subjectId,
+                  professorId: this.professorId,
+                  eventTypeId: this.eventTypeId,
+                  startDate: DateTime.fromJSDate(this.startDate).toISODate(),
+                  endDate: DateTime.fromJSDate(this.endDate).toISODate(),
+                  startTime: DateTime.fromJSDate(this.startTime).toISOTime(),
+                  endTime: DateTime.fromJSDate(this.endTime).toISOTime(),
+                  groupId: this.$route.params.id
+                }
+              },
+              update: (store, { data: { postEvent } }) => {
+                const data = store.readQuery({
+                  query: EVENTS_QUERY,
+                  variables: { groupId: this.$route.params.id }
+                });
+                data.events.push(postEvent);
+                store.writeQuery({
+                  query: EVENTS_QUERY,
+                  data,
+                  variables: { groupId: this.$route.params.id }
+                });
+              }
+            });
+          } catch (e) {
+            console.error(e);
+          }
         }
         this.modalClose();
       }
-    }
-  },
-  async mounted() {
-    await this.getFaculties();
-    this.getSubjects(this.facultyQuery().first().id);
-    this.getEventTypes();
-    this.getProfessors();
-    if (this.id) {
-      const event = this.eventQuery(this.id);
     }
   },
   mixins: [validationMixin],

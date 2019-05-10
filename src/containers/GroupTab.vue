@@ -10,7 +10,10 @@
       <div class="btn-group">
         <base-button type="info" @click="editGroupAction(id)">Edit</base-button>
         <base-button type="danger" @click="deleteGroupAction(id)">Delete</base-button>
-        <base-button :routerPath="`/groups/${id}/events`" type="primary">Events</base-button>
+        <base-button
+          :routerPath="`/faculties/${$route.params.id}/groups/${id}/events`"
+          type="primary"
+        >Events</base-button>
         <base-button type="secondary">Students</base-button>
       </div>
     </template>

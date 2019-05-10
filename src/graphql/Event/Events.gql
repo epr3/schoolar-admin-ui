@@ -1,0 +1,33 @@
+query Events($groupId: ID!) {
+  events: eventsByGroupId(groupId: $groupId) {
+    id
+    room
+    interval
+    frequency
+    startDate
+    endDate
+    startTime
+    endTime
+    isFullDay
+    isNotifiable
+    subjectId
+    groupId
+    professorId
+    eventTypeId
+    group {
+      number
+    }
+    subject {
+      name
+    }
+    professor {
+      name
+      surname
+      title
+    }
+    eventType {
+      type
+      color
+    }
+  }
+}

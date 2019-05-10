@@ -19,7 +19,7 @@ const router = new Router({
         import(/* webpackChunkName: "events" */ './views/EventTypes.vue')
     },
     {
-      path: '/groups/:id/events',
+      path: '/faculties/:facultyId/groups/:id/events',
       name: 'groupEvents',
       meta: {
         auth: true

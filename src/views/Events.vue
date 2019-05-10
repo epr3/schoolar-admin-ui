@@ -3,16 +3,20 @@
     <div class="container-fluid">
       <div class="card">
         <div class="card-body">
-          <base-button type="primary" @click="openModalAction"
-            >Add Event</base-button
-          >
+          <base-button type="primary" @click="openModalAction">
+            Add Event
+          </base-button>
         </div>
         <div class="card-body">
           <div class="row">
             <div class="col" v-for="day in days" :key="day">{{ day }}</div>
           </div>
-          <div class="row" v-if="events">
-            <div class="col" v-for="(item, index) in events" :key="index">
+          <div class="row" v-if="eventsComputed">
+            <div
+              class="col"
+              v-for="(item, index) in eventsComputed"
+              :key="index"
+            >
               <event-card
                 v-for="event in item"
                 :key="event.id"
@@ -35,7 +39,10 @@
 </template>
 
 <script>
-import { mapActions, mapMutations, mapGetters } from 'vuex';
+import gql from 'graphql-tag';
+import { mapMutations } from 'vuex';
+
+import EVENTS_QUERY from '../graphql/Event/Events.gql';
 
 import { DateTime } from 'luxon';
 
@@ -47,19 +54,32 @@ import GuestLayout from '@/layouts/GuestLayout.vue';
 
 export default {
   name: 'events',
-  data: () => ({
-    days: [
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-      'Sunday'
-    ]
-  }),
-  mounted() {
-    this.getEvents(this.$route.params.id);
+  data() {
+    return {
+      days: [
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+        'Sunday'
+      ],
+      events: [],
+      routeParam: this.$route.params.id
+    };
+  },
+  apollo: {
+    events: {
+      query: gql`
+        ${EVENTS_QUERY}
+      `,
+      variables() {
+        return {
+          groupId: this.routeParam
+        };
+      }
+    }
   },
   components: {
     GuestLayout,
@@ -67,21 +87,17 @@ export default {
     EventCard
   },
   computed: {
-    ...mapGetters({
-      eventQuery: 'entities/events/query'
-    }),
-    events() {
-      const events = this.eventQuery()
-        .withAll()
-        .all()
-        .map(item => item.$toJson());
+    eventsComputed() {
+      if (this.events.length === 0) {
+        return {};
+      }
       return this.days.reduce((acc, val) => {
-        acc[val] = events
+        acc[val] = this.events
           .filter(
             item => DateTime.fromISO(item.startDate).toFormat('cccc') === val
           )
           .map(item => ({
-            type: item.event_type.type,
+            type: item.eventType.type,
             subject: item.subject.name,
             professor: `${item.professor.title} ${item.professor.name} ${
               item.professor.surname
@@ -91,7 +107,7 @@ export default {
             endDate: DateTime.fromISO(item.endDate).toFormat('dd-LL-yyyy'),
             startTime: DateTime.fromISO(item.startTime).toFormat('HH:mm'),
             endTime: DateTime.fromISO(item.endTime).toFormat('HH:mm'),
-            color: item.event_type.color
+            color: item.eventType.color
           }));
         return acc;
       }, {});
@@ -100,10 +116,6 @@ export default {
   methods: {
     ...mapMutations({
       openModal: 'Modal/OPEN_MODAL'
-    }),
-    ...mapActions({
-      getEvents: 'Event/getEvents',
-      getGroupById: 'Group/getGroupById'
     }),
     openModalAction(props) {
       this.openModal({
