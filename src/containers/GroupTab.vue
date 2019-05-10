@@ -13,8 +13,15 @@
         <base-button
           :routerPath="`/faculties/${$route.params.id}/groups/${id}/events`"
           type="primary"
-        >Events</base-button>
-        <base-button type="secondary">Students</base-button>
+        >
+          Events
+        </base-button>
+        <base-button
+          :routerPath="`/faculties/${$route.params.id}/groups/${id}/students`"
+          type="secondary"
+        >
+          Students
+        </base-button>
       </div>
     </template>
   </base-table>

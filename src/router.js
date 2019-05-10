@@ -28,6 +28,15 @@ const router = new Router({
         import(/* webpackChunkName: "events" */ './views/Events.vue')
     },
     {
+      path: '/faculties/:facultyId/groups/:id/students',
+      name: 'groupStudents',
+      meta: {
+        auth: true
+      },
+      component: () =>
+        import(/* webpackChunkName: "events" */ './views/StudentTab.vue')
+    },
+    {
       path: '/faculties/:id',
       name: 'facultyTabs',
       meta: {

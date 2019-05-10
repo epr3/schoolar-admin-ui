@@ -3,24 +3,19 @@
     <div class="container-fluid">
       <div class="card">
         <div class="card-body">
-          <base-button type="primary" @click="openModalAction">
-            Add Event
-          </base-button>
+          <base-button type="primary" @click="openModalAction">Add Event</base-button>
         </div>
         <div class="card-body">
           <div class="row">
             <div class="col" v-for="day in days" :key="day">{{ day }}</div>
           </div>
           <div class="row" v-if="eventsComputed">
-            <div
-              class="col"
-              v-for="(item, index) in eventsComputed"
-              :key="index"
-            >
+            <div class="col" v-for="(item, index) in eventsComputed" :key="index">
               <event-card
                 v-for="event in item"
                 :key="event.id"
                 :type="event.type"
+                :room="event.room"
                 :subject="event.subject"
                 :professor="event.professor"
                 :group="event.group"
@@ -29,6 +24,7 @@
                 :start-time="event.startTime"
                 :end-time="event.endTime"
                 :color="event.color"
+                @click="editEventAction(event.id)"
               />
             </div>
           </div>
@@ -97,6 +93,8 @@ export default {
             item => DateTime.fromISO(item.startDate).toFormat('cccc') === val
           )
           .map(item => ({
+            id: item.id,
+            room: item.room,
             type: item.eventType.type,
             subject: item.subject.name,
             professor: `${item.professor.title} ${item.professor.name} ${
@@ -122,6 +120,9 @@ export default {
         component: () => import('@/containers/EventModal.vue'),
         props
       });
+    },
+    editEventAction(id) {
+      this.openModalAction({ id });
     }
   }
 };

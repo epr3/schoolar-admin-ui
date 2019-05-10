@@ -1,11 +1,12 @@
 <template>
-  <div class="card">
+  <div class="card" @click="$emit('click')">
     <div class="card-header" :style="{ backgroundColor: color }">
       {{ type }}
     </div>
     <div class="card-body">
       <h5 class="card-title">{{ subject }}</h5>
       <p class="card-text">{{ professor }}</p>
+      <p class="card-text">Room {{ room }}</p>
       <p class="card-text">Group {{ group }}</p>
       <p class="card-text">
         <small>From {{ startDate }} to {{ endDate }}</small>
@@ -30,6 +31,10 @@ export default {
       required: true
     },
     professor: {
+      type: String,
+      required: true
+    },
+    room: {
       type: String,
       required: true
     },

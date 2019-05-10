@@ -2,20 +2,14 @@
   <base-table :items="subjects">
     <template #filter>
       <div class="col-sm-4">
-        <base-button size="lg" type="primary" @click="openModalAction"
-          >Add Subject</base-button
-        >
+        <base-button size="lg" type="primary" @click="openModalAction">Add Subject</base-button>
       </div>
       <div class="col-sm-8">Sort + per page</div>
     </template>
     <template #actions="{ item: { id }}">
       <div class="btn-group">
-        <base-button type="info" @click="editSubjectAction(id)"
-          >Edit</base-button
-        >
-        <base-button type="danger" @click="deleteSubjectAction(id)"
-          >Delete</base-button
-        >
+        <base-button type="info" @click="editSubjectAction(id)">Edit</base-button>
+        <base-button type="danger" @click="deleteSubjectAction(id)">Delete</base-button>
       </div>
     </template>
   </base-table>
@@ -33,10 +27,12 @@ import BaseButton from '@/components/BaseButton.vue';
 
 export default {
   name: 'subject-tab',
-  data() {return {
-    subjects: [],
-    routeParam: this.$route.params.id
-  }},
+  data() {
+    return {
+      subjects: [],
+      routeParam: this.$route.params.id
+    };
+  },
   apollo: {
     subjects: {
       query: gql`

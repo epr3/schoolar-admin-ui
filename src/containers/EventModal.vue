@@ -128,8 +128,10 @@ import { DateTime } from 'luxon';
 import PROFESSORS_QUERY from '../graphql/Professor/Professors.gql';
 import SUBJECTS_QUERY from '../graphql/Subject/Subjects.gql';
 import EVENT_TYPES_QUERY from '../graphql/EventType/EventTypes.gql';
+import EVENT_QUERY from '../graphql/Event/Event.gql';
 import EVENTS_QUERY from '../graphql/Event/Events.gql';
 import POST_EVENT from '../graphql/Event/PostEvent.gql';
+import UPDATE_EVENT from '../graphql/Event/UpdateEvent.gql';
 
 import BaseInput from '@/components/BaseInput.vue';
 import BaseSelect from '@/components/BaseSelect.vue';
@@ -162,10 +164,22 @@ export default {
   },
   async mounted() {
     if (this.id) {
-      // const response = await this.$apollo.query({
-      //   query: EVENT_QUERY,
-      //   variables: { id: this.id }
-      // });
+      const response = await this.$apollo.query({
+        query: EVENT_QUERY,
+        variables: { id: this.id }
+      });
+      this.interval = response.data.event.interval;
+      this.frequency = response.data.event.frequency;
+      this.room = response.data.event.room;
+      this.isFullDay = !!response.data.event.isFullDay;
+      this.isNotifiable = !!response.data.event.isNotifiable;
+      this.subjectId = response.data.event.subjectId;
+      this.professorId = response.data.event.professorId;
+      this.eventTypeId = response.data.event.eventTypeId;
+      this.startDate = DateTime.fromISO(response.data.event.startDate).toISO();
+      this.endDate = DateTime.fromISO(response.data.event.endDate).toISO();
+      this.startTime = DateTime.fromISO(response.data.event.startTime).toISO();
+      this.endTime = DateTime.fromISO(response.data.event.endTime).toISO();
     }
   },
   apollo: {
@@ -224,7 +238,54 @@ export default {
     submitMethod() {
       if (!this.$v.$invalid) {
         if (this.id) {
-          // this.updateEvent({ id: this.id, object });
+          try {
+            this.$apollo.mutate({
+              mutation: UPDATE_EVENT,
+              variables: {
+                event: {
+                  id: this.id,
+                  interval: parseInt(this.interval),
+                  frequency: this.frequency,
+                  room: this.room,
+                  isFullDay: this.isFullDay,
+                  isNotifiable: this.isNotifiable,
+                  subjectId: this.subjectId,
+                  professorId: this.professorId,
+                  eventTypeId: this.eventTypeId,
+                  startDate: DateTime.fromISO(this.startDate).toISODate(),
+                  endDate: DateTime.fromISO(this.endDate).toISODate(),
+                  startTime: DateTime.fromISO(this.startTime).toISOTime(),
+                  endTime: DateTime.fromISO(this.endTime).toISOTime(),
+                  groupId: this.$route.params.id
+                }
+              },
+              update: (store, { data: { updateEvent } }) => {
+                const data = store.readQuery({
+                  query: EVENTS_QUERY,
+                  variables: { groupId: this.$route.params.id }
+                });
+                const itemIndex = data.events.findIndex(
+                  item => item.id === updateEvent.id
+                );
+                store.writeQuery({
+                  query: EVENTS_QUERY,
+                  data: {
+                    ...data,
+                    events: data.events.map((item, index) => {
+                      if (index !== itemIndex) {
+                        return item;
+                      }
+
+                      return { ...item, ...updateEvent };
+                    })
+                  },
+                  variables: { groupId: this.$route.params.id }
+                });
+              }
+            });
+          } catch (e) {
+            console.error(e);
+          }
         } else {
           try {
             this.$apollo.mutate({

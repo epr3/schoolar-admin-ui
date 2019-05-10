@@ -1,6 +1,6 @@
 <template>
   <base-modal-content
-    :modal-title="`${id ? 'Edit professor' : 'Add new professor'}`"
+    :modal-title="`${id ? 'Edit student' : 'Add new student'}`"
     :modal-close-action="modalClose"
   >
     <template #modal-body>
@@ -17,10 +17,9 @@
           label="Email"
           type="text"
           :v="$v.email"
-          placeholder="example@ie.ase.ro"
+          placeholder="example@stud.ase.ro"
           v-model="email"
         />
-        <base-input label="Title" type="text" :v="$v.title" placeholder="Ph.D." v-model="title"/>
         <base-input
           label="Telephone"
           type="text"
@@ -39,10 +38,10 @@
 <script>
 import { mapState, mapMutations } from 'vuex';
 
-import POST_PROFESSOR from '../graphql/Professor/PostProfessor.gql';
-import PROFESSORS_QUERY from '../graphql/Professor/Professors.gql';
-import PROFESSOR_QUERY from '../graphql/Professor/Professor.gql';
-import UPDATE_PROFESSOR from '../graphql/Professor/UpdateProfessor.gql';
+import POST_STUDENT from '../graphql/Student/PostStudent.gql';
+import STUDENTS_QUERY from '../graphql/Student/Students.gql';
+import STUDENT_QUERY from '../graphql/Student/Student.gql';
+import UPDATE_STUDENT from '../graphql/Student/UpdateStudent.gql';
 
 import { validationMixin } from 'vuelidate';
 import { required } from 'vuelidate/lib/validators';
@@ -52,11 +51,11 @@ import BaseButton from '@/components/BaseButton.vue';
 
 import BaseModalContent from '@/components/BaseModalContent.vue';
 export default {
-  name: 'professor-modal',
+  name: 'student-modal',
   data: () => ({
     name: '',
     surname: '',
-    title: '',
+    groupId: '',
     userId: '',
     telephone: '',
     email: ''
@@ -70,15 +69,15 @@ export default {
   async mounted() {
     if (this.id) {
       const response = await this.$apollo.query({
-        query: PROFESSOR_QUERY,
+        query: STUDENT_QUERY,
         variables: { id: this.id }
       });
-      this.name = response.data.professor.name;
-      this.surname = response.data.professor.surname;
-      this.email = response.data.professor.email;
-      this.title = response.data.professor.title;
-      this.telephone = response.data.professor.telephone;
-      this.userId = response.data.professor.userId;
+      this.name = response.data.student.name;
+      this.surname = response.data.student.surname;
+      this.email = response.data.student.email;
+      this.groupId = response.data.student.groupId;
+      this.telephone = response.data.student.telephone;
+      this.userId = response.data.student.userId;
     }
   },
   computed: {
@@ -96,33 +95,33 @@ export default {
         if (this.id) {
           try {
             this.$apollo.mutate({
-              mutation: UPDATE_PROFESSOR,
+              mutation: UPDATE_STUDENT,
               variables: {
-                professor: {
+                student: {
                   id: this.id,
                   email: this.email,
                   name: this.name,
                   surname: this.surname,
-                  title: this.title,
+                  groupId: this.groupId,
                   telephone: this.telephone,
                   userId: this.userId
                 }
               },
-              update: (store, { data: { updateProfessor } }) => {
-                const data = store.readQuery({ query: PROFESSORS_QUERY });
-                const itemIndex = data.professors.findIndex(
-                  item => item.id === updateProfessor.id
+              update: (store, { data: { updateStudent } }) => {
+                const data = store.readQuery({ query: STUDENTS_QUERY });
+                const itemIndex = data.students.findIndex(
+                  item => item.id === updateStudent.id
                 );
                 store.writeQuery({
-                  query: PROFESSORS_QUERY,
+                  query: STUDENTS_QUERY,
                   data: {
                     ...data,
-                    professors: data.professors.map((item, index) => {
+                    students: data.students.map((item, index) => {
                       if (index !== itemIndex) {
                         return item;
                       }
 
-                      return { ...item, ...updateProfessor };
+                      return { ...item, ...updateStudent };
                     })
                   }
                 });
@@ -134,20 +133,27 @@ export default {
         } else {
           try {
             this.$apollo.mutate({
-              mutation: POST_PROFESSOR,
+              mutation: POST_STUDENT,
               variables: {
-                professor: {
+                student: {
                   email: this.email,
                   name: this.name,
                   surname: this.surname,
-                  title: this.title,
+                  groupId: this.$route.params.id,
                   telephone: this.telephone
                 }
               },
-              update: (store, { data: { postProfessor } }) => {
-                const data = store.readQuery({ query: PROFESSORS_QUERY });
-                data.professors.push(postProfessor);
-                store.writeQuery({ query: PROFESSORS_QUERY, data });
+              update: (store, { data: { postStudent } }) => {
+                const data = store.readQuery({
+                  query: STUDENTS_QUERY,
+                  variables: { groupId: this.$route.params.id }
+                });
+                data.students.push(postStudent);
+                store.writeQuery({
+                  query: STUDENTS_QUERY,
+                  data,
+                  variables: { groupId: this.$route.params.id }
+                });
               }
             });
           } catch (e) {
@@ -172,9 +178,6 @@ export default {
       required
     },
     email: {
-      required
-    },
-    title: {
       required
     },
     telephone: {
