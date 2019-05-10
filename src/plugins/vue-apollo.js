@@ -80,7 +80,7 @@ export async function onLogin(apolloClient, accessToken, refreshToken) {
     localStorage.setItem(process.env.VUE_APP_REFRESH_TOKEN, refreshToken);
   }
   try {
-    await apolloClient.resetStore();
+    await apolloClient.cache.reset();
   } catch (e) {
     // eslint-disable-next-line no-console
     console.log('%cError on cache reset (login)', 'color: orange;', e.message);
@@ -94,7 +94,7 @@ export async function onLogout(apolloClient) {
     localStorage.removeItem(process.env.VUE_APP_REFRESH_TOKEN);
   }
   try {
-    await apolloClient.resetStore();
+    await apolloClient.cache.reset();
   } catch (e) {
     // eslint-disable-next-line no-console
     console.log('%cError on cache reset (logout)', 'color: orange;', e.message);

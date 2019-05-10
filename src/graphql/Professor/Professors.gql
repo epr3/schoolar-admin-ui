@@ -1,9 +1,9 @@
 query Professors {
   professors {
     id
-    email
     name
     surname
+    email
     title
     telephone
     userId

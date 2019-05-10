@@ -1,5 +1,5 @@
 query Events($groupId: ID!) {
-  events: eventsByGroupId(groupId: $groupId) {
+  events: eventsByQuery(groupId: $groupId) {
     id
     room
     interval

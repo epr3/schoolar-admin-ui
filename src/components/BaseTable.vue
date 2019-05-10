@@ -13,7 +13,7 @@
         </thead>
         <tbody>
           <tr v-for="(item, index) in computedItems" :key="index">
-            <td v-for="(cell, index) in Object.values(item)" :key="index">{{ cell }}</td>
+            <td v-for="(cell, index) in Object.keys(item)" :key="index">{{ item[cell] }}</td>
             <td>
               <slot name="actions" :item="item"/>
             </td>
@@ -51,9 +51,6 @@ export default {
   computed: {
     computedItems() {
       return this.items.map(item => {
-        if (item.hasOwnProperty('__typename')) {
-          delete item.__typename;
-        }
         return item;
       });
     }

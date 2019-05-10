@@ -56,7 +56,7 @@ export default {
             },
             update: (_, { data: { login } }) => {
               onLogin(
-                this.$apollo.$client,
+                this.$apolloProvider.defaultClient,
                 login.accessToken,
                 login.refreshToken
               );

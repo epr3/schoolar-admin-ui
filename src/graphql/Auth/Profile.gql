@@ -1,7 +1,7 @@
 query Profile {
   profile {
     user {
-      id
+      userId
       email
       role
     }
