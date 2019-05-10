@@ -53,7 +53,8 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import FACULTIES_QUERY from '../graphql/Faculty/Faculties.gql';
+import PROFILE_QUERY from '../graphql/Auth/Profile.gql';
 
 import GuestLayout from '@/layouts/GuestLayout.vue';
 
@@ -65,28 +66,20 @@ export default {
   name: 'home',
   data: () => ({
     showFacultyForm: false,
-    showFacultyDropdown: false
+    showFacultyDropdown: false,
+    faculties: [],
+    profile: null
   }),
+  apollo: {
+    faculties: FACULTIES_QUERY,
+    profile: PROFILE_QUERY
+  },
   components: {
     GuestLayout,
     BaseButton,
     FacultyForm
   },
-  mounted() {
-    this.getProfile();
-    this.getFaculties();
-  },
-  computed: {
-    ...mapGetters({
-      facultyQuery: 'entities/faculties/query'
-    }),
-    faculties() {
-      return this.facultyQuery().all();
-    }
-  },
   methods: {
-    ...mapActions('User', ['getProfile']),
-    ...mapActions('Faculty', ['getFaculties']),
     toggleShowFacultyForm() {
       this.showFacultyForm = !this.showFacultyForm;
     },

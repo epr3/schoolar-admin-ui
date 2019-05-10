@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import LOGIN from '../graphql/Login.gql';
+import LOGIN from '../graphql/Auth/Login.gql';
 import { onLogin } from '../plugins/vue-apollo.js';
 import { validationMixin } from 'vuelidate';
 import { required, email } from 'vuelidate/lib/validators';

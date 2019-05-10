@@ -10,16 +10,16 @@
           placeholder="Faculty of Something"
           v-model="name"
         />
-        <base-button type="primary" @click="postFacultyMethod"
-          >Submit</base-button
-        >
+        <base-button type="primary" @click="postFacultyMethod">Submit</base-button>
       </form>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import POST_FACULTY from '../graphql/Faculty/PostFaculty.gql';
+import FACULTY_QUERY from '../graphql/Faculty/Faculties.gql';
+
 import { validationMixin } from 'vuelidate';
 import { required } from 'vuelidate/lib/validators';
 
@@ -42,11 +42,26 @@ export default {
     }
   },
   methods: {
-    ...mapActions('Faculty', ['postFaculty']),
     postFacultyMethod() {
       this.$emit('reset:form');
       if (!this.$v.$invalid) {
-        this.postFaculty({ name: this.name });
+        try {
+          this.$apollo.mutate({
+            mutation: POST_FACULTY,
+            variables: {
+              faculty: {
+                name: this.name
+              }
+            },
+            update: (store, { data: { postFaculty } }) => {
+              const data = store.readQuery({ query: FACULTY_QUERY });
+              data.faculties.push(postFaculty);
+              store.writeQuery({ query: FACULTY_QUERY, data });
+            }
+          });
+        } catch (e) {
+          console.error(e);
+        }
         this.name = '';
       }
     }

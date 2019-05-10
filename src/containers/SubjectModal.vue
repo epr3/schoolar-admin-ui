@@ -5,13 +5,7 @@
   >
     <template #modal-body>
       <form>
-        <base-input
-          label="Name"
-          type="text"
-          :v="$v.name"
-          placeholder="Something"
-          v-model="name"
-        />
+        <base-input label="Name" type="text" :v="$v.name" placeholder="Something" v-model="name"/>
         <base-input
           label="Credits"
           type="number"
@@ -28,7 +22,13 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
+
+import SUBJECT_QUERY from '../graphql/Subject/Subject.gql';
+import SUBJECTS_QUERY from '../graphql/Subject/Subjects.gql';
+import POST_SUBJECT from '../graphql/Subject/PostSubject.gql';
+import UPDATE_SUBJECT from '../graphql/Subject/UpdateSubject.gql';
+
 import { validationMixin } from 'vuelidate';
 import { required } from 'vuelidate/lib/validators';
 
@@ -41,7 +41,8 @@ export default {
   name: 'subject-modal',
   data: () => ({
     name: '',
-    credits: 0
+    credits: 0,
+    facultyId: ''
   }),
   props: {
     id: {
@@ -49,38 +50,95 @@ export default {
       default: ''
     }
   },
-  mounted() {
+  async mounted() {
     if (this.id) {
-      const subject = this.subjectQuery(this.id);
-      this.name = subject.name;
-      this.credits = subject.credits;
+      const response = await this.$apollo.query({
+        query: SUBJECT_QUERY,
+        variables: { id: this.id }
+      });
+      this.name = response.data.subjectById.name;
+      this.credits = response.data.subjectById.credits;
+      this.facultyId = response.data.subjectById.facultyId;
     }
   },
   computed: {
-    ...mapState('Modal', ['modalOpen', 'modalComponent']),
-    ...mapGetters({
-      subjectQuery: 'entities/subjects/find'
-    })
+    ...mapState('Modal', ['modalOpen', 'modalComponent'])
   },
   methods: {
     ...mapMutations({
       modalClose: 'Modal/CLOSE_MODAL'
     }),
-    ...mapActions('Subject', ['postSubject', 'updateSubject']),
     modalCloseAction() {
       this.modalClose();
     },
     submitMethod() {
       if (!this.$v.$invalid) {
-        const object = {
-          name: this.name,
-          credits: this.credits,
-          facultyId: this.$route.params.id
-        };
         if (this.id) {
-          this.updateSubject({ id: this.id, object });
+          try {
+            this.$apollo.mutate({
+              mutation: UPDATE_SUBJECT,
+              variables: {
+                subject: {
+                  id: this.id,
+                  name: this.name,
+                  credits: parseInt(this.credits),
+                  facultyId: this.facultyId
+                }
+              },
+              update: (store, { data: { updateSubject } }) => {
+                const data = store.readQuery({
+                  query: SUBJECTS_QUERY,
+                  variables: { facultyId: this.$route.params.id }
+                });
+                const itemIndex = data.subjects.findIndex(
+                  item => item.id === updateSubject.id
+                );
+                store.writeQuery({
+                  query: SUBJECTS_QUERY,
+                  variables: { facultyId: this.$route.params.id },
+                  data: {
+                    ...data,
+                    subjects: data.subjects.map((item, index) => {
+                      if (index !== itemIndex) {
+                        return item;
+                      }
+
+                      return { ...item, ...updateSubject };
+                    })
+                  }
+                });
+              }
+            });
+          } catch (e) {
+            console.error(e);
+          }
         } else {
-          this.postSubject({ ...object });
+          try {
+            this.$apollo.mutate({
+              mutation: POST_SUBJECT,
+              variables: {
+                subject: {
+                  name: this.name,
+                  credits: parseInt(this.credits),
+                  facultyId: this.$route.params.id
+                }
+              },
+              update: (store, { data: { postSubject } }) => {
+                const data = store.readQuery({
+                  query: SUBJECTS_QUERY,
+                  variables: { facultyId: this.$route.params.id }
+                });
+                data.subjects.push(postSubject);
+                store.writeQuery({
+                  query: SUBJECTS_QUERY,
+                  data,
+                  variables: { facultyId: this.$route.params.id }
+                });
+              }
+            });
+          } catch (e) {
+            console.error(e);
+          }
         }
         this.modalClose();
       }

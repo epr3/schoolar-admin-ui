@@ -22,38 +22,42 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import gql from 'graphql-tag';
+import { mapMutations } from 'vuex';
+
+import SUBJECTS_QUERY from '../graphql/Subject/Subjects.gql';
+import DELETE_SUBJECT from '../graphql/Subject/DeleteSubject.gql';
 
 import BaseTable from '@/components/BaseTable.vue';
 import BaseButton from '@/components/BaseButton.vue';
 
 export default {
   name: 'subject-tab',
-  mounted() {
-    this.getSubjects(this.$route.params.id);
+  data() {return {
+    subjects: [],
+    routeParam: this.$route.params.id
+  }},
+  apollo: {
+    subjects: {
+      query: gql`
+        ${SUBJECTS_QUERY}
+      `,
+      variables() {
+        return {
+          facultyId: this.routeParam
+        };
+      }
+    }
   },
   components: {
     BaseTable,
     BaseButton
-  },
-  computed: {
-    ...mapGetters({
-      subjectQuery: 'entities/subjects/all'
-    }),
-    subjects() {
-      return this.subjectQuery().map(item => {
-        const json = item.$toJson();
-        delete json.events;
-        return json;
-      });
-    }
   },
   methods: {
     ...mapMutations({
       openModal: 'Modal/OPEN_MODAL',
       modalClose: 'Modal/CLOSE_MODAL'
     }),
-    ...mapActions('Subject', ['getSubjects', 'deleteSubject']),
     openModalAction(props) {
       this.openModal({
         component: () => import('@/containers/SubjectModal.vue'),
@@ -75,8 +79,29 @@ export default {
         modalTitle: 'Delete subject',
         modalCloseAction: this.modalClose,
         modalSuccessAction: async () => {
-          await this.deleteSubject(id);
-          this.modalClose();
+          try {
+            this.$apollo.mutate({
+              mutation: DELETE_SUBJECT,
+              variables: {
+                id
+              },
+              update: store => {
+                const data = store.readQuery({
+                  query: SUBJECTS_QUERY,
+                  variables: { facultyId: this.$route.params.id }
+                });
+                const response = data.subjects.filter(item => item.id !== id);
+                store.writeQuery({
+                  query: SUBJECTS_QUERY,
+                  variables: { facultyId: this.$route.params.id },
+                  data: { ...data, subjects: [...response] }
+                });
+              }
+            });
+            this.modalClose();
+          } catch (e) {
+            console.error(e);
+          }
         }
       });
     }

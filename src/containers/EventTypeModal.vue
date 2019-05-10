@@ -5,14 +5,8 @@
   >
     <template #modal-body>
       <form>
-        <base-input
-          label="Type"
-          type="text"
-          :v="$v.type"
-          placeholder="Seminar"
-          v-model="type"
-        />
-        <base-color-picker label="Color" :v="$v.color" v-model="color" />
+        <base-input label="Type" type="text" :v="$v.type" placeholder="Seminar" v-model="type"/>
+        <base-color-picker label="Color" :v="$v.color" v-model="color"/>
       </form>
     </template>
     <template #modal-footer>
@@ -22,7 +16,13 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
+
+import POST_EVENT_TYPE from '../graphql/EventType/PostEventType.gql';
+import EVENT_TYPES_QUERY from '../graphql/EventType/EventTypes.gql';
+import EVENT_TYPE_QUERY from '../graphql/EventType/EventType.gql';
+import UPDATE_EVENT_TYPE from '../graphql/EventType/UpdateEventType.gql';
+
 import { validationMixin } from 'vuelidate';
 import { required } from 'vuelidate/lib/validators';
 
@@ -36,13 +36,17 @@ export default {
   name: 'event-type-modal',
   data: () => ({
     type: '',
-    color: ''
+    color: '',
+    eventType: null
   }),
-  mounted() {
+  async mounted() {
     if (this.id) {
-      const eventType = this.eventTypeQuery(this.id);
-      this.type = eventType.type;
-      this.color = eventType.color;
+      const response = await this.$apollo.query({
+        query: EVENT_TYPE_QUERY,
+        variables: { id: this.id }
+      });
+      this.type = response.data.eventType.type;
+      this.color = response.data.eventType.color;
     }
   },
   props: {
@@ -67,32 +71,70 @@ export default {
     }
   },
   computed: {
-    ...mapState('Modal', ['modalOpen', 'modalComponent']),
-    ...mapGetters({
-      eventTypeQuery: 'entities/event_types/find'
-    })
+    ...mapState('Modal', ['modalOpen', 'modalComponent'])
   },
   methods: {
     ...mapMutations({
       modalClose: 'Modal/CLOSE_MODAL'
-    }),
-    ...mapActions({
-      postEventType: 'EventType/postEventType',
-      updateEventType: 'EventType/updateEventType'
     }),
     modalCloseAction() {
       this.modalClose();
     },
     submitMethod() {
       if (!this.$v.$invalid) {
-        const object = {
-          type: this.type,
-          color: this.color
-        };
         if (this.id) {
-          this.updateEventType({ id: this.id, object });
+          try {
+            this.$apollo.mutate({
+              mutation: UPDATE_EVENT_TYPE,
+              variables: {
+                eventType: {
+                  id: this.id,
+                  type: this.type,
+                  color: this.color
+                }
+              },
+              update: (store, { data: { updateEventType } }) => {
+                const data = store.readQuery({ query: EVENT_TYPES_QUERY });
+                const itemIndex = data.eventTypes.findIndex(
+                  item => item.id === updateEventType.id
+                );
+                store.writeQuery({
+                  query: EVENT_TYPES_QUERY,
+                  data: {
+                    ...data,
+                    eventTypes: data.eventTypes.map((item, index) => {
+                      if (index !== itemIndex) {
+                        return item;
+                      }
+
+                      return { ...item, ...updateEventType };
+                    })
+                  }
+                });
+              }
+            });
+          } catch (e) {
+            console.error(e);
+          }
         } else {
-          this.postEventType({ ...object });
+          try {
+            this.$apollo.mutate({
+              mutation: POST_EVENT_TYPE,
+              variables: {
+                eventType: {
+                  type: this.type,
+                  color: this.color
+                }
+              },
+              update: (store, { data: { postEventType } }) => {
+                const data = store.readQuery({ query: EVENT_TYPES_QUERY });
+                data.eventTypes.push(postEventType);
+                store.writeQuery({ query: EVENT_TYPES_QUERY, data });
+              }
+            });
+          } catch (e) {
+            console.error(e);
+          }
         }
         this.modalClose();
       }

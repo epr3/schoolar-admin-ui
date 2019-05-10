@@ -2,21 +2,15 @@
   <base-table :items="groups">
     <template #filter>
       <div class="col-sm-4">
-        <base-button size="lg" type="primary" @click="openModalAction"
-          >Add Group</base-button
-        >
+        <base-button size="lg" type="primary" @click="openModalAction">Add Group</base-button>
       </div>
       <div class="col-sm-8">Sort + per page</div>
     </template>
     <template #actions="{ item: { id }}">
       <div class="btn-group">
         <base-button type="info" @click="editGroupAction(id)">Edit</base-button>
-        <base-button type="danger" @click="deleteGroupAction(id)"
-          >Delete</base-button
-        >
-        <base-button :routerPath="`/groups/${id}/events`" type="primary"
-          >Events</base-button
-        >
+        <base-button type="danger" @click="deleteGroupAction(id)">Delete</base-button>
+        <base-button :routerPath="`/groups/${id}/events`" type="primary">Events</base-button>
         <base-button type="secondary">Students</base-button>
       </div>
     </template>
@@ -24,45 +18,45 @@
 </template>
 
 <script>
-import { mapActions, mapMutations, mapGetters } from 'vuex';
+import gql from 'graphql-tag';
+
+import { mapMutations } from 'vuex';
+
+import GROUPS_QUERY from '../graphql/Group/Groups.gql';
+import DELETE_GROUP from '../graphql/Group/DeleteGroup.gql';
 
 import BaseTable from '@/components/BaseTable.vue';
 import BaseButton from '@/components/BaseButton.vue';
 
 export default {
   name: 'group-tab',
-  mounted() {
-    this.getGroups(this.$route.params.id);
+  data() {
+    return {
+      groups: [],
+      routeParam: this.$route.params.id
+    };
+  },
+  apollo: {
+    groups: {
+      query: gql`
+        ${GROUPS_QUERY}
+      `,
+      variables() {
+        return {
+          facultyId: this.routeParam
+        };
+      }
+    }
   },
   components: {
     BaseTable,
     BaseButton
-  },
-  computed: {
-    ...mapGetters({
-      groupQuery: 'entities/groups/query'
-    }),
-    groups() {
-      return this.groupQuery()
-        .withAll()
-        .get()
-        .map(item => {
-          const json = item.$toJson();
-          // delete json.events;
-          return json;
-        });
-    }
   },
   methods: {
     ...mapMutations({
       modalClose: 'Modal/CLOSE_MODAL',
       openModal: 'Modal/OPEN_MODAL'
     }),
-    ...mapActions({
-      getGroups: 'Group/getGroups',
-      deleteGroup: 'Group/deleteGroup'
-    }),
-
     openModalAction(props) {
       this.openModal({
         component: () => import('@/containers/GroupModal.vue'),
@@ -86,8 +80,29 @@ export default {
         modalTitle: 'Delete group',
         modalCloseAction: this.modalClose,
         modalSuccessAction: async () => {
-          await this.deleteGroup(id);
-          this.modalClose();
+          try {
+            this.$apollo.mutate({
+              mutation: DELETE_GROUP,
+              variables: {
+                id
+              },
+              update: store => {
+                const data = store.readQuery({
+                  query: GROUPS_QUERY,
+                  variables: { facultyId: this.$route.params.id }
+                });
+                const response = data.groups.filter(item => item.id !== id);
+                store.writeQuery({
+                  query: GROUPS_QUERY,
+                  variables: { facultyId: this.$route.params.id },
+                  data: { ...data, groups: [...response] }
+                });
+              }
+            });
+            this.modalClose();
+          } catch (e) {
+            console.error(e);
+          }
         }
       });
     }

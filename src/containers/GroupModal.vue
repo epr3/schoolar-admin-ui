@@ -5,20 +5,8 @@
   >
     <template #modal-body>
       <form>
-        <base-input
-          label="Number"
-          type="text"
-          :v="$v.number"
-          placeholder="1111"
-          v-model="number"
-        />
-        <base-input
-          label="Year"
-          type="text"
-          :v="$v.year"
-          placeholder="2M"
-          v-model="year"
-        />
+        <base-input label="Number" type="text" :v="$v.number" placeholder="1111" v-model="number"/>
+        <base-input label="Year" type="text" :v="$v.year" placeholder="2M" v-model="year"/>
       </form>
     </template>
     <template #modal-footer>
@@ -28,7 +16,13 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
+
+import POST_GROUP from '../graphql/Group/PostGroup.gql';
+import GROUPS_QUERY from '../graphql/Group/Groups.gql';
+import GROUP_QUERY from '../graphql/Group/Group.gql';
+import UPDATE_GROUP from '../graphql/Group/UpdateGroup.gql';
+
 import { validationMixin } from 'vuelidate';
 import { required } from 'vuelidate/lib/validators';
 
@@ -41,7 +35,8 @@ export default {
   name: 'group-modal',
   data: () => ({
     number: '',
-    year: ''
+    year: '',
+    facultyId: ''
   }),
   props: {
     id: {
@@ -49,11 +44,15 @@ export default {
       default: ''
     }
   },
-  mounted() {
+  async mounted() {
     if (this.id) {
-      const group = this.groupQuery(this.id);
-      this.number = group.number;
-      this.year = group.year;
+      const response = await this.$apollo.query({
+        query: GROUP_QUERY,
+        variables: { id: this.id }
+      });
+      this.number = response.data.groupById.number;
+      this.year = response.data.groupById.year;
+      this.facultyId = response.data.groupById.facultyId;
     }
   },
   mixins: [validationMixin],
@@ -63,33 +62,83 @@ export default {
     BaseInput
   },
   computed: {
-    ...mapState('Modal', ['modalOpen', 'modalComponent']),
-    ...mapGetters({
-      groupQuery: 'entities/groups/find'
-    })
+    ...mapState('Modal', ['modalOpen', 'modalComponent'])
   },
   methods: {
     ...mapMutations({
       modalClose: 'Modal/CLOSE_MODAL'
-    }),
-    ...mapActions({
-      postGroup: 'Group/postGroup',
-      updateGroup: 'Group/updateGroup'
     }),
     modalCloseAction() {
       this.modalClose();
     },
     submitMethod() {
       if (!this.$v.$invalid) {
-        const object = {
-          number: this.number,
-          year: this.year,
-          facultyId: this.$route.params.id
-        };
         if (this.id) {
-          this.updateGroup({ id: this.id, object });
+          try {
+            this.$apollo.mutate({
+              mutation: UPDATE_GROUP,
+              variables: {
+                group: {
+                  id: this.id,
+                  number: this.number,
+                  year: this.year,
+                  facultyId: this.facultyId
+                }
+              },
+              update: (store, { data: { updateGroup } }) => {
+                const data = store.readQuery({
+                  query: GROUPS_QUERY,
+                  variables: { facultyId: this.$route.params.id }
+                });
+                const itemIndex = data.groups.findIndex(
+                  item => item.id === updateGroup.id
+                );
+                store.writeQuery({
+                  query: GROUPS_QUERY,
+                  variables: { facultyId: this.$route.params.id },
+                  data: {
+                    ...data,
+                    groups: data.groups.map((item, index) => {
+                      if (index !== itemIndex) {
+                        return item;
+                      }
+
+                      return { ...item, ...updateGroup };
+                    })
+                  }
+                });
+              }
+            });
+          } catch (e) {
+            console.error(e);
+          }
         } else {
-          this.postGroup({ ...object });
+          try {
+            this.$apollo.mutate({
+              mutation: POST_GROUP,
+              variables: {
+                group: {
+                  number: this.number,
+                  year: this.year,
+                  facultyId: this.$route.params.id
+                }
+              },
+              update: (store, { data: { postGroup } }) => {
+                const data = store.readQuery({
+                  query: GROUPS_QUERY,
+                  variables: { facultyId: this.$route.params.id }
+                });
+                data.groups.push(postGroup);
+                store.writeQuery({
+                  query: GROUPS_QUERY,
+                  data,
+                  variables: { facultyId: this.$route.params.id }
+                });
+              }
+            });
+          } catch (e) {
+            console.error(e);
+          }
         }
         this.modalClose();
       }

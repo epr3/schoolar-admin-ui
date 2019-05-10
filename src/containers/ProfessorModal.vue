@@ -5,13 +5,7 @@
   >
     <template #modal-body>
       <form>
-        <base-input
-          label="Name"
-          type="text"
-          :v="$v.name"
-          placeholder="John"
-          v-model="name"
-        />
+        <base-input label="Name" type="text" :v="$v.name" placeholder="John" v-model="name"/>
         <base-input
           label="Surname"
           type="text"
@@ -26,13 +20,7 @@
           placeholder="example@ie.ase.ro"
           v-model="email"
         />
-        <base-input
-          label="Title"
-          type="text"
-          :v="$v.title"
-          placeholder="Ph.D."
-          v-model="title"
-        />
+        <base-input label="Title" type="text" :v="$v.title" placeholder="Ph.D." v-model="title"/>
         <base-input
           label="Telephone"
           type="text"
@@ -50,6 +38,12 @@
 
 <script>
 import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
+
+import POST_PROFESSOR from '../graphql/Professor/PostProfessor.gql';
+import PROFESSORS_QUERY from '../graphql/Professor/Professors.gql';
+import PROFESSOR_QUERY from '../graphql/Professor/Professor.gql';
+import UPDATE_PROFESSOR from '../graphql/Professor/UpdateProfessor.gql';
+
 import { validationMixin } from 'vuelidate';
 import { required } from 'vuelidate/lib/validators';
 
@@ -73,15 +67,18 @@ export default {
       default: ''
     }
   },
-  mounted() {
+  async mounted() {
     if (this.id) {
-      const professor = this.professorQuery(this.id);
-      this.name = professor.name;
-      this.surname = professor.surname;
-      this.email = professor.email;
-      this.title = professor.title;
-      this.telephone = professor.telephone;
-      this.userId = professor.userId;
+      const response = await this.$apollo.query({
+        query: PROFESSOR_QUERY,
+        variables: { id: this.id }
+      });
+      this.name = response.data.professor.name;
+      this.surname = response.data.professor.surname;
+      this.email = response.data.professor.email;
+      this.title = response.data.professor.title;
+      this.telephone = response.data.professor.telephone;
+      this.userId = response.data.professor.userId;
     }
   },
   computed: {
@@ -100,20 +97,66 @@ export default {
     },
     submitMethod() {
       if (!this.$v.$invalid) {
-        const object = {
-          name: this.name,
-          surname: this.surname,
-          email: this.email,
-          title: this.title,
-          telephone: this.telephone
-        };
         if (this.id) {
-          this.updateProfessor({
-            id: this.id,
-            object: { ...object, userId: this.userId }
-          });
+          try {
+            this.$apollo.mutate({
+              mutation: UPDATE_PROFESSOR,
+              variables: {
+                professor: {
+                  id: this.id,
+                  email: this.email,
+                  name: this.name,
+                  surname: this.surname,
+                  title: this.title,
+                  telephone: this.telephone,
+                  userId: this.userId
+                }
+              },
+              update: (store, { data: { updateProfessor } }) => {
+                const data = store.readQuery({ query: PROFESSORS_QUERY });
+                const itemIndex = data.professors.findIndex(
+                  item => item.id === updateProfessor.id
+                );
+                store.writeQuery({
+                  query: PROFESSORS_QUERY,
+                  data: {
+                    ...data,
+                    professors: data.professors.map((item, index) => {
+                      if (index !== itemIndex) {
+                        return item;
+                      }
+
+                      return { ...item, ...updateProfessor };
+                    })
+                  }
+                });
+              }
+            });
+          } catch (e) {
+            console.error(e);
+          }
         } else {
-          this.postProfessor({ ...object });
+          try {
+            this.$apollo.mutate({
+              mutation: POST_PROFESSOR,
+              variables: {
+                professor: {
+                  email: this.email,
+                  name: this.name,
+                  surname: this.surname,
+                  title: this.title,
+                  telephone: this.telephone
+                }
+              },
+              update: (store, { data: { postProfessor } }) => {
+                const data = store.readQuery({ query: PROFESSORS_QUERY });
+                data.professors.push(postProfessor);
+                store.writeQuery({ query: PROFESSORS_QUERY, data });
+              }
+            });
+          } catch (e) {
+            console.error(e);
+          }
         }
         this.modalClose();
       }
