@@ -7,19 +7,15 @@
       <template v-if="items.length">
         <thead>
           <tr>
-            <th v-for="(item, index) in Object.keys(items[0])" :key="index">
-              {{ item }}
-            </th>
+            <th v-for="(item, index) in Object.keys(computedItems[0])" :key="index">{{ item }}</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in items" :key="index">
-            <td v-for="(cell, index) in Object.values(item)" :key="index">
-              {{ cell }}
-            </td>
+          <tr v-for="(item, index) in computedItems" :key="index">
+            <td v-for="(cell, index) in Object.values(item)" :key="index">{{ cell }}</td>
             <td>
-              <slot name="actions" :item="item" />
+              <slot name="actions" :item="item"/>
             </td>
           </tr>
         </tbody>
@@ -50,6 +46,16 @@ export default {
     items: {
       required: true,
       type: Array
+    }
+  },
+  computed: {
+    computedItems() {
+      return this.items.map(item => {
+        if (item.hasOwnProperty('__typename')) {
+          delete item.__typename;
+        }
+        return item;
+      });
     }
   }
 };
