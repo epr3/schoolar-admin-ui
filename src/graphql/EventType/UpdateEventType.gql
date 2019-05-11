@@ -1,4 +1,4 @@
-mutation UpdateEventType($eventType: UpdateEventTypeInput!) {
+mutation UpdateEventType($eventType: EventTypeInput!) {
   updateEventType(eventType: $eventType) {
     id
     type

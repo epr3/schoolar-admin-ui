@@ -1,4 +1,4 @@
-mutation UpdateSubject($subject: UpdateSubjectInput!) {
+mutation UpdateSubject($subject: SubjectInput!) {
   updateSubject(subject: $subject) {
     id
     name

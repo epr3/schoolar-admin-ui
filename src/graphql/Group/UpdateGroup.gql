@@ -1,4 +1,4 @@
-mutation UpdateGroup($group: UpdateGroupInput!) {
+mutation UpdateGroup($group: GroupInput!) {
   updateGroup(group: $group) {
     id
     number

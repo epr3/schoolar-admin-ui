@@ -1,4 +1,4 @@
-mutation UpdateEvent($event: UpdateEventInput!) {
+mutation UpdateEvent($event: EventInput!) {
   updateEvent(event: $event) {
     id
     interval
