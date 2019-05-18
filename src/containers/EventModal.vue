@@ -176,10 +176,14 @@ export default {
       this.subjectId = response.data.event.subjectId;
       this.professorId = response.data.event.professorId;
       this.eventTypeId = response.data.event.eventTypeId;
-      this.startDate = DateTime.fromISO(response.data.event.startDate).toISO();
-      this.endDate = DateTime.fromISO(response.data.event.endDate).toISO();
-      this.startTime = DateTime.fromISO(response.data.event.startTime).toISO();
-      this.endTime = DateTime.fromISO(response.data.event.endTime).toISO();
+      this.startDate = DateTime.fromISO(
+        response.data.event.startDate
+      ).toJSDate();
+      this.endDate = DateTime.fromISO(response.data.event.endDate).toJSDate();
+      this.startTime = DateTime.fromISO(
+        response.data.event.startTime
+      ).toJSDate();
+      this.endTime = DateTime.fromISO(response.data.event.endTime).toJSDate();
     }
   },
   apollo: {
@@ -252,10 +256,10 @@ export default {
                   subjectId: this.subjectId,
                   professorId: this.professorId,
                   eventTypeId: this.eventTypeId,
-                  startDate: DateTime.fromISO(this.startDate).toISODate(),
-                  endDate: DateTime.fromISO(this.endDate).toISODate(),
-                  startTime: DateTime.fromISO(this.startTime).toISOTime(),
-                  endTime: DateTime.fromISO(this.endTime).toISOTime(),
+                  startDate: DateTime.fromJSDate(this.startDate).toISODate(),
+                  endDate: DateTime.fromJSDate(this.endDate).toISODate(),
+                  startTime: DateTime.fromJSDate(this.startTime).toISOTime(),
+                  endTime: DateTime.fromJSDate(this.endTime).toISOTime(),
                   groupId: this.$route.params.id
                 }
               },
