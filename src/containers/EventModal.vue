@@ -56,8 +56,8 @@
           <div class="col">
             <base-select
               label="Professor"
-              :v="$v.professorId"
-              v-model="professorId"
+              :v="$v.userId"
+              v-model="userId"
               :options="professorSelect"
             />
           </div>
@@ -150,12 +150,12 @@ export default {
       isFullDay: false,
       isNotifiable: false,
       subjectId: null,
-      professorId: null,
+      userId: null,
       eventTypeId: null,
-      startDate: new Date(),
-      endDate: new Date(),
-      startTime: new Date(),
-      endTime: new Date(),
+      startDate: null,
+      endDate: null,
+      startTime: null,
+      endTime: null,
       professors: [],
       subjects: [],
       eventTypes: [],
@@ -174,7 +174,7 @@ export default {
       this.isFullDay = !!response.data.event.isFullDay;
       this.isNotifiable = !!response.data.event.isNotifiable;
       this.subjectId = response.data.event.subjectId;
-      this.professorId = response.data.event.professorId;
+      this.profesuserIdsorId = response.data.event.userId;
       this.eventTypeId = response.data.event.eventTypeId;
       this.startDate = DateTime.fromISO(
         response.data.event.startDate
@@ -210,9 +210,9 @@ export default {
     ...mapState('Modal', ['modalOpen', 'modalComponent']),
     professorSelect() {
       return this.professors.map(item => ({
-        id: item.id,
+        id: item.userId,
         label: `${item.title} ${item.name} ${item.surname}`,
-        value: item.id
+        value: item.userId
       }));
     },
 
@@ -254,7 +254,7 @@ export default {
                   isFullDay: this.isFullDay,
                   isNotifiable: this.isNotifiable,
                   subjectId: this.subjectId,
-                  professorId: this.professorId,
+                  userId: this.userId,
                   eventTypeId: this.eventTypeId,
                   startDate: DateTime.fromJSDate(this.startDate).toISODate(),
                   endDate: DateTime.fromJSDate(this.endDate).toISODate(),
@@ -302,7 +302,7 @@ export default {
                   isFullDay: this.isFullDay,
                   isNotifiable: this.isNotifiable,
                   subjectId: this.subjectId,
-                  professorId: this.professorId,
+                  userId: this.userId,
                   eventTypeId: this.eventTypeId,
                   startDate: DateTime.fromJSDate(this.startDate).toISODate(),
                   endDate: DateTime.fromJSDate(this.endDate).toISODate(),
@@ -357,7 +357,7 @@ export default {
     isFullDay: {
       required
     },
-    professorId: {
+    userId: {
       required
     },
     subjectId: {

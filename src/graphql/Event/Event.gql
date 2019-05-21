@@ -12,7 +12,7 @@ query Event($id: ID!) {
     isNotifiable
     subjectId
     groupId
-    professorId
+    userId
     eventTypeId
   }
 }

@@ -7,7 +7,7 @@ mutation PostEvent($event: EventInput!) {
     isFullDay
     isNotifiable
     subjectId
-    professorId
+    userId
     eventTypeId
     startDate
     endDate

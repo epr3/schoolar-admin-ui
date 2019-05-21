@@ -10,6 +10,7 @@
       v-model="model"
       :format="format"
       :placeholder="placeholder"
+      :time-picker-options="timePickerOptions"
       confirm
       input-class="form-control"
       width="100%"
@@ -22,6 +23,14 @@
 import DatePicker from 'vue2-datepicker';
 
 export default {
+  name: 'base-date-time-picker',
+  data: () => ({
+    timePickerOptions: {
+      start: '07:30',
+      step: '00:10',
+      end: '20:50'
+    }
+  }),
   components: {
     DatePicker
   },
