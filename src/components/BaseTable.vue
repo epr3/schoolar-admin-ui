@@ -51,6 +51,7 @@ export default {
   computed: {
     computedItems() {
       return this.items.map(item => {
+        delete item.__typename;
         return item;
       });
     }

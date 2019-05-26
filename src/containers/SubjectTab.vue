@@ -4,7 +4,7 @@
       <div class="col-sm-4">
         <base-button size="lg" type="primary" @click="openModalAction">Add Subject</base-button>
       </div>
-      <div class="col-sm-8">Sort + per page</div>
+      <!-- <div class="col-sm-8">Sort + per page</div> -->
     </template>
     <template #actions="{ item: { id }}">
       <div class="btn-group">

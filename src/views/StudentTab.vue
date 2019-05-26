@@ -8,7 +8,7 @@
               <div class="col-sm-4">
                 <base-button size="lg" type="primary" @click="openModalAction">Add Student</base-button>
               </div>
-              <div class="col-sm-8">Sort + per page</div>
+              <!-- <div class="col-sm-8">Sort + per page</div> -->
             </template>
             <template #actions="{ item: { id, userId }}">
               <div class="btn-group">

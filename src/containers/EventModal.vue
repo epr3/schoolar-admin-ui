@@ -174,7 +174,7 @@ export default {
       this.isFullDay = !!response.data.event.isFullDay;
       this.isNotifiable = !!response.data.event.isNotifiable;
       this.subjectId = response.data.event.subjectId;
-      this.profesuserIdsorId = response.data.event.userId;
+      this.userId = response.data.event.userId;
       this.eventTypeId = response.data.event.eventTypeId;
       this.startDate = DateTime.fromISO(
         response.data.event.startDate
