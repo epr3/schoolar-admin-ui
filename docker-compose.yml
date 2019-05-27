@@ -1,20 +1,12 @@
 version: '3.5'
 services:
-  app:
-    container_name: admin_ui
-    build:
-      dockerfile: Dockerfile
-      context: .
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
-    env_file: .env
-    command: ["npm", "run", "serve"]
+  admin-ui:
+    container_name: admin-ui
+    build: .
     ports:
-      - "1000:8080"
+      - "80:80"
 
 networks:
   default:
-    external:
-      name: schoolar-network
+    name: schoolar-network
 
