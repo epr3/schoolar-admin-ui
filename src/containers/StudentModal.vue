@@ -38,6 +38,8 @@
 <script>
 import { mapState, mapMutations } from 'vuex';
 
+import errorHandler from '../utils/errorHandler';
+
 import POST_STUDENT from '../graphql/Student/PostStudent.gql';
 import STUDENTS_QUERY from '../graphql/Student/Students.gql';
 import STUDENT_QUERY from '../graphql/Student/Student.gql';
@@ -128,7 +130,7 @@ export default {
               }
             });
           } catch (e) {
-            console.error(e);
+           errorHandler(e);
           }
         } else {
           try {
@@ -157,7 +159,7 @@ export default {
               }
             });
           } catch (e) {
-            console.error(e);
+            errorHandler(e);
           }
         }
         this.modalClose();

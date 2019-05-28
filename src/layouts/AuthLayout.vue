@@ -20,20 +20,44 @@
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/accounts" exact>Professors</router-link>
+            <router-link class="nav-link" to="/accounts" exact>
+              Professors
+            </router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/event_types" exact>Event Types</router-link>
+            <router-link class="nav-link" to="/event_types" exact>
+              Event Types
+            </router-link>
           </li>
         </ul>
       </div>
     </nav>
+    <div class="alert-list" v-if="errors.length">
+      <base-alert
+        v-for="(error, index) in errors"
+        :key="index"
+        :message="error"
+        type="danger"
+      />
+    </div>
     <slot></slot>
     <modal-container />
   </div>
 </template>
 
+<style lang="scss" scoped>
+.alert-list {
+  position: absolute;
+  right: 0;
+  top: 60px;
+}
+</style>
+
+
 <script>
+import { mapState } from 'vuex';
+
+import BaseAlert from '../components/BaseAlert';
 import ModalContainer from '@/containers/ModalContainer.vue';
 
 export default {
@@ -41,7 +65,11 @@ export default {
   data: () => ({
     showNavbar: false
   }),
+  computed: {
+    ...mapState('Error', ['errors'])
+  },
   components: {
+    BaseAlert,
     ModalContainer
   },
   methods: {

@@ -18,6 +18,8 @@
 <script>
 import { mapState, mapMutations } from 'vuex';
 
+import errorHandler from '../utils/errorHandler';
+
 import POST_EVENT_TYPE from '../graphql/EventType/PostEventType.gql';
 import EVENT_TYPES_QUERY from '../graphql/EventType/EventTypes.gql';
 import EVENT_TYPE_QUERY from '../graphql/EventType/EventType.gql';
@@ -114,7 +116,7 @@ export default {
               }
             });
           } catch (e) {
-            console.error(e);
+            errorHandler(e);
           }
         } else {
           try {
@@ -133,7 +135,7 @@ export default {
               }
             });
           } catch (e) {
-            console.error(e);
+            errorHandler(e);
           }
         }
         this.modalClose();

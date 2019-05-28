@@ -2,30 +2,29 @@
   <div class="container mt-2">
     <div class="row">
       <div class="col-sm-8 offset-sm-2">
-        <base-button size="lg" type="primary" @click="openModalAction">
-          Add Faculty
-        </base-button>
+        <base-button size="lg" type="primary" @click="openModalAction">Add Faculty</base-button>
       </div>
     </div>
     <div class="row mt-2">
       <div class="col-sm-8 offset-sm-2">
         <div class="list-group" v-if="faculties.length">
-          <router-link
+          <li
             class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
             v-for="item in faculties"
             :key="item.id"
-            :to="`/faculties/${item.id}`"
           >
-            {{ item.name }}
+            <router-link tag="span" :to="`/faculties/${item.id}`">
+              {{ item.name }}
+            </router-link>
             <div class="btn-group">
-              <base-button type="secondary" @click="editFacultyAction(item.id)">
+              <base-button type="secondary" @click="editFacultyAction(item)">
                 Edit faculty
               </base-button>
               <base-button type="danger" @click="deleteFacultyAction(item.id)">
                 Delete faculty
               </base-button>
             </div>
-          </router-link>
+          </li>
         </div>
         <p v-else>No data to show.</p>
       </div>
@@ -35,6 +34,9 @@
 
 <script>
 import { mapMutations } from 'vuex';
+
+import errorHandler from '../utils/errorHandler';
+
 import FACULTIES_QUERY from '../graphql/Faculty/Faculties.gql';
 import DELETE_FACULTY from '../graphql/Faculty/DeleteFaculty.gql';
 
@@ -68,8 +70,8 @@ export default {
         props
       });
     },
-    editFacultyAction(id) {
-      this.openModalAction({ id });
+    editFacultyAction(faculty) {
+      this.openModalAction({ faculty });
     },
     deleteFacultyAction(id) {
       this.openConfirmationModal({
@@ -87,13 +89,13 @@ export default {
                 const response = data.faculties.filter(item => item.id !== id);
                 store.writeQuery({
                   query: FACULTIES_QUERY,
-                  data: { ...data, eventTypes: [...response] }
+                  data: { ...data, faculties: [...response] }
                 });
               }
             });
             this.modalClose();
           } catch (e) {
-            console.error(e);
+            errorHandler(e);
           }
         }
       });

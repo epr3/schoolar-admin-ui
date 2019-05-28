@@ -36,6 +36,8 @@ import gql from 'graphql-tag';
 
 import { mapMutations } from 'vuex';
 
+import errorHandler from '../utils/errorHandler';
+
 import GROUPS_QUERY from '../graphql/Group/Groups.gql';
 import DELETE_GROUP from '../graphql/Group/DeleteGroup.gql';
 
@@ -115,7 +117,7 @@ export default {
             });
             this.modalClose();
           } catch (e) {
-            console.error(e);
+            errorHandler(e);
           }
         }
       });

@@ -39,6 +39,8 @@
 <script>
 import { mapState, mapMutations } from 'vuex';
 
+import errorHandler from '../utils/errorHandler';
+
 import POST_PROFESSOR from '../graphql/Professor/PostProfessor.gql';
 import PROFESSORS_QUERY from '../graphql/Professor/Professors.gql';
 import PROFESSOR_QUERY from '../graphql/Professor/Professor.gql';
@@ -129,7 +131,7 @@ export default {
               }
             });
           } catch (e) {
-            console.error(e);
+            errorHandler(e);
           }
         } else {
           try {
@@ -151,7 +153,7 @@ export default {
               }
             });
           } catch (e) {
-            console.error(e);
+            errorHandler(e);
           }
         }
         this.modalClose();

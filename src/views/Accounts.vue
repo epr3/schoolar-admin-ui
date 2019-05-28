@@ -33,6 +33,8 @@
 <script>
 import { mapMutations } from 'vuex';
 
+import errorHandler from '../utils/errorHandler';
+
 import PROFESSORS_QUERY from '../graphql/Professor/Professors.gql';
 import DELETE_PROFESSOR from '../graphql/Professor/DeleteProfessor.gql';
 
@@ -97,7 +99,7 @@ export default {
             });
             this.modalClose();
           } catch (e) {
-            console.error(e);
+            errorHandler(e);
           }
         }
       });

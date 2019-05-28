@@ -18,6 +18,8 @@
 <script>
 import { mapState, mapMutations } from 'vuex';
 
+import errorHandler from '../utils/errorHandler';
+
 import POST_GROUP from '../graphql/Group/PostGroup.gql';
 import GROUPS_QUERY from '../graphql/Group/Groups.gql';
 import GROUP_QUERY from '../graphql/Group/Group.gql';
@@ -110,7 +112,7 @@ export default {
               }
             });
           } catch (e) {
-            console.error(e);
+           errorHandler(e);
           }
         } else {
           try {
@@ -137,7 +139,7 @@ export default {
               }
             });
           } catch (e) {
-            console.error(e);
+            errorHandler(e);
           }
         }
         this.modalClose();

@@ -23,6 +23,8 @@
 import gql from 'graphql-tag';
 import { mapMutations } from 'vuex';
 
+import errorHandler from '../utils/errorHandler';
+
 import SUBJECTS_QUERY from '../graphql/Subject/Subjects.gql';
 import DELETE_SUBJECT from '../graphql/Subject/DeleteSubject.gql';
 
@@ -100,7 +102,7 @@ export default {
             });
             this.modalClose();
           } catch (e) {
-            console.error(e);
+           errorHandler(e);
           }
         }
       });

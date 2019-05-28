@@ -1,6 +1,6 @@
 <template>
   <auth-layout>
-    <div class="container-fluid">
+    <div class="container mt-2">
       <div class="card">
         <div class="card-body">
           <base-table :items="students">
@@ -30,6 +30,8 @@
 <script>
 import gql from 'graphql-tag';
 import { mapMutations } from 'vuex';
+
+import errorHandler from '../utils/errorHandler';
 
 import STUDENTS_QUERY from '../graphql/Student/Students.gql';
 import DELETE_STUDENT from '../graphql/Student/DeleteStudent.gql';
@@ -112,7 +114,7 @@ export default {
             });
             this.modalClose();
           } catch (e) {
-            console.error(e);
+           errorHandler(e);
           }
         }
       });

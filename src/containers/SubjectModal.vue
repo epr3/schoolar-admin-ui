@@ -24,6 +24,8 @@
 <script>
 import { mapState, mapMutations } from 'vuex';
 
+import errorHandler from '../utils/errorHandler';
+
 import SUBJECT_QUERY from '../graphql/Subject/Subject.gql';
 import SUBJECTS_QUERY from '../graphql/Subject/Subjects.gql';
 import POST_SUBJECT from '../graphql/Subject/PostSubject.gql';
@@ -110,7 +112,7 @@ export default {
               }
             });
           } catch (e) {
-            console.error(e);
+            errorHandler(e);
           }
         } else {
           try {
@@ -137,7 +139,7 @@ export default {
               }
             });
           } catch (e) {
-            console.error(e);
+            errorHandler(e);
           }
         }
         this.modalClose();

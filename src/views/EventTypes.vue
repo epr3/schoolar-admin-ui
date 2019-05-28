@@ -29,6 +29,9 @@
 
 <script>
 import { mapMutations } from 'vuex';
+
+import errorHandler from '../utils/errorHandler';
+
 import EVENT_TYPES_QUERY from '../graphql/EventType/EventTypes.gql';
 import DELETE_EVENT_TYPE from '../graphql/EventType/DeleteEventType.gql';
 
@@ -92,7 +95,7 @@ export default {
             });
             this.modalClose();
           } catch (e) {
-            console.error(e);
+            errorHandler(e);
           }
         }
       });

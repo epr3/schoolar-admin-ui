@@ -25,6 +25,9 @@
 
 <script>
 import LOGIN from '../graphql/Auth/Login.gql';
+
+import errorHandler from '../utils/errorHandler';
+
 import { onLogin } from '../plugins/vue-apollo.js';
 import { validationMixin } from 'vuelidate';
 import { required, email } from 'vuelidate/lib/validators';
@@ -48,7 +51,7 @@ export default {
     async loginMethod() {
       if (!this.$v.$invalid) {
         try {
-          this.$apollo.mutate({
+          await this.$apollo.mutate({
             mutation: LOGIN,
             variables: {
               email: this.email,
@@ -64,7 +67,7 @@ export default {
             }
           });
         } catch (e) {
-          console.error(e);
+          errorHandler(e);
         }
       }
     }

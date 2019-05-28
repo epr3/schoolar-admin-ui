@@ -26,7 +26,7 @@
                 :start-time="event.startTime"
                 :end-time="event.endTime"
                 :color="event.color"
-                @click="editEventAction(event.id)"
+                @click="editEventAction(event)"
               />
             </div>
           </div>
@@ -126,8 +126,8 @@ export default {
         props
       });
     },
-    editEventAction(id) {
-      this.openModalAction({ id });
+    editEventAction(event) {
+      this.openModalAction({ event });
     }
   }
 };

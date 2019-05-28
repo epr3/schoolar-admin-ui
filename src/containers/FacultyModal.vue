@@ -1,6 +1,6 @@
 <template>
   <base-modal-content
-    :modal-title="`${id ? 'Edit faculty' : 'Add new faculty'}`"
+    :modal-title="`${faculty ? 'Edit faculty' : 'Add new faculty'}`"
     :modal-close-action="modalClose"
   >
     <template #modal-body>
@@ -21,10 +21,11 @@
 </template>
 
 <script>
+import errorHandler from '../utils/errorHandler';
+
 import { mapState, mapMutations } from 'vuex';
 import POST_FACULTY from '../graphql/Faculty/PostFaculty.gql';
 import UPDATE_FACULTY from '../graphql/Faculty/UpdateFaculty.gql';
-import FACULTY_QUERY from '../graphql/Faculty/Faculty.gql';
 import FACULTIES_QUERY from '../graphql/Faculty/Faculties.gql';
 
 import { validationMixin } from 'vuelidate';
@@ -40,8 +41,8 @@ export default {
     name: ''
   }),
   props: {
-    id: {
-      type: String,
+    faculty: {
+      type: Object,
       default: null
     }
   },
@@ -51,13 +52,9 @@ export default {
     BaseModalContent
   },
   mixins: [validationMixin],
-  async mounted() {
-    if (this.id) {
-      const response = await this.$apollo.query({
-        query: FACULTY_QUERY,
-        variables: { id: this.id }
-      });
-      this.name = response.data.faculty.name;
+  mounted() {
+    if (this.faculty) {
+      this.name = this.faculty.name;
     }
   },
   validations: {
@@ -75,15 +72,15 @@ export default {
     modalCloseAction() {
       this.modalClose();
     },
-    submitMethod() {
+    async submitMethod() {
       if (!this.$v.$invalid) {
-        if (this.id) {
+        if (this.faculty) {
           try {
-            this.$apollo.mutate({
+            await this.$apollo.mutate({
               mutation: UPDATE_FACULTY,
               variables: {
                 faculty: {
-                  id: this.id,
+                  id: this.faculty.id,
                   name: this.name
                 }
               },
@@ -105,10 +102,18 @@ export default {
                     })
                   }
                 });
+              },
+              optimisticResponse: {
+                __typename: 'Mutation',
+                updateFaculty: {
+                  __typename: 'Faculty',
+                  name: this.name,
+                  id: null
+                }
               }
             });
           } catch (e) {
-            console.error(e);
+            errorHandler(e);
           }
         } else {
           try {
@@ -123,10 +128,18 @@ export default {
                 const data = store.readQuery({ query: FACULTIES_QUERY });
                 data.faculties.push(postFaculty);
                 store.writeQuery({ query: FACULTIES_QUERY, data });
+              },
+              optimisticResponse: {
+                __typename: 'Mutation',
+                postFaculty: {
+                  __typename: 'Faculty',
+                  name: this.name,
+                  id: null
+                }
               }
             });
           } catch (e) {
-            console.error(e);
+            errorHandler(e);
           }
         }
         this.modalClose();

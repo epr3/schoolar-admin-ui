@@ -125,6 +125,8 @@ import { validationMixin } from 'vuelidate';
 import { required } from 'vuelidate/lib/validators';
 import { DateTime } from 'luxon';
 
+import errorHandler from '../utils/errorHandler';
+
 import PROFESSORS_QUERY from '../graphql/Professor/Professors.gql';
 import SUBJECTS_QUERY from '../graphql/Subject/Subjects.gql';
 import EVENT_TYPES_QUERY from '../graphql/EventType/EventTypes.gql';
@@ -162,28 +164,24 @@ export default {
       facultyId: this.$route.params.facultyId
     };
   },
-  async mounted() {
-    if (this.id) {
-      const response = await this.$apollo.query({
-        query: EVENT_QUERY,
-        variables: { id: this.id }
-      });
-      this.interval = response.data.event.interval;
-      this.frequency = response.data.event.frequency;
-      this.room = response.data.event.room;
-      this.isFullDay = !!response.data.event.isFullDay;
-      this.isNotifiable = !!response.data.event.isNotifiable;
-      this.subjectId = response.data.event.subjectId;
-      this.userId = response.data.event.userId;
-      this.eventTypeId = response.data.event.eventTypeId;
+  mounted() {
+    if (this.event) {
+      this.interval = this.event.data.event.interval;
+      this.frequency = this.event.data.event.frequency;
+      this.room = this.event.data.event.room;
+      this.isFullDay = !!this.event.data.event.isFullDay;
+      this.isNotifiable = !!this.event.data.event.isNotifiable;
+      this.subjectId = this.event.data.event.subjectId;
+      this.userId = this.event.data.event.userId;
+      this.eventTypeId = this.event.data.event.eventTypeId;
       this.startDate = DateTime.fromISO(
-        response.data.event.startDate
+        this.event.data.event.startDate
       ).toJSDate();
-      this.endDate = DateTime.fromISO(response.data.event.endDate).toJSDate();
+      this.endDate = DateTime.fromISO(this.event.data.event.endDate).toJSDate();
       this.startTime = DateTime.fromISO(
-        response.data.event.startTime
+        this.event.data.event.startTime
       ).toJSDate();
-      this.endTime = DateTime.fromISO(response.data.event.endTime).toJSDate();
+      this.endTime = DateTime.fromISO(this.event.data.event.endTime).toJSDate();
     }
   },
   apollo: {
@@ -201,9 +199,9 @@ export default {
     eventTypes: EVENT_TYPES_QUERY
   },
   props: {
-    id: {
-      type: String,
-      default: ''
+    event: {
+      type: Object,
+      default: null
     }
   },
   computed: {
@@ -288,7 +286,7 @@ export default {
               }
             });
           } catch (e) {
-            console.error(e);
+            errorHandler(e);
           }
         } else {
           try {
@@ -325,7 +323,7 @@ export default {
               }
             });
           } catch (e) {
-            console.error(e);
+            errorHandler(e)
           }
         }
         this.modalClose();
