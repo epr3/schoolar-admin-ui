@@ -1,0 +1,6 @@
+mutation UpdateFaculty($faculty: FacultyInput!) {
+  updateFaculty(faculty: $faculty) {
+    id
+    name
+  }
+}

@@ -1,9 +1,11 @@
 <template>
-  <guest-layout>
-    <div class="container-fluid">
+  <auth-layout>
+    <div class="container-fluid mt-2">
       <div class="card">
         <div class="card-body">
-          <base-button type="primary" @click="openModalAction">Add Event</base-button>
+          <base-button type="primary" @click="openModalAction">
+            Add Event
+          </base-button>
         </div>
         <div class="card-body">
           <div class="row">
@@ -28,10 +30,13 @@
               />
             </div>
           </div>
+          <div class="row" v-else>
+            <p>No events to show</p>
+          </div>
         </div>
       </div>
     </div>
-  </guest-layout>
+  </auth-layout>
 </template>
 
 <script>
@@ -46,7 +51,7 @@ import BaseButton from '@/components/BaseButton.vue';
 
 import EventCard from '@/components/EventCard.vue';
 
-import GuestLayout from '@/layouts/GuestLayout.vue';
+import AuthLayout from '@/layouts/AuthLayout.vue';
 
 export default {
   name: 'events',
@@ -78,7 +83,7 @@ export default {
     }
   },
   components: {
-    GuestLayout,
+    AuthLayout,
     BaseButton,
     EventCard
   },

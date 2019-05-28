@@ -1,8 +1,8 @@
 <template>
   <guest-layout>
-    <div class="row">
+    <div class="row d-flex align-items-center">
       <div class="col-sm-6 offset-sm-3">
-        <div class="card card__login">
+        <div class="card">
           <div class="card-body">
             <h5 class="card-title">Login</h5>
             <form>
@@ -22,12 +22,6 @@
     </div>
   </guest-layout>
 </template>
-
-<style lang="scss" scoped>
-.card__login {
-  margin-top: 50%;
-}
-</style>
 
 <script>
 import LOGIN from '../graphql/Auth/Login.gql';

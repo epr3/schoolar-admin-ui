@@ -1,5 +1,5 @@
 <template>
-  <guest-layout>
+  <auth-layout>
     <div class="container-fluid">
       <div class="card">
         <div class="card-body">
@@ -12,15 +12,19 @@
             </template>
             <template #actions="{ item: { id, userId }}">
               <div class="btn-group">
-                <base-button type="info" @click="editStudentAction(id)">Edit</base-button>
-                <base-button type="danger" @click="deleteStudentAction(id, userId)">Delete</base-button>
+                <base-button type="info" @click="editStudentAction(id)">
+                  <font-awesome-icon icon="edit" />
+                </base-button>
+                <base-button type="danger" @click="deleteStudentAction(id, userId)">
+                  <font-awesome-icon icon="trash" />
+                </base-button>
               </div>
             </template>
           </base-table>
         </div>
       </div>
     </div>
-  </guest-layout>
+  </auth-layout>
 </template>
 
 <script>
@@ -33,7 +37,7 @@ import DELETE_STUDENT from '../graphql/Student/DeleteStudent.gql';
 import BaseTable from '@/components/BaseTable.vue';
 import BaseButton from '@/components/BaseButton.vue';
 
-import GuestLayout from '@/layouts/GuestLayout.vue';
+import AuthLayout from '@/layouts/AuthLayout.vue';
 
 export default {
   name: 'subject-tab',
@@ -58,7 +62,7 @@ export default {
   components: {
     BaseTable,
     BaseButton,
-    GuestLayout
+    AuthLayout
   },
   methods: {
     ...mapMutations({

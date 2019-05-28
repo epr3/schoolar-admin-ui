@@ -8,19 +8,23 @@
     </template>
     <template #actions="{ item: { id }}">
       <div class="btn-group">
-        <base-button type="info" @click="editGroupAction(id)">Edit</base-button>
-        <base-button type="danger" @click="deleteGroupAction(id)">Delete</base-button>
+        <base-button type="info" @click="editGroupAction(id)">
+          <font-awesome-icon icon="edit"/>
+        </base-button>
+        <base-button type="danger" @click="deleteGroupAction(id)">
+          <font-awesome-icon icon="trash"/>
+        </base-button>
         <base-button
           :routerPath="`/faculties/${$route.params.id}/groups/${id}/events`"
           type="primary"
         >
-          Events
+          <font-awesome-icon icon="calendar"/>
         </base-button>
         <base-button
           :routerPath="`/faculties/${$route.params.id}/groups/${id}/students`"
           type="secondary"
         >
-          Students
+          <font-awesome-icon icon="user-graduate"/>
         </base-button>
       </div>
     </template>

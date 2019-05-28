@@ -1,6 +1,6 @@
 <template>
-  <guest-layout>
-    <div class="container">
+  <auth-layout>
+    <div class="container mt-2">
       <div class="card">
         <div class="card-body">
           <base-table :items="professors">
@@ -12,15 +12,22 @@
             </template>
             <template #actions="{ item: { id, userId }}">
               <div class="btn-group">
-                <base-button type="info" @click="editProfessorAction(id)">Edit</base-button>
-                <base-button type="danger" @click="deleteProfessorAction(id, userId)">Delete</base-button>
+                <base-button type="info" @click="editProfessorAction(id)">
+                  <font-awesome-icon icon="edit" />
+                </base-button>
+                <base-button
+                  type="danger"
+                  @click="deleteProfessorAction(id, userId)"
+                >
+                  <font-awesome-icon icon="trash" />
+                </base-button>
               </div>
             </template>
           </base-table>
         </div>
       </div>
     </div>
-  </guest-layout>
+  </auth-layout>
 </template>
 
 <script>
@@ -29,7 +36,7 @@ import { mapMutations } from 'vuex';
 import PROFESSORS_QUERY from '../graphql/Professor/Professors.gql';
 import DELETE_PROFESSOR from '../graphql/Professor/DeleteProfessor.gql';
 
-import GuestLayout from '@/layouts/GuestLayout.vue';
+import AuthLayout from '@/layouts/AuthLayout.vue';
 
 import BaseTable from '@/components/BaseTable.vue';
 import BaseButton from '@/components/BaseButton.vue';
@@ -42,7 +49,7 @@ export default {
   components: {
     BaseTable,
     BaseButton,
-    GuestLayout
+    AuthLayout
   },
   apollo: {
     professors: PROFESSORS_QUERY

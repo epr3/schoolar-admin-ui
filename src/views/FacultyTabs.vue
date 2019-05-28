@@ -1,6 +1,6 @@
 <template>
-  <guest-layout>
-    <div class="container">
+  <auth-layout>
+    <div class="container mt-2">
       <div class="card">
         <div class="card-body">
           <ul class="nav nav-tabs">
@@ -40,11 +40,11 @@
         </div>
       </div>
     </div>
-  </guest-layout>
+  </auth-layout>
 </template>
 
 <script>
-import GuestLayout from '@/layouts/GuestLayout.vue';
+import AuthLayout from '@/layouts/AuthLayout.vue';
 
 import GroupTab from '@/containers/GroupTab.vue';
 import SubjectTab from '@/containers/SubjectTab.vue';
@@ -54,7 +54,7 @@ export default {
     tab: 1
   }),
   components: {
-    GuestLayout,
+    AuthLayout,
     GroupTab,
     SubjectTab
   }

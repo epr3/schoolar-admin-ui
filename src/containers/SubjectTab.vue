@@ -8,8 +8,12 @@
     </template>
     <template #actions="{ item: { id }}">
       <div class="btn-group">
-        <base-button type="info" @click="editSubjectAction(id)">Edit</base-button>
-        <base-button type="danger" @click="deleteSubjectAction(id)">Delete</base-button>
+        <base-button type="info" @click="editSubjectAction(id)">
+          <font-awesome-icon icon="edit" />
+        </base-button>
+        <base-button type="danger" @click="deleteSubjectAction(id)">
+          <font-awesome-icon icon="trash" />
+        </base-button>
       </div>
     </template>
   </base-table>

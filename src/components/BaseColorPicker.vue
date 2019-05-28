@@ -2,6 +2,7 @@
   <div class="form-group">
     <label v-if="label">{{ label }}</label>
     <color-picker v-model="model" :value="value" />
+    <div v-if="v.$error" class="invalid-feedback">Field is invalid!</div>
   </div>
 </template>
 

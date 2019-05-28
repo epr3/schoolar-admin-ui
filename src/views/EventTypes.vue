@@ -1,6 +1,6 @@
 <template>
-  <guest-layout>
-    <div class="container">
+  <auth-layout>
+    <div class="container mt-2">
       <div class="card">
         <div class="card-body">
           <base-table :items="eventTypes">
@@ -12,15 +12,19 @@
             </template>
             <template #actions="{ item: { id }}">
               <div class="btn-group">
-                <base-button type="info" @click="editEventTypeAction(id)">Edit</base-button>
-                <base-button type="danger" @click="deleteEventTypeAction(id)">Delete</base-button>
+                <base-button type="info" @click="editEventTypeAction(id)">
+                  <font-awesome-icon icon="edit" />
+                </base-button>
+                <base-button type="danger" @click="deleteEventTypeAction(id)">
+                  <font-awesome-icon icon="trash" />
+                </base-button>
               </div>
             </template>
           </base-table>
         </div>
       </div>
     </div>
-  </guest-layout>
+  </auth-layout>
 </template>
 
 <script>
@@ -28,7 +32,7 @@ import { mapMutations } from 'vuex';
 import EVENT_TYPES_QUERY from '../graphql/EventType/EventTypes.gql';
 import DELETE_EVENT_TYPE from '../graphql/EventType/DeleteEventType.gql';
 
-import GuestLayout from '@/layouts/GuestLayout.vue';
+import AuthLayout from '@/layouts/AuthLayout.vue';
 
 import BaseTable from '@/components/BaseTable.vue';
 import BaseButton from '@/components/BaseButton.vue';
@@ -41,7 +45,7 @@ export default {
   components: {
     BaseTable,
     BaseButton,
-    GuestLayout
+    AuthLayout
   },
   apollo: {
     eventTypes: EVENT_TYPES_QUERY
@@ -68,7 +72,7 @@ export default {
     },
     deleteEventTypeAction(id) {
       this.openConfirmationModal({
-        modalTitle: 'Delete professor',
+        modalTitle: 'Delete event type',
         modalCloseAction: this.modalClose,
         modalSuccessAction: () => {
           try {

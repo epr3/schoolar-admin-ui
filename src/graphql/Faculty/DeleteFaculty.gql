@@ -1,0 +1,3 @@
+mutation DeleteFaculty($id: ID!) {
+  deleteFaculty(id: $id)
+}

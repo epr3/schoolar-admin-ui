@@ -6,9 +6,19 @@ import Login from './views/Login.vue';
 Vue.use(Router);
 
 const router = new Router({
+  linkActiveClass: 'active',
+  linkExactActiveClass: 'active',
   base: process.env.BASE_URL,
   mode: 'history',
   routes: [
+    {
+      path: '/',
+      name: 'home',
+      component: Home,
+      meta: {
+        auth: true
+      }
+    },
     {
       path: '/event_types',
       name: 'eventTypes',
@@ -60,14 +70,6 @@ const router = new Router({
       component: Login,
       meta: {
         guest: true
-      }
-    },
-    {
-      path: '/',
-      name: 'home',
-      component: Home,
-      meta: {
-        auth: true
       }
     }
   ]
