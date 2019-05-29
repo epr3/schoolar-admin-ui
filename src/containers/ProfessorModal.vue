@@ -93,11 +93,11 @@ export default {
     modalCloseAction() {
       this.modalClose();
     },
-    submitMethod() {
+    async submitMethod() {
       if (!this.$v.$invalid) {
         if (this.id) {
           try {
-            this.$apollo.mutate({
+            await this.$apollo.mutate({
               mutation: UPDATE_PROFESSOR,
               variables: {
                 professor: {
@@ -128,6 +128,19 @@ export default {
                     })
                   }
                 });
+              },
+              optimisticResponse: {
+                __typename: 'Mutation',
+                updateProfessor: {
+                  __typename: 'Professor',
+                  email: this.email,
+                  name: this.name,
+                  surname: this.surname,
+                  title: this.title,
+                  telephone: this.telephone,
+                  userId: this.userId,
+                  id: null
+                }
               }
             });
           } catch (e) {
@@ -135,7 +148,7 @@ export default {
           }
         } else {
           try {
-            this.$apollo.mutate({
+            await this.$apollo.mutate({
               mutation: POST_PROFESSOR,
               variables: {
                 professor: {
@@ -150,6 +163,19 @@ export default {
                 const data = store.readQuery({ query: PROFESSORS_QUERY });
                 data.professors.push(postProfessor);
                 store.writeQuery({ query: PROFESSORS_QUERY, data });
+              },
+              optimisticResponse: {
+                __typename: 'Mutation',
+                postProfessor: {
+                  __typename: 'Professor',
+                  email: this.email,
+                  name: this.name,
+                  surname: this.surname,
+                  title: this.title,
+                  telephone: this.telephone,
+                  userId: this.userId,
+                  id: null
+                }
               }
             });
           } catch (e) {

@@ -7,15 +7,34 @@
       <template v-if="items.length">
         <thead>
           <tr>
-            <th v-for="(item, index) in Object.keys(computedItems[0])" :key="index">{{ item }}</th>
+            <th
+              v-for="(item, index) in Object.keys(items[0]).filter(
+                item => item !== '__typename'
+              )"
+              :key="index"
+            >
+              {{ item }}
+            </th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in computedItems" :key="index">
-            <td v-for="(cell, index) in Object.keys(item)" :key="index">{{ item[cell] }}</td>
-            <td>
-              <slot name="actions" :item="item"/>
+          <tr v-for="(item, index) in items" :key="index">
+            <template v-if="item.id">
+              <td
+                v-for="(cell, index) in Object.keys(item).filter(
+                  item => item !== '__typename'
+                )"
+                :key="index"
+              >
+                {{ item[cell] }}
+              </td>
+              <td>
+                <slot name="actions" :item="item" />
+              </td>
+            </template>
+            <td :colspan="Object.keys(item).length + 1" v-else>
+              <loading-spinner />
             </td>
           </tr>
         </tbody>
@@ -40,20 +59,17 @@ th td {
 </style>
 
 <script>
+import LoadingSpinner from './LoadingSpinner';
+
 export default {
   name: 'base-table',
+  components: {
+    LoadingSpinner
+  },
   props: {
     items: {
       required: true,
       type: Array
-    }
-  },
-  computed: {
-    computedItems() {
-      return this.items.map(item => {
-        delete item.__typename;
-        return item;
-      });
     }
   }
 };

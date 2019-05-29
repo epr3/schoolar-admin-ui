@@ -117,7 +117,7 @@ export default {
           }
         } else {
           try {
-            this.$apollo.mutate({
+            await this.$apollo.mutate({
               mutation: POST_FACULTY,
               variables: {
                 faculty: {

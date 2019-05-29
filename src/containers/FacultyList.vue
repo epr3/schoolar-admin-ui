@@ -13,17 +13,20 @@
             v-for="item in faculties"
             :key="item.id"
           >
-            <router-link tag="span" :to="`/faculties/${item.id}`">
-              {{ item.name }}
-            </router-link>
-            <div class="btn-group">
-              <base-button type="secondary" @click="editFacultyAction(item)">
-                Edit faculty
-              </base-button>
-              <base-button type="danger" @click="deleteFacultyAction(item.id)">
-                Delete faculty
-              </base-button>
-            </div>
+            <template v-if="item.id">
+              <router-link tag="span" :to="`/faculties/${item.id}`">
+                {{ item.name }}
+              </router-link>
+              <div class="btn-group">
+                <base-button type="secondary" @click="editFacultyAction(item)">
+                  Edit faculty
+                </base-button>
+                <base-button type="danger" @click="deleteFacultyAction(item.id)">
+                  Delete faculty
+                </base-button>
+              </div>
+            </template>
+            <loading-spinner v-else />
           </li>
         </div>
         <p v-else>No data to show.</p>
@@ -41,6 +44,7 @@ import FACULTIES_QUERY from '../graphql/Faculty/Faculties.gql';
 import DELETE_FACULTY from '../graphql/Faculty/DeleteFaculty.gql';
 
 import BaseButton from '../components/BaseButton';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 export default {
   name: 'faculty-list',
@@ -48,7 +52,8 @@ export default {
     faculties: []
   }),
   components: {
-    BaseButton
+    BaseButton,
+    LoadingSpinner
   },
   apollo: {
     faculties: FACULTIES_QUERY
@@ -77,9 +82,9 @@ export default {
       this.openConfirmationModal({
         modalTitle: 'Delete faculty',
         modalCloseAction: this.modalClose,
-        modalSuccessAction: () => {
+        modalSuccessAction: async () => {
           try {
-            this.$apollo.mutate({
+            await this.$apollo.mutate({
               mutation: DELETE_FACULTY,
               variables: {
                 id

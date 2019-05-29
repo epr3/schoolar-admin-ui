@@ -93,7 +93,7 @@ export default {
         modalCloseAction: this.modalClose,
         modalSuccessAction: async () => {
           try {
-            this.$apollo.mutate({
+            await this.$apollo.mutate({
               mutation: DELETE_STUDENT,
               variables: {
                 id,

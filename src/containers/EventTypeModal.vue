@@ -82,11 +82,11 @@ export default {
     modalCloseAction() {
       this.modalClose();
     },
-    submitMethod() {
+    async submitMethod() {
       if (!this.$v.$invalid) {
         if (this.id) {
           try {
-            this.$apollo.mutate({
+            await this.$apollo.mutate({
               mutation: UPDATE_EVENT_TYPE,
               variables: {
                 eventType: {
@@ -113,6 +113,15 @@ export default {
                     })
                   }
                 });
+              },
+              optimisticResponse: {
+                __typename: 'Mutation',
+                updateEventType: {
+                  __typename: 'EventType',
+                  color: this.color,
+                  type: this.type,
+                  id: null
+                }
               }
             });
           } catch (e) {
@@ -120,7 +129,7 @@ export default {
           }
         } else {
           try {
-            this.$apollo.mutate({
+            await this.$apollo.mutate({
               mutation: POST_EVENT_TYPE,
               variables: {
                 eventType: {
@@ -132,6 +141,15 @@ export default {
                 const data = store.readQuery({ query: EVENT_TYPES_QUERY });
                 data.eventTypes.push(postEventType);
                 store.writeQuery({ query: EVENT_TYPES_QUERY, data });
+              },
+              optimisticResponse: {
+                __typename: 'Mutation',
+                postEventType: {
+                  __typename: 'EventType',
+                  color: this.color,
+                  type: this.type,
+                  id: null
+                }
               }
             });
           } catch (e) {

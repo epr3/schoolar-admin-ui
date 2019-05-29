@@ -73,11 +73,11 @@ export default {
     modalCloseAction() {
       this.modalClose();
     },
-    submitMethod() {
+    async submitMethod() {
       if (!this.$v.$invalid) {
         if (this.id) {
           try {
-            this.$apollo.mutate({
+            await this.$apollo.mutate({
               mutation: UPDATE_SUBJECT,
               variables: {
                 subject: {
@@ -85,6 +85,16 @@ export default {
                   name: this.name,
                   credits: parseInt(this.credits),
                   facultyId: this.facultyId
+                }
+              },
+              optimisticResponse: {
+                __typename: 'Mutation',
+                updateSubject: {
+                  __typename: 'Subject',
+                  name: this.name,
+                  credits: parseInt(this.credits),
+                  facultyId: this.facultyId,
+                  id: null
                 }
               },
               update: (store, { data: { updateSubject } }) => {
@@ -116,13 +126,23 @@ export default {
           }
         } else {
           try {
-            this.$apollo.mutate({
+            await this.$apollo.mutate({
               mutation: POST_SUBJECT,
               variables: {
                 subject: {
                   name: this.name,
                   credits: parseInt(this.credits),
                   facultyId: this.$route.params.id
+                }
+              },
+              optimisticResponse: {
+                __typename: 'Mutation',
+                postSubject: {
+                  __typename: 'Subject',
+                  name: this.name,
+                  credits: parseInt(this.credits),
+                  facultyId: this.facultyId,
+                  id: null
                 }
               },
               update: (store, { data: { postSubject } }) => {

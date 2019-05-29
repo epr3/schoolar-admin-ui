@@ -77,9 +77,9 @@ export default {
       this.openConfirmationModal({
         modalTitle: 'Delete event type',
         modalCloseAction: this.modalClose,
-        modalSuccessAction: () => {
+        modalSuccessAction: async () => {
           try {
-            this.$apollo.mutate({
+            await this.$apollo.mutate({
               mutation: DELETE_EVENT_TYPE,
               variables: {
                 id

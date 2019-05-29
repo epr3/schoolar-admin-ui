@@ -237,11 +237,11 @@ export default {
     modalCloseAction() {
       this.modalClose();
     },
-    submitMethod() {
+    async submitMethod() {
       if (!this.$v.$invalid) {
         if (this.id) {
           try {
-            this.$apollo.mutate({
+            await this.$apollo.mutate({
               mutation: UPDATE_EVENT,
               variables: {
                 event: {
@@ -290,7 +290,7 @@ export default {
           }
         } else {
           try {
-            this.$apollo.mutate({
+            await this.$apollo.mutate({
               mutation: POST_EVENT,
               variables: {
                 event: {
@@ -323,7 +323,7 @@ export default {
               }
             });
           } catch (e) {
-            errorHandler(e)
+            errorHandler(e);
           }
         }
         this.modalClose();

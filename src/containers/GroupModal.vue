@@ -73,11 +73,11 @@ export default {
     modalCloseAction() {
       this.modalClose();
     },
-    submitMethod() {
+    async submitMethod() {
       if (!this.$v.$invalid) {
         if (this.id) {
           try {
-            this.$apollo.mutate({
+            await this.$apollo.mutate({
               mutation: UPDATE_GROUP,
               variables: {
                 group: {
@@ -109,14 +109,23 @@ export default {
                     })
                   }
                 });
+              },
+              optimisticResponse: {
+                __typename: 'Mutation',
+                updateGroup: {
+                  __typename: 'Group',
+                  number: this.number,
+                  year: this.year,
+                  id: null
+                }
               }
             });
           } catch (e) {
-           errorHandler(e);
+            errorHandler(e);
           }
         } else {
           try {
-            this.$apollo.mutate({
+            await this.$apollo.mutate({
               mutation: POST_GROUP,
               variables: {
                 group: {
@@ -136,6 +145,15 @@ export default {
                   data,
                   variables: { facultyId: this.$route.params.id }
                 });
+              },
+              optimisticResponse: {
+                __typename: 'Mutation',
+                postGroup: {
+                  __typename: 'Group',
+                  number: this.number,
+                  year: this.year,
+                  id: null
+                }
               }
             });
           } catch (e) {

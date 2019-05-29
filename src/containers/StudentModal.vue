@@ -92,11 +92,11 @@ export default {
     modalCloseAction() {
       this.modalClose();
     },
-    submitMethod() {
+    async submitMethod() {
       if (!this.$v.$invalid) {
         if (this.id) {
           try {
-            this.$apollo.mutate({
+            await this.$apollo.mutate({
               mutation: UPDATE_STUDENT,
               variables: {
                 student: {
@@ -107,6 +107,19 @@ export default {
                   groupId: this.groupId,
                   telephone: this.telephone,
                   userId: this.userId
+                }
+              },
+              optimisticResponse: {
+                __typename: 'Mutation',
+                updateStudent: {
+                  __typename: 'Student',
+                  email: this.email,
+                  name: this.name,
+                  surname: this.surname,
+                  groupId: this.groupId,
+                  telephone: this.telephone,
+                  userId: this.userId,
+                  id: null
                 }
               },
               update: (store, { data: { updateStudent } }) => {
@@ -130,11 +143,11 @@ export default {
               }
             });
           } catch (e) {
-           errorHandler(e);
+            errorHandler(e);
           }
         } else {
           try {
-            this.$apollo.mutate({
+            await this.$apollo.mutate({
               mutation: POST_STUDENT,
               variables: {
                 student: {
@@ -143,6 +156,19 @@ export default {
                   surname: this.surname,
                   groupId: this.$route.params.id,
                   telephone: this.telephone
+                }
+              },
+              optimisticResponse: {
+                __typename: 'Mutation',
+                postStudent: {
+                  __typename: 'Student',
+                  email: this.email,
+                  name: this.name,
+                  surname: this.surname,
+                  groupId: this.groupId,
+                  telephone: this.telephone,
+                  userId: this.userId,
+                  id: null
                 }
               },
               update: (store, { data: { postStudent } }) => {
