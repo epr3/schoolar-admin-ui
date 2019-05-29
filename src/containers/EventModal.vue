@@ -1,6 +1,6 @@
 <template>
   <base-modal-content
-    :modal-title="`${id ? 'Edit event' : 'Add new event'}`"
+    :modal-title="`${event ? 'Edit event' : 'Add new event'}`"
     :modal-close-action="modalClose"
   >
     <template #modal-body>
@@ -130,7 +130,6 @@ import errorHandler from '../utils/errorHandler';
 import PROFESSORS_QUERY from '../graphql/Professor/Professors.gql';
 import SUBJECTS_QUERY from '../graphql/Subject/Subjects.gql';
 import EVENT_TYPES_QUERY from '../graphql/EventType/EventTypes.gql';
-import EVENT_QUERY from '../graphql/Event/Event.gql';
 import EVENTS_QUERY from '../graphql/Event/Events.gql';
 import POST_EVENT from '../graphql/Event/PostEvent.gql';
 import UPDATE_EVENT from '../graphql/Event/UpdateEvent.gql';
@@ -166,22 +165,18 @@ export default {
   },
   mounted() {
     if (this.event) {
-      this.interval = this.event.data.event.interval;
-      this.frequency = this.event.data.event.frequency;
-      this.room = this.event.data.event.room;
-      this.isFullDay = !!this.event.data.event.isFullDay;
-      this.isNotifiable = !!this.event.data.event.isNotifiable;
-      this.subjectId = this.event.data.event.subjectId;
-      this.userId = this.event.data.event.userId;
-      this.eventTypeId = this.event.data.event.eventTypeId;
-      this.startDate = DateTime.fromISO(
-        this.event.data.event.startDate
-      ).toJSDate();
-      this.endDate = DateTime.fromISO(this.event.data.event.endDate).toJSDate();
-      this.startTime = DateTime.fromISO(
-        this.event.data.event.startTime
-      ).toJSDate();
-      this.endTime = DateTime.fromISO(this.event.data.event.endTime).toJSDate();
+      this.interval = this.event.interval;
+      this.frequency = this.event.frequency;
+      this.room = this.event.room;
+      this.isFullDay = !!this.event.isFullDay;
+      this.isNotifiable = !!this.event.isNotifiable;
+      this.subjectId = this.event.subjectId;
+      this.userId = this.event.userId;
+      this.eventTypeId = this.event.eventTypeId;
+      this.startDate = DateTime.fromISO(this.event.startDate).toJSDate();
+      this.endDate = DateTime.fromISO(this.event.endDate).toJSDate();
+      this.startTime = DateTime.fromISO(this.event.startTime).toJSDate();
+      this.endTime = DateTime.fromISO(this.event.endTime).toJSDate();
     }
   },
   apollo: {
@@ -245,7 +240,7 @@ export default {
               mutation: UPDATE_EVENT,
               variables: {
                 event: {
-                  id: this.id,
+                  id: this.event.id,
                   interval: parseInt(this.interval),
                   frequency: this.frequency,
                   room: this.room,

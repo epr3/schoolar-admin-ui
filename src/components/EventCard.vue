@@ -1,18 +1,42 @@
 <template>
-  <div class="card" @click="$emit('click')">
+  <div class="card mb-2">
     <div class="card-header" :style="{ backgroundColor: color }">
-      {{ type }}
+      <font-awesome-icon icon="edit" @click="$emit('click')" />
+      <button
+        @click="deleteAction"
+        type="button"
+        class="close"
+        data-dismiss="modal"
+        aria-label="Close"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
     </div>
     <div class="card-body">
-      <h5 class="card-title">{{ subject }}</h5>
-      <p class="card-text">{{ professor }}</p>
-      <p class="card-text">Room {{ room }}</p>
-      <p class="card-text">Group {{ group }}</p>
+      <h5 class="card-title">{{ subject }} - {{ type }}</h5>
       <p class="card-text">
-        <small>From {{ startDate }} to {{ endDate }}</small>
+        <font-awesome-icon icon="user-tie" />
+        {{ professor }}
+      </p>
+      <p class="card-text">
+        <font-awesome-icon icon="building" />
+        {{ room }}
+      </p>
+      <p class="card-text">
+        <font-awesome-icon icon="users" />
+        {{ group }}
+      </p>
+      <p class="card-text">
+        <small>
+          <font-awesome-icon icon="calendar" />
+          {{ startDate }} - {{ endDate }}
+        </small>
       </p>
       <div class="card-text">
-        <small>From {{ startTime }} to {{ endTime }}</small>
+        <small>
+          <font-awesome-icon icon="clock" />
+          {{ startTime }} - {{ endTime }}
+        </small>
       </div>
     </div>
   </div>
@@ -60,6 +84,10 @@ export default {
     },
     color: {
       type: String,
+      required: true
+    },
+    deleteAction: {
+      type: Function,
       required: true
     }
   }

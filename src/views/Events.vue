@@ -11,11 +11,16 @@
           <div class="row">
             <div class="col" v-for="day in days" :key="day">{{ day }}</div>
           </div>
-          <div class="row" v-if="eventsComputed">
-            <div class="col" v-for="(item, index) in eventsComputed" :key="index">
+          <div class="row mt-3" v-if="eventsComputed">
+            <div
+              class="col"
+              v-for="(item, index) in eventsComputed"
+              :key="index"
+            >
               <event-card
                 v-for="event in item"
                 :key="event.id"
+                :event="event"
                 :type="event.type"
                 :room="event.room"
                 :subject="event.subject"
@@ -26,7 +31,8 @@
                 :start-time="event.startTime"
                 :end-time="event.endTime"
                 :color="event.color"
-                @click="editEventAction(event)"
+                @click="editEventAction(event.event)"
+                :delete-action="() => deleteEventAction(id)"
               />
             </div>
           </div>
@@ -44,8 +50,11 @@ import gql from 'graphql-tag';
 import { mapMutations } from 'vuex';
 
 import EVENTS_QUERY from '../graphql/Event/Events.gql';
+import DELETE_EVENT from '../graphql/Event/DeleteEvent.gql';
 
 import { DateTime } from 'luxon';
+
+import errorHandler from '../utils/errorHandler';
 
 import BaseButton from '@/components/BaseButton.vue';
 
@@ -110,7 +119,8 @@ export default {
             endDate: DateTime.fromISO(item.endDate).toFormat('dd-LL-yyyy'),
             startTime: DateTime.fromISO(item.startTime).toFormat('HH:mm'),
             endTime: DateTime.fromISO(item.endTime).toFormat('HH:mm'),
-            color: item.eventType.color
+            color: item.eventType.color,
+            event: { ...item }
           }));
         return acc;
       }, {});
@@ -121,6 +131,7 @@ export default {
       openModal: 'Modal/OPEN_MODAL'
     }),
     openModalAction(props) {
+      console.log(props);
       this.openModal({
         component: () => import('@/containers/EventModal.vue'),
         props
@@ -128,6 +139,33 @@ export default {
     },
     editEventAction(event) {
       this.openModalAction({ event });
+    },
+    deleteEventAction(id) {
+      this.openConfirmationModal({
+        modalTitle: 'Delete event',
+        modalCloseAction: this.modalClose,
+        modalSuccessAction: async () => {
+          try {
+            await this.$apollo.mutate({
+              mutation: DELETE_EVENT,
+              variables: {
+                id
+              },
+              update: store => {
+                const data = store.readQuery({ query: EVENTS_QUERY });
+                const response = data.events.filter(item => item.id !== id);
+                store.writeQuery({
+                  query: EVENTS_QUERY,
+                  data: { ...data, events: [...response] }
+                });
+              }
+            });
+            this.modalClose();
+          } catch (e) {
+            errorHandler(e);
+          }
+        }
+      });
     }
   }
 };

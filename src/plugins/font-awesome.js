@@ -5,10 +5,24 @@ import {
   faTrash,
   faCalendar,
   faUserGraduate,
-  faSpinner
+  faSpinner,
+  faClock,
+  faBuilding,
+  faUsers,
+  faUserTie
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-library.add(faEdit, faTrash, faCalendar, faUserGraduate, faSpinner);
+library.add(
+  faEdit,
+  faTrash,
+  faCalendar,
+  faUserGraduate,
+  faSpinner,
+  faClock,
+  faBuilding,
+  faUsers,
+  faUserTie
+);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
