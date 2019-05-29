@@ -19,6 +19,7 @@
   left: 0;
   width: 100%;
   padding: 0 15px;
+  z-index: 9999;
 }
 .container__login {
   height: 100vh;
