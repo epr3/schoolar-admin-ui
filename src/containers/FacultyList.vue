@@ -12,11 +12,10 @@
             class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
             v-for="item in faculties"
             :key="item.id"
+            @click.self="$router.push(`/faculties/${item.id}`)"
           >
             <template v-if="item.id">
-              <router-link tag="span" :to="`/faculties/${item.id}`">
-                {{ item.name }}
-              </router-link>
+              {{ item.name }}
               <div class="btn-group">
                 <base-button type="secondary" @click="editFacultyAction(item)">
                   Edit faculty

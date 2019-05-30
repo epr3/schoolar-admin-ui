@@ -12,7 +12,6 @@ export default ({ networkError, graphQLErrors }) => {
       item.extensions.code === 'UNAUTHENTICATED' ||
       item.extensions.code === 'FORBIDDEN'
     ) {
-      console.log('here');
       if (typeof localStorage !== 'undefined') {
         localStorage.removeItem(process.env.VUE_APP_ACCESS_TOKEN);
         localStorage.removeItem(process.env.VUE_APP_REFRESH_TOKEN);
@@ -23,4 +22,7 @@ export default ({ networkError, graphQLErrors }) => {
     }
     store.commit('Error/SET_ERROR', item.message);
   });
+  setTimeout(() => {
+    store.commit('Error/CLEAR_ERROR');
+  }, 5000);
 };

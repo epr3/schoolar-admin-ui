@@ -234,7 +234,7 @@ export default {
     },
     async submitMethod() {
       if (!this.$v.$invalid) {
-        if (this.id) {
+        if (this.event) {
           try {
             await this.$apollo.mutate({
               mutation: UPDATE_EVENT,

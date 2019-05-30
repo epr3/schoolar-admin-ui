@@ -3,20 +3,14 @@
     <div class="container-fluid mt-2">
       <div class="card">
         <div class="card-body">
-          <base-button type="primary" @click="openModalAction">
-            Add Event
-          </base-button>
+          <base-button type="primary" @click="openModalAction">Add Event</base-button>
         </div>
         <div class="card-body">
           <div class="row">
             <div class="col" v-for="day in days" :key="day">{{ day }}</div>
           </div>
           <div class="row mt-3" v-if="eventsComputed">
-            <div
-              class="col"
-              v-for="(item, index) in eventsComputed"
-              :key="index"
-            >
+            <div class="col" v-for="(item, index) in eventsComputed" :key="index">
               <event-card
                 v-for="event in item"
                 :key="event.id"
@@ -32,7 +26,7 @@
                 :end-time="event.endTime"
                 :color="event.color"
                 @click="editEventAction(event.event)"
-                :delete-action="() => deleteEventAction(id)"
+                :delete-action="() => deleteEventAction(event.id)"
               />
             </div>
           </div>
@@ -128,10 +122,10 @@ export default {
   },
   methods: {
     ...mapMutations({
-      openModal: 'Modal/OPEN_MODAL'
+      openModal: 'Modal/OPEN_MODAL',
+      modalClose: 'Modal/CLOSE_MODAL'
     }),
     openModalAction(props) {
-      console.log(props);
       this.openModal({
         component: () => import('@/containers/EventModal.vue'),
         props
@@ -139,6 +133,12 @@ export default {
     },
     editEventAction(event) {
       this.openModalAction({ event });
+    },
+    openConfirmationModal(props) {
+      this.openModal({
+        component: () => import('@/components/ConfirmationModal.vue'),
+        props
+      });
     },
     deleteEventAction(id) {
       this.openConfirmationModal({
@@ -152,10 +152,14 @@ export default {
                 id
               },
               update: store => {
-                const data = store.readQuery({ query: EVENTS_QUERY });
+                const data = store.readQuery({
+                  query: EVENTS_QUERY,
+                  variables: { groupId: this.$route.params.id }
+                });
                 const response = data.events.filter(item => item.id !== id);
                 store.writeQuery({
                   query: EVENTS_QUERY,
+                  variables: { groupId: this.$route.params.id },
                   data: { ...data, events: [...response] }
                 });
               }

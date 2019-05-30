@@ -114,6 +114,7 @@ export default {
                 __typename: 'Mutation',
                 updateGroup: {
                   __typename: 'Group',
+                  facultyId: this.facultyId,
                   number: this.number,
                   year: this.year,
                   id: null
@@ -150,6 +151,7 @@ export default {
                 __typename: 'Mutation',
                 postGroup: {
                   __typename: 'Group',
+                  facultyId: this.facultyId,
                   number: this.number,
                   year: this.year,
                   id: null
