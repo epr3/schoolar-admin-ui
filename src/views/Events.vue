@@ -70,7 +70,7 @@ export default {
         'Sunday'
       ],
       events: [],
-      routeParam: this.$route.params.id
+      routeParam: this.$route.params.groupId
     };
   },
   apollo: {
@@ -154,12 +154,12 @@ export default {
               update: store => {
                 const data = store.readQuery({
                   query: EVENTS_QUERY,
-                  variables: { groupId: this.$route.params.id }
+                  variables: { groupId: this.$route.params.groupId }
                 });
                 const response = data.events.filter(item => item.id !== id);
                 store.writeQuery({
                   query: EVENTS_QUERY,
-                  variables: { groupId: this.$route.params.id },
+                  variables: { groupId: this.$route.params.groupId },
                   data: { ...data, events: [...response] }
                 });
               }

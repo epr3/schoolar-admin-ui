@@ -6,12 +6,12 @@
       </div>
       <!-- <div class="col-sm-8">Sort + per page</div> -->
     </template>
-    <template #actions="{ item: { id }}">
+    <template #actions="{ item }">
       <div class="btn-group">
-        <base-button type="info" @click="editSubjectAction(id)">
+        <base-button type="info" @click="editSubjectAction(item)">
           <font-awesome-icon icon="edit" />
         </base-button>
-        <base-button type="danger" @click="deleteSubjectAction(id)">
+        <base-button type="danger" @click="deleteSubjectAction(item.id)">
           <font-awesome-icon icon="trash" />
         </base-button>
       </div>
@@ -73,8 +73,8 @@ export default {
         props
       });
     },
-    editSubjectAction(id) {
-      this.openModalAction({ id });
+    editSubjectAction(subject) {
+      this.openModalAction({ subject });
     },
     deleteSubjectAction(id) {
       this.openConfirmationModal({

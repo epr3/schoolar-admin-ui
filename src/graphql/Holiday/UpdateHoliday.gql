@@ -1,0 +1,8 @@
+mutation UpdateHoliday($holiday: HolidayInput!) {
+  updateHoliday(holiday: $holiday) {
+    id
+    name
+    startDate
+    endDate
+  }
+}

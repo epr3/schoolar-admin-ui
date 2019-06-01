@@ -1,6 +1,6 @@
 <template>
   <base-modal-content
-    :modal-title="`${id ? 'Edit event type' : 'Add new event type'}`"
+    :modal-title="`${eventType ? 'Edit event type' : 'Add new event type'}`"
     :modal-close-action="modalClose"
   >
     <template #modal-body>
@@ -22,7 +22,6 @@ import errorHandler from '../utils/errorHandler';
 
 import POST_EVENT_TYPE from '../graphql/EventType/PostEventType.gql';
 import EVENT_TYPES_QUERY from '../graphql/EventType/EventTypes.gql';
-import EVENT_TYPE_QUERY from '../graphql/EventType/EventType.gql';
 import UPDATE_EVENT_TYPE from '../graphql/EventType/UpdateEventType.gql';
 
 import { validationMixin } from 'vuelidate';
@@ -38,23 +37,18 @@ export default {
   name: 'event-type-modal',
   data: () => ({
     type: '',
-    color: '',
-    eventType: null
+    color: ''
   }),
-  async mounted() {
-    if (this.id) {
-      const response = await this.$apollo.query({
-        query: EVENT_TYPE_QUERY,
-        variables: { id: this.id }
-      });
-      this.type = response.data.eventType.type;
-      this.color = response.data.eventType.color;
+  mounted() {
+    if (this.eventType) {
+      this.type = this.eventType.type;
+      this.color = this.eventType.color;
     }
   },
   props: {
-    id: {
-      type: String,
-      default: ''
+    eventType: {
+      type: Object,
+      default: null
     }
   },
   mixins: [validationMixin],
@@ -84,13 +78,13 @@ export default {
     },
     async submitMethod() {
       if (!this.$v.$invalid) {
-        if (this.id) {
+        if (this.eventType) {
           try {
             await this.$apollo.mutate({
               mutation: UPDATE_EVENT_TYPE,
               variables: {
                 eventType: {
-                  id: this.id,
+                  id: this.eventType.id,
                   type: this.type,
                   color: this.color
                 }

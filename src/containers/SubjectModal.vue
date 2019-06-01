@@ -1,6 +1,6 @@
 <template>
   <base-modal-content
-    :modal-title="`${id ? 'Edit group' : 'Add new group'}`"
+    :modal-title="`${subject ? 'Edit subject' : 'Add new subject'}`"
     :modal-close-action="modalClose"
   >
     <template #modal-body>
@@ -26,7 +26,6 @@ import { mapState, mapMutations } from 'vuex';
 
 import errorHandler from '../utils/errorHandler';
 
-import SUBJECT_QUERY from '../graphql/Subject/Subject.gql';
 import SUBJECTS_QUERY from '../graphql/Subject/Subjects.gql';
 import POST_SUBJECT from '../graphql/Subject/PostSubject.gql';
 import UPDATE_SUBJECT from '../graphql/Subject/UpdateSubject.gql';
@@ -47,20 +46,16 @@ export default {
     facultyId: ''
   }),
   props: {
-    id: {
-      type: String,
-      default: ''
+    subject: {
+      subject: Object,
+      default: null
     }
   },
-  async mounted() {
-    if (this.id) {
-      const response = await this.$apollo.query({
-        query: SUBJECT_QUERY,
-        variables: { id: this.id }
-      });
-      this.name = response.data.subjectById.name;
-      this.credits = response.data.subjectById.credits;
-      this.facultyId = response.data.subjectById.facultyId;
+  mounted() {
+    if (this.subject) {
+      this.name = this.subjectById.name;
+      this.credits = this.subjectById.credits;
+      this.facultyId = this.subjectById.facultyId;
     }
   },
   computed: {
@@ -75,13 +70,13 @@ export default {
     },
     async submitMethod() {
       if (!this.$v.$invalid) {
-        if (this.id) {
+        if (this.subject) {
           try {
             await this.$apollo.mutate({
               mutation: UPDATE_SUBJECT,
               variables: {
                 subject: {
-                  id: this.id,
+                  id: this.subject.id,
                   name: this.name,
                   credits: parseInt(this.credits),
                   facultyId: this.facultyId

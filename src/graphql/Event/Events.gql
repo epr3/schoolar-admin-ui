@@ -8,8 +8,6 @@ query Events($groupId: ID!) {
     endDate
     startTime
     endTime
-    isFullDay
-    isNotifiable
     subjectId
     groupId
     userId

@@ -6,22 +6,22 @@
       </div>
       <!-- <div class="col-sm-8">Sort + per page</div> -->
     </template>
-    <template #actions="{ item: { id }}">
+    <template #actions="{ item}">
       <div class="btn-group">
-        <base-button type="info" @click="editGroupAction(id)">
+        <base-button type="info" @click="editGroupAction(item)">
           <font-awesome-icon icon="edit"/>
         </base-button>
-        <base-button type="danger" @click="deleteGroupAction(id)">
+        <base-button type="danger" @click="deleteGroupAction(item.id)">
           <font-awesome-icon icon="trash"/>
         </base-button>
         <base-button
-          :routerPath="`/faculties/${$route.params.id}/groups/${id}/events`"
+          :routerPath="`/faculties/${$route.params.id}/groups/${item.id}/events`"
           type="primary"
         >
           <font-awesome-icon icon="calendar"/>
         </base-button>
         <base-button
-          :routerPath="`/faculties/${$route.params.id}/groups/${id}/students`"
+          :routerPath="`/faculties/${$route.params.id}/groups/${item.id}/students`"
           type="secondary"
         >
           <font-awesome-icon icon="user-graduate"/>
@@ -87,8 +87,8 @@ export default {
       });
     },
 
-    editGroupAction(id) {
-      this.openModalAction({ id });
+    editGroupAction(group) {
+      this.openModalAction({ group });
     },
 
     deleteGroupAction(id) {

@@ -19,7 +19,6 @@
             />
           </div>
         </div>
-
         <div class="form-row">
           <div class="col">
             <base-select
@@ -35,39 +34,34 @@
         </div>
         <div class="form-row">
           <div class="col">
-            <base-checkbox
-              id="notifiable"
-              label="Is Notifiable"
-              :v="$v.isNotifiable"
-              v-model="isNotifiable"
-            />
-            <base-checkbox id="full-day" label="Is Full Day" :v="$v.isFullDay" v-model="isFullDay"/>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="col">
             <base-select
+              v-if="subjectSelect.length"
               label="Subject"
               :v="$v.subjectId"
               v-model="subjectId"
               :options="subjectSelect"
             />
+            <base-button v-else type="info" @click="openSubjectModalAction">Create subject</base-button>
           </div>
           <div class="col">
             <base-select
+              v-if="professorSelect.length"
               label="Professor"
               :v="$v.userId"
               v-model="userId"
               :options="professorSelect"
             />
+            <base-button v-else type="info" @click="openProfessorModalAction">Create professor</base-button>
           </div>
           <div class="col">
             <base-select
+              v-if="eventTypeSelect.length"
               label="Event Type"
               :v="$v.eventTypeId"
               v-model="eventTypeId"
               :options="eventTypeSelect"
             />
+            <base-button v-else type="info" @click="openEventTypeModalAction">Create type</base-button>
           </div>
         </div>
         <div class="form-row">
@@ -136,7 +130,6 @@ import UPDATE_EVENT from '../graphql/Event/UpdateEvent.gql';
 
 import BaseInput from '@/components/BaseInput.vue';
 import BaseSelect from '@/components/BaseSelect.vue';
-import BaseCheckbox from '@/components/BaseCheckbox.vue';
 import BaseButton from '@/components/BaseButton.vue';
 import BaseDateTimePicker from '@/components/BaseDateTimePicker.vue';
 
@@ -148,8 +141,6 @@ export default {
       interval: '',
       frequency: null,
       room: '',
-      isFullDay: false,
-      isNotifiable: false,
       subjectId: null,
       userId: null,
       eventTypeId: null,
@@ -160,7 +151,7 @@ export default {
       professors: [],
       subjects: [],
       eventTypes: [],
-      facultyId: this.$route.params.facultyId
+      facultyId: this.$route.params.id
     };
   },
   mounted() {
@@ -168,8 +159,6 @@ export default {
       this.interval = this.event.interval;
       this.frequency = this.event.frequency;
       this.room = this.event.room;
-      this.isFullDay = !!this.event.isFullDay;
-      this.isNotifiable = !!this.event.isNotifiable;
       this.subjectId = this.event.subjectId;
       this.userId = this.event.userId;
       this.eventTypeId = this.event.eventTypeId;
@@ -227,10 +216,29 @@ export default {
   },
   methods: {
     ...mapMutations({
+      openModal: 'Modal/OPEN_MODAL',
       modalClose: 'Modal/CLOSE_MODAL'
     }),
     modalCloseAction() {
       this.modalClose();
+    },
+    openSubjectModalAction(props) {
+      this.openModal({
+        component: () => import('@/containers/SubjectModal.vue'),
+        props
+      });
+    },
+    openProfessorModalAction(props) {
+      this.openModal({
+        component: () => import('@/containers/ProfessorModal.vue'),
+        props
+      });
+    },
+    openEventTypeModalAction(props) {
+      this.openModal({
+        component: () => import('@/containers/EventTypeModal.vue'),
+        props
+      });
     },
     async submitMethod() {
       if (!this.$v.$invalid) {
@@ -244,8 +252,6 @@ export default {
                   interval: parseInt(this.interval),
                   frequency: this.frequency,
                   room: this.room,
-                  isFullDay: this.isFullDay,
-                  isNotifiable: this.isNotifiable,
                   subjectId: this.subjectId,
                   userId: this.userId,
                   eventTypeId: this.eventTypeId,
@@ -253,13 +259,13 @@ export default {
                   endDate: DateTime.fromJSDate(this.endDate).toISODate(),
                   startTime: DateTime.fromJSDate(this.startTime).toISOTime(),
                   endTime: DateTime.fromJSDate(this.endTime).toISOTime(),
-                  groupId: this.$route.params.id
+                  groupId: this.$route.params.groupId
                 }
               },
               update: (store, { data: { updateEvent } }) => {
                 const data = store.readQuery({
                   query: EVENTS_QUERY,
-                  variables: { groupId: this.$route.params.id }
+                  variables: { groupId: this.$route.params.groupId }
                 });
                 const itemIndex = data.events.findIndex(
                   item => item.id === updateEvent.id
@@ -276,7 +282,7 @@ export default {
                       return { ...item, ...updateEvent };
                     })
                   },
-                  variables: { groupId: this.$route.params.id }
+                  variables: { groupId: this.$route.params.groupId }
                 });
               }
             });
@@ -292,8 +298,6 @@ export default {
                   interval: parseInt(this.interval),
                   frequency: this.frequency,
                   room: this.room,
-                  isFullDay: this.isFullDay,
-                  isNotifiable: this.isNotifiable,
                   subjectId: this.subjectId,
                   userId: this.userId,
                   eventTypeId: this.eventTypeId,
@@ -301,19 +305,19 @@ export default {
                   endDate: DateTime.fromJSDate(this.endDate).toISODate(),
                   startTime: DateTime.fromJSDate(this.startTime).toISOTime(),
                   endTime: DateTime.fromJSDate(this.endTime).toISOTime(),
-                  groupId: this.$route.params.id
+                  groupId: this.$route.params.groupId
                 }
               },
               update: (store, { data: { postEvent } }) => {
                 const data = store.readQuery({
                   query: EVENTS_QUERY,
-                  variables: { groupId: this.$route.params.id }
+                  variables: { groupId: this.$route.params.groupId }
                 });
                 data.events.push(postEvent);
                 store.writeQuery({
                   query: EVENTS_QUERY,
                   data,
-                  variables: { groupId: this.$route.params.id }
+                  variables: { groupId: this.$route.params.groupId }
                 });
               }
             });
@@ -330,7 +334,6 @@ export default {
     BaseModalContent,
     BaseButton,
     BaseInput,
-    BaseCheckbox,
     BaseSelect,
     BaseDateTimePicker
   },
@@ -342,12 +345,6 @@ export default {
       required
     },
     room: {
-      required
-    },
-    isNotifiable: {
-      required
-    },
-    isFullDay: {
       required
     },
     userId: {

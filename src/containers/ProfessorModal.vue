@@ -64,23 +64,19 @@ export default {
     email: ''
   }),
   props: {
-    id: {
-      type: String,
-      default: ''
+    professor: {
+      type: Object,
+      default: null
     }
   },
-  async mounted() {
-    if (this.id) {
-      const response = await this.$apollo.query({
-        query: PROFESSOR_QUERY,
-        variables: { id: this.id }
-      });
-      this.name = response.data.professor.name;
-      this.surname = response.data.professor.surname;
-      this.email = response.data.professor.email;
-      this.title = response.data.professor.title;
-      this.telephone = response.data.professor.telephone;
-      this.userId = response.data.professor.userId;
+  mounted() {
+    if (this.professor) {
+      this.name = this.professor.name;
+      this.surname = this.professor.surname;
+      this.email = this.professor.email;
+      this.title = this.professor.title;
+      this.telephone = this.professor.telephone;
+      this.userId = this.professor.userId;
     }
   },
   computed: {
@@ -101,7 +97,7 @@ export default {
               mutation: UPDATE_PROFESSOR,
               variables: {
                 professor: {
-                  id: this.id,
+                  id: this.professor.id,
                   email: this.email,
                   name: this.name,
                   surname: this.surname,

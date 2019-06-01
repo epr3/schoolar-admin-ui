@@ -10,12 +10,12 @@
               </div>
               <div class="col-sm-8">Sort + per page</div>
             </template>
-            <template #actions="{ item: { id }}">
+            <template #actions="{ item }">
               <div class="btn-group">
-                <base-button type="info" @click="editEventTypeAction(id)">
+                <base-button type="info" @click="editEventTypeAction(item)">
                   <font-awesome-icon icon="edit" />
                 </base-button>
-                <base-button type="danger" @click="deleteEventTypeAction(id)">
+                <base-button type="danger" @click="deleteEventTypeAction(item.id)">
                   <font-awesome-icon icon="trash" />
                 </base-button>
               </div>
@@ -70,8 +70,8 @@ export default {
         props
       });
     },
-    editEventTypeAction(id) {
-      this.openModalAction({ id });
+    editEventTypeAction(eventType) {
+      this.openModalAction({ eventType });
     },
     deleteEventTypeAction(id) {
       this.openConfirmationModal({

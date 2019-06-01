@@ -29,7 +29,7 @@ const router = new Router({
         import(/* webpackChunkName: "events" */ './views/EventTypes.vue')
     },
     {
-      path: '/faculties/:facultyId/groups/:id/events',
+      path: '/faculties/:id/groups/:groupId/events',
       name: 'groupEvents',
       meta: {
         auth: true
@@ -38,7 +38,7 @@ const router = new Router({
         import(/* webpackChunkName: "events" */ './views/Events.vue')
     },
     {
-      path: '/faculties/:facultyId/groups/:id/students',
+      path: '/faculties/:id/groups/:groupId/students',
       name: 'groupStudents',
       meta: {
         auth: true
@@ -63,6 +63,15 @@ const router = new Router({
       },
       component: () =>
         import(/* webpackChunkName: "accounts" */ './views/Accounts.vue')
+    },
+    {
+      path: '/holidays',
+      name: 'holidays',
+      meta: {
+        auth: true
+      },
+      component: () =>
+        import(/* webpackChunkName: "holidays" */ './views/Holidays.vue')
     },
     {
       path: '/login',

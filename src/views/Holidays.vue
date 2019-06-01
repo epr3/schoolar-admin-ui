@@ -3,19 +3,18 @@
     <div class="container mt-2">
       <div class="card">
         <div class="card-body">
-          <base-table :items="students">
+          <base-table :items="holidays">
             <template #filter>
               <div class="col-sm-4">
-                <base-button size="lg" type="primary" @click="openModalAction">Add Student</base-button>
+                <base-button size="lg" type="primary" @click="openModalAction">Add Holiday</base-button>
               </div>
-              <!-- <div class="col-sm-8">Sort + per page</div> -->
             </template>
             <template #actions="{ item }">
               <div class="btn-group">
-                <base-button type="info" @click="editStudentAction(item)">
+                <base-button type="info" @click="editHolidayAction(item)">
                   <font-awesome-icon icon="edit" />
                 </base-button>
-                <base-button type="danger" @click="deleteStudentAction(item.id, item.userId)">
+                <base-button type="danger" @click="deleteHolidayAction(item.id)">
                   <font-awesome-icon icon="trash" />
                 </base-button>
               </div>
@@ -28,43 +27,30 @@
 </template>
 
 <script>
-import gql from 'graphql-tag';
 import { mapMutations } from 'vuex';
 
 import errorHandler from '../utils/errorHandler';
 
-import STUDENTS_QUERY from '../graphql/Student/Students.gql';
-import DELETE_STUDENT from '../graphql/Student/DeleteStudent.gql';
+import HOLIDAYS_QUERY from '../graphql/Holiday/Holidays.gql';
+import DELETE_HOLIDAY from '../graphql/Holiday/DeleteHoliday.gql';
+
+import AuthLayout from '@/layouts/AuthLayout.vue';
 
 import BaseTable from '@/components/BaseTable.vue';
 import BaseButton from '@/components/BaseButton.vue';
 
-import AuthLayout from '@/layouts/AuthLayout.vue';
-
 export default {
-  name: 'subject-tab',
-  data() {
-    return {
-      students: [],
-      routeParam: this.$route.params.groupId
-    };
-  },
-  apollo: {
-    students: {
-      query: gql`
-        ${STUDENTS_QUERY}
-      `,
-      variables() {
-        return {
-          groupId: this.routeParam
-        };
-      }
-    }
-  },
+  name: 'event-types',
+  data: () => ({
+    holidays: []
+  }),
   components: {
     BaseTable,
     BaseButton,
     AuthLayout
+  },
+  apollo: {
+    holidays: HOLIDAYS_QUERY
   },
   methods: {
     ...mapMutations({
@@ -73,42 +59,36 @@ export default {
     }),
     openModalAction(props) {
       this.openModal({
-        component: () => import('@/containers/StudentModal.vue'),
+        component: () => import('@/containers/HolidayModal.vue'),
         props
       });
     },
-
     openConfirmationModal(props) {
       this.openModal({
         component: () => import('@/components/ConfirmationModal.vue'),
         props
       });
     },
-    editStudentAction(student) {
-      this.openModalAction({ student });
+    editHolidayAction(holiday) {
+      this.openModalAction({ holiday });
     },
-    deleteStudentAction(id, userId) {
+    deleteHolidayAction(id) {
       this.openConfirmationModal({
-        modalTitle: 'Delete student',
+        modalTitle: 'Delete holiday',
         modalCloseAction: this.modalClose,
         modalSuccessAction: async () => {
           try {
             await this.$apollo.mutate({
-              mutation: DELETE_STUDENT,
+              mutation: DELETE_HOLIDAY,
               variables: {
-                id,
-                userId
+                id
               },
               update: store => {
-                const data = store.readQuery({
-                  query: STUDENTS_QUERY,
-                  variables: { groupId: this.$route.params.groupId }
-                });
-                const response = data.students.filter(item => item.id !== id);
+                const data = store.readQuery({ query: HOLIDAYS_QUERY });
+                const response = data.holidays.filter(item => item.id !== id);
                 store.writeQuery({
-                  query: STUDENTS_QUERY,
-                  variables: { groupId: this.$route.params.groupId },
-                  data: { ...data, students: [...response] }
+                  query: HOLIDAYS_QUERY,
+                  data: { ...data, holidays: [...response] }
                 });
               }
             });

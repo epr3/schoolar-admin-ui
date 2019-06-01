@@ -1,0 +1,8 @@
+query Holidays {
+  holidays {
+    id
+    name
+    startDate
+    endDate
+  }
+}

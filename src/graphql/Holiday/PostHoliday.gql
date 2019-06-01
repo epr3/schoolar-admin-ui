@@ -1,0 +1,8 @@
+mutation PostHoliday($holiday: HolidayInput!) {
+  postHoliday(holiday: $holiday) {
+    id
+    name
+    startDate
+    endDate
+  }
+}

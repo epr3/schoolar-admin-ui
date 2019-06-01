@@ -1,0 +1,3 @@
+mutation DeleteHoliday($id: ID!) {
+  deleteHoliday(id: $id)
+}

@@ -1,6 +1,6 @@
 <template>
   <base-modal-content
-    :modal-title="`${id ? 'Edit group' : 'Add new group'}`"
+    :modal-title="`${group ? 'Edit group' : 'Add new group'}`"
     :modal-close-action="modalClose"
   >
     <template #modal-body>
@@ -22,7 +22,6 @@ import errorHandler from '../utils/errorHandler';
 
 import POST_GROUP from '../graphql/Group/PostGroup.gql';
 import GROUPS_QUERY from '../graphql/Group/Groups.gql';
-import GROUP_QUERY from '../graphql/Group/Group.gql';
 import UPDATE_GROUP from '../graphql/Group/UpdateGroup.gql';
 
 import { validationMixin } from 'vuelidate';
@@ -41,20 +40,16 @@ export default {
     facultyId: ''
   }),
   props: {
-    id: {
-      type: String,
-      default: ''
+    group: {
+      type: Object,
+      default: null
     }
   },
-  async mounted() {
-    if (this.id) {
-      const response = await this.$apollo.query({
-        query: GROUP_QUERY,
-        variables: { id: this.id }
-      });
-      this.number = response.data.groupById.number;
-      this.year = response.data.groupById.year;
-      this.facultyId = response.data.groupById.facultyId;
+  mounted() {
+    if (this.group) {
+      this.number = this.groupById.number;
+      this.year = this.groupById.year;
+      this.facultyId = this.groupById.facultyId;
     }
   },
   mixins: [validationMixin],
@@ -75,13 +70,13 @@ export default {
     },
     async submitMethod() {
       if (!this.$v.$invalid) {
-        if (this.id) {
+        if (this.group) {
           try {
             await this.$apollo.mutate({
               mutation: UPDATE_GROUP,
               variables: {
                 group: {
-                  id: this.id,
+                  id: this.group.id,
                   number: this.number,
                   year: this.year,
                   facultyId: this.facultyId

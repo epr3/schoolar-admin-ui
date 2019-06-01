@@ -4,8 +4,6 @@ mutation PostEvent($event: EventInput!) {
     interval
     frequency
     room
-    isFullDay
-    isNotifiable
     subjectId
     userId
     eventTypeId

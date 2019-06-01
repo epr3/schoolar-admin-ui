@@ -29,6 +29,11 @@
               Event Types
             </router-link>
           </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/holidays" exact>
+              Holidays
+            </router-link>
+          </li>
         </ul>
       </div>
     </nav>

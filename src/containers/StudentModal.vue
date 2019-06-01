@@ -1,6 +1,6 @@
 <template>
   <base-modal-content
-    :modal-title="`${id ? 'Edit student' : 'Add new student'}`"
+    :modal-title="`${student ? 'Edit student' : 'Add new student'}`"
     :modal-close-action="modalClose"
   >
     <template #modal-body>
@@ -42,7 +42,6 @@ import errorHandler from '../utils/errorHandler';
 
 import POST_STUDENT from '../graphql/Student/PostStudent.gql';
 import STUDENTS_QUERY from '../graphql/Student/Students.gql';
-import STUDENT_QUERY from '../graphql/Student/Student.gql';
 import UPDATE_STUDENT from '../graphql/Student/UpdateStudent.gql';
 
 import { validationMixin } from 'vuelidate';
@@ -63,23 +62,19 @@ export default {
     email: ''
   }),
   props: {
-    id: {
-      type: String,
-      default: ''
+    student: {
+      type: Object,
+      default: null
     }
   },
-  async mounted() {
-    if (this.id) {
-      const response = await this.$apollo.query({
-        query: STUDENT_QUERY,
-        variables: { id: this.id }
-      });
-      this.name = response.data.student.name;
-      this.surname = response.data.student.surname;
-      this.email = response.data.student.email;
-      this.groupId = response.data.student.groupId;
-      this.telephone = response.data.student.telephone;
-      this.userId = response.data.student.userId;
+  mounted() {
+    if (this.student) {
+      this.name = this.student.name;
+      this.surname = this.student.surname;
+      this.email = this.student.email;
+      this.groupId = this.student.groupId;
+      this.telephone = this.student.telephone;
+      this.userId = this.student.userId;
     }
   },
   computed: {
@@ -94,13 +89,13 @@ export default {
     },
     async submitMethod() {
       if (!this.$v.$invalid) {
-        if (this.id) {
+        if (this.student) {
           try {
             await this.$apollo.mutate({
               mutation: UPDATE_STUDENT,
               variables: {
                 student: {
-                  id: this.id,
+                  id: this.student.id,
                   email: this.email,
                   name: this.name,
                   surname: this.surname,
