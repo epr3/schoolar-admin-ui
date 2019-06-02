@@ -115,12 +115,16 @@ export default {
                 }
               },
               update: (store, { data: { updateStudent } }) => {
-                const data = store.readQuery({ query: STUDENTS_QUERY });
+                const data = store.readQuery({
+                  query: STUDENTS_QUERY,
+                  variables: { groupId: this.$route.params.groupId }
+                });
                 const itemIndex = data.students.findIndex(
                   item => item.id === updateStudent.id
                 );
                 store.writeQuery({
                   query: STUDENTS_QUERY,
+                  variables: { groupId: this.$route.params.groupId },
                   data: {
                     ...data,
                     students: data.students.map((item, index) => {
@@ -146,7 +150,7 @@ export default {
                   email: this.email,
                   name: this.name,
                   surname: this.surname,
-                  groupId: this.$route.params.id,
+                  groupId: this.$route.params.groupId,
                   telephone: this.telephone
                 }
               },
@@ -166,13 +170,13 @@ export default {
               update: (store, { data: { postStudent } }) => {
                 const data = store.readQuery({
                   query: STUDENTS_QUERY,
-                  variables: { groupId: this.$route.params.id }
+                  variables: { groupId: this.$route.params.groupId }
                 });
                 data.students.push(postStudent);
                 store.writeQuery({
                   query: STUDENTS_QUERY,
                   data,
-                  variables: { groupId: this.$route.params.id }
+                  variables: { groupId: this.$route.params.groupId }
                 });
               }
             });
