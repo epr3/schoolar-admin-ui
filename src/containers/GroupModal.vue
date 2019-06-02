@@ -1,7 +1,7 @@
 <template>
   <base-modal-content
     :modal-title="`${group ? 'Edit group' : 'Add new group'}`"
-    :modal-close-action="modalClose"
+    :modal-close-action="modalCloseAction"
   >
     <template #modal-body>
       <form>
@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapMutations } from 'vuex';
 
 import errorHandler from '../utils/errorHandler';
 
@@ -58,15 +58,12 @@ export default {
     BaseButton,
     BaseInput
   },
-  computed: {
-    ...mapState('Modal', ['modalOpen', 'modalComponent'])
-  },
   methods: {
     ...mapMutations({
       modalClose: 'Modal/CLOSE_MODAL'
     }),
     modalCloseAction() {
-      this.modalClose();
+      this.modalClose('group');
     },
     async submitMethod() {
       if (!this.$v.$invalid) {
@@ -157,7 +154,7 @@ export default {
             errorHandler(e);
           }
         }
-        this.modalClose();
+        this.modalCloseAction();
       }
     }
   },

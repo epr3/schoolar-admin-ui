@@ -1,7 +1,7 @@
 <template>
   <base-modal-content
-    :modal-title="`${id ? 'Edit professor' : 'Add new professor'}`"
-    :modal-close-action="modalClose"
+    :modal-title="`${professor ? 'Edit professor' : 'Add new professor'}`"
+    :modal-close-action="modalCloseAction"
   >
     <template #modal-body>
       <form>
@@ -37,13 +37,12 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapMutations } from 'vuex';
 
 import errorHandler from '../utils/errorHandler';
 
 import POST_PROFESSOR from '../graphql/Professor/PostProfessor.gql';
 import PROFESSORS_QUERY from '../graphql/Professor/Professors.gql';
-import PROFESSOR_QUERY from '../graphql/Professor/Professor.gql';
 import UPDATE_PROFESSOR from '../graphql/Professor/UpdateProfessor.gql';
 
 import { validationMixin } from 'vuelidate';
@@ -79,15 +78,12 @@ export default {
       this.userId = this.professor.userId;
     }
   },
-  computed: {
-    ...mapState('Modal', ['modalOpen', 'modalComponent'])
-  },
   methods: {
     ...mapMutations({
       modalClose: 'Modal/CLOSE_MODAL'
     }),
     modalCloseAction() {
-      this.modalClose();
+      this.modalClose('professor');
     },
     async submitMethod() {
       if (!this.$v.$invalid) {
@@ -178,7 +174,7 @@ export default {
             errorHandler(e);
           }
         }
-        this.modalClose();
+        this.modalCloseAction();
       }
     }
   },

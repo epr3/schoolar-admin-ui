@@ -9,10 +9,10 @@
     <template #actions="{ item }">
       <div class="btn-group">
         <base-button type="info" @click="editSubjectAction(item)">
-          <font-awesome-icon icon="edit" />
+          <font-awesome-icon icon="edit"/>
         </base-button>
         <base-button type="danger" @click="deleteSubjectAction(item.id)">
-          <font-awesome-icon icon="trash" />
+          <font-awesome-icon icon="trash"/>
         </base-button>
       </div>
     </template>
@@ -63,14 +63,16 @@ export default {
     openModalAction(props) {
       this.openModal({
         component: () => import('@/containers/SubjectModal.vue'),
-        props
+        props,
+        id: 'subject'
       });
     },
 
     openConfirmationModal(props) {
       this.openModal({
         component: () => import('@/components/ConfirmationModal.vue'),
-        props
+        props,
+        id: 'confirmation'
       });
     },
     editSubjectAction(subject) {
@@ -79,7 +81,7 @@ export default {
     deleteSubjectAction(id) {
       this.openConfirmationModal({
         modalTitle: 'Delete subject',
-        modalCloseAction: this.modalClose,
+        modalCloseAction: () => this.modalClose('confirmation'),
         modalSuccessAction: async () => {
           try {
             await this.$apollo.mutate({
@@ -100,9 +102,9 @@ export default {
                 });
               }
             });
-            this.modalClose();
+            this.modalClose('confirmation');
           } catch (e) {
-           errorHandler(e);
+            errorHandler(e);
           }
         }
       });

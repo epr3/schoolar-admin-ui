@@ -1,7 +1,7 @@
 <template>
   <base-modal-content
     :modal-title="`${faculty ? 'Edit faculty' : 'Add new faculty'}`"
-    :modal-close-action="modalClose"
+    :modal-close-action="modalCloseAction"
   >
     <template #modal-body>
       <form>
@@ -23,7 +23,7 @@
 <script>
 import errorHandler from '../utils/errorHandler';
 
-import { mapState, mapMutations } from 'vuex';
+import { mapMutations } from 'vuex';
 import POST_FACULTY from '../graphql/Faculty/PostFaculty.gql';
 import UPDATE_FACULTY from '../graphql/Faculty/UpdateFaculty.gql';
 import FACULTIES_QUERY from '../graphql/Faculty/Faculties.gql';
@@ -62,15 +62,12 @@ export default {
       required
     }
   },
-  computed: {
-    ...mapState('Modal', ['modalOpen', 'modalComponent'])
-  },
   methods: {
     ...mapMutations({
       modalClose: 'Modal/CLOSE_MODAL'
     }),
     modalCloseAction() {
-      this.modalClose();
+      this.modalClose('faculty');
     },
     async submitMethod() {
       if (!this.$v.$invalid) {
@@ -142,7 +139,7 @@ export default {
             errorHandler(e);
           }
         }
-        this.modalClose();
+        this.modalCloseAction();
         this.name = '';
       }
     }

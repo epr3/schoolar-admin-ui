@@ -1,7 +1,7 @@
 <template>
   <base-modal-content
     :modal-title="`${eventType ? 'Edit event type' : 'Add new event type'}`"
-    :modal-close-action="modalClose"
+    :modal-close-action="modalCloseAction"
   >
     <template #modal-body>
       <form>
@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapMutations } from 'vuex';
 
 import errorHandler from '../utils/errorHandler';
 
@@ -66,15 +66,12 @@ export default {
       required
     }
   },
-  computed: {
-    ...mapState('Modal', ['modalOpen', 'modalComponent'])
-  },
   methods: {
     ...mapMutations({
       modalClose: 'Modal/CLOSE_MODAL'
     }),
     modalCloseAction() {
-      this.modalClose();
+      this.modalClose('eventType');
     },
     async submitMethod() {
       if (!this.$v.$invalid) {
@@ -150,7 +147,7 @@ export default {
             errorHandler(e);
           }
         }
-        this.modalClose();
+        this.modalCloseAction();
       }
     }
   }

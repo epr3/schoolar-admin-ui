@@ -1,7 +1,7 @@
 <template>
   <base-modal-content
     :modal-title="`${holiday ? 'Edit holiday' : 'Add new holiday'}`"
-    :modal-close-action="modalClose"
+    :modal-close-action="modalCloseAction"
   >
     <template #modal-body>
       <form>
@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapMutations } from 'vuex';
 import { validationMixin } from 'vuelidate';
 import { required } from 'vuelidate/lib/validators';
 import { DateTime } from 'luxon';
@@ -79,15 +79,12 @@ export default {
       default: null
     }
   },
-  computed: {
-    ...mapState('Modal', ['modalOpen', 'modalComponent'])
-  },
   methods: {
     ...mapMutations({
       modalClose: 'Modal/CLOSE_MODAL'
     }),
     modalCloseAction() {
-      this.modalClose();
+      this.modalClose('holiday');
     },
     async submitMethod() {
       if (!this.$v.$invalid) {
@@ -155,7 +152,7 @@ export default {
             errorHandler(e);
           }
         }
-        this.modalClose();
+        this.modalCloseAction();
       }
     }
   },

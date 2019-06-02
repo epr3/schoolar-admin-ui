@@ -1,13 +1,13 @@
 <template>
   <portal to="modal">
     <div
-      class="modal"
-      v-if="modalOpen"
-      @click="modalClose"
-      :class="{ fade: modalOpen, show: modalOpen }"
+      v-for="modal in modalComponents"
+      :key="modal.id"
+      class="modal show fade"
+      @click="modalClose(modal.id)"
     >
       <div @click.stop class="modal-dialog">
-        <component :is="modalComponent" v-bind="modalProps" />
+        <component :is="modal.component" v-bind="modal.props" />
       </div>
     </div>
   </portal>
@@ -28,7 +28,7 @@ import { mapState, mapMutations } from 'vuex';
 export default {
   name: 'modal-container',
   computed: {
-    ...mapState('Modal', ['modalOpen', 'modalComponent', 'modalProps'])
+    ...mapState('Modal', ['modalComponents'])
   },
   methods: {
     ...mapMutations({

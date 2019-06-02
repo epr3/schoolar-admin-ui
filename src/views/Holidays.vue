@@ -60,13 +60,15 @@ export default {
     openModalAction(props) {
       this.openModal({
         component: () => import('@/containers/HolidayModal.vue'),
-        props
+        props,
+        id: 'holiday'
       });
     },
     openConfirmationModal(props) {
       this.openModal({
         component: () => import('@/components/ConfirmationModal.vue'),
-        props
+        props,
+        id: 'confirmation'
       });
     },
     editHolidayAction(holiday) {
@@ -75,7 +77,7 @@ export default {
     deleteHolidayAction(id) {
       this.openConfirmationModal({
         modalTitle: 'Delete holiday',
-        modalCloseAction: this.modalClose,
+        modalCloseAction: () => this.modalClose('confirmation'),
         modalSuccessAction: async () => {
           try {
             await this.$apollo.mutate({
@@ -92,7 +94,7 @@ export default {
                 });
               }
             });
-            this.modalClose();
+            this.modalClose('confirmation');
           } catch (e) {
             errorHandler(e);
           }

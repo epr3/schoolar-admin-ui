@@ -64,13 +64,15 @@ export default {
     openModalAction(props) {
       this.openModal({
         component: () => import('@/containers/ProfessorModal.vue'),
-        props
+        props,
+        id: 'professor'
       });
     },
     openConfirmationModal(props) {
       this.openModal({
         component: () => import('@/components/ConfirmationModal.vue'),
-        props
+        props,
+        id: 'confirmation'
       });
     },
     editProfessorAction(professor) {
@@ -79,7 +81,7 @@ export default {
     deleteProfessorAction(id, userId) {
       this.openConfirmationModal({
         modalTitle: 'Delete professor',
-        modalCloseAction: this.modalClose,
+        modalCloseAction: () => this.modalClose('confirmation'),
         modalSuccessAction: async () => {
           try {
             this.$apollo.mutate({
@@ -97,7 +99,7 @@ export default {
                 });
               }
             });
-            this.modalClose();
+            this.modalClose('confirmation');
           } catch (e) {
             errorHandler(e);
           }

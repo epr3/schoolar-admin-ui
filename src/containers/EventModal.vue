@@ -1,7 +1,7 @@
 <template>
   <base-modal-content
     :modal-title="`${event ? 'Edit event' : 'Add new event'}`"
-    :modal-close-action="modalClose"
+    :modal-close-action="modalCloseAction"
   >
     <template #modal-body>
       <form>
@@ -114,7 +114,7 @@
 
 <script>
 import gql from 'graphql-tag';
-import { mapState, mapMutations } from 'vuex';
+import { mapMutations } from 'vuex';
 import { validationMixin } from 'vuelidate';
 import { required } from 'vuelidate/lib/validators';
 import { DateTime } from 'luxon';
@@ -189,7 +189,6 @@ export default {
     }
   },
   computed: {
-    ...mapState('Modal', ['modalOpen', 'modalComponent']),
     professorSelect() {
       return this.professors.map(item => ({
         id: item.userId,
@@ -220,24 +219,24 @@ export default {
       modalClose: 'Modal/CLOSE_MODAL'
     }),
     modalCloseAction() {
-      this.modalClose();
+      this.modalClose('event');
     },
-    openSubjectModalAction(props) {
+    openSubjectModalAction() {
       this.openModal({
         component: () => import('@/containers/SubjectModal.vue'),
-        props
+        id: 'subject'
       });
     },
-    openProfessorModalAction(props) {
+    openProfessorModalAction() {
       this.openModal({
         component: () => import('@/containers/ProfessorModal.vue'),
-        props
+        id: 'professor'
       });
     },
-    openEventTypeModalAction(props) {
+    openEventTypeModalAction() {
       this.openModal({
         component: () => import('@/containers/EventTypeModal.vue'),
-        props
+        id: 'eventType'
       });
     },
     async submitMethod() {
@@ -325,7 +324,7 @@ export default {
             errorHandler(e);
           }
         }
-        this.modalClose();
+        this.modalCloseAction();
       }
     }
   },

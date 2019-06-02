@@ -128,7 +128,8 @@ export default {
     openModalAction(props) {
       this.openModal({
         component: () => import('@/containers/EventModal.vue'),
-        props
+        props,
+        id: 'event'
       });
     },
     editEventAction(event) {
@@ -137,13 +138,14 @@ export default {
     openConfirmationModal(props) {
       this.openModal({
         component: () => import('@/components/ConfirmationModal.vue'),
-        props
+        props,
+        id: 'confirmation'
       });
     },
     deleteEventAction(id) {
       this.openConfirmationModal({
         modalTitle: 'Delete event',
-        modalCloseAction: this.modalClose,
+        modalCloseAction: () => this.modalClose('confirmation'),
         modalSuccessAction: async () => {
           try {
             await this.$apollo.mutate({
@@ -164,7 +166,7 @@ export default {
                 });
               }
             });
-            this.modalClose();
+            this.modalClose('confirmation');
           } catch (e) {
             errorHandler(e);
           }

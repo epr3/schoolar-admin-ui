@@ -1,7 +1,7 @@
 <template>
   <base-modal-content
     :modal-title="`${student ? 'Edit student' : 'Add new student'}`"
-    :modal-close-action="modalClose"
+    :modal-close-action="modalCloseAction"
   >
     <template #modal-body>
       <form>
@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapMutations } from 'vuex';
 
 import errorHandler from '../utils/errorHandler';
 
@@ -77,15 +77,12 @@ export default {
       this.userId = this.student.userId;
     }
   },
-  computed: {
-    ...mapState('Modal', ['modalOpen', 'modalComponent'])
-  },
   methods: {
     ...mapMutations({
       modalClose: 'Modal/CLOSE_MODAL'
     }),
     modalCloseAction() {
-      this.modalClose();
+      this.modalClose('student');
     },
     async submitMethod() {
       if (!this.$v.$invalid) {
@@ -183,7 +180,7 @@ export default {
             errorHandler(e);
           }
         }
-        this.modalClose();
+        this.modalCloseAction();
       }
     }
   },

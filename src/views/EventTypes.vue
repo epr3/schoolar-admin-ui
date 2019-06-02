@@ -61,13 +61,15 @@ export default {
     openModalAction(props) {
       this.openModal({
         component: () => import('@/containers/EventTypeModal.vue'),
-        props
+        props,
+        id: 'eventType'
       });
     },
     openConfirmationModal(props) {
       this.openModal({
         component: () => import('@/components/ConfirmationModal.vue'),
-        props
+        props,
+        id: 'confirmation'
       });
     },
     editEventTypeAction(eventType) {
@@ -76,7 +78,7 @@ export default {
     deleteEventTypeAction(id) {
       this.openConfirmationModal({
         modalTitle: 'Delete event type',
-        modalCloseAction: this.modalClose,
+        modalCloseAction: () => this.modalClose('confirmation'),
         modalSuccessAction: async () => {
           try {
             await this.$apollo.mutate({
@@ -93,7 +95,7 @@ export default {
                 });
               }
             });
-            this.modalClose();
+            this.modalClose('confirmation');
           } catch (e) {
             errorHandler(e);
           }
