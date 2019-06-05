@@ -21,7 +21,7 @@ import { mapMutations } from 'vuex';
 import errorHandler from '../utils/errorHandler';
 
 import POST_GROUP from '../graphql/Group/PostGroup.gql';
-import GROUPS_QUERY from '../graphql/Group/Groups.gql';
+import GROUPS_QUERY from '../graphql/Group/GroupsByFacultyId.gql';
 import UPDATE_GROUP from '../graphql/Group/UpdateGroup.gql';
 
 import { validationMixin } from 'vuelidate';

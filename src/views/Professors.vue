@@ -44,7 +44,7 @@ import BaseTable from '@/components/BaseTable.vue';
 import BaseButton from '@/components/BaseButton.vue';
 
 export default {
-  name: 'accounts',
+  name: 'professors',
   data: () => ({
     professors: []
   }),

@@ -26,7 +26,7 @@ const router = new Router({
         auth: true
       },
       component: () =>
-        import(/* webpackChunkName: "events" */ './views/EventTypes.vue')
+        import(/* webpackChunkName: "eventTypes" */ './views/EventTypes.vue')
     },
     {
       path: '/faculties/:id/groups/:groupId/events',
@@ -44,7 +44,7 @@ const router = new Router({
         auth: true
       },
       component: () =>
-        import(/* webpackChunkName: "events" */ './views/StudentTab.vue')
+        import(/* webpackChunkName: "groupStudents" */ './views/StudentTab.vue')
     },
     {
       path: '/faculties/:id',
@@ -56,13 +56,22 @@ const router = new Router({
         import(/* webpackChunkName: "facultyTabs" */ './views/FacultyTabs.vue')
     },
     {
-      path: '/accounts',
-      name: 'accounts',
+      path: '/professors',
+      name: 'professors',
       meta: {
         auth: true
       },
       component: () =>
-        import(/* webpackChunkName: "accounts" */ './views/Accounts.vue')
+        import(/* webpackChunkName: "professors" */ './views/Professors.vue')
+    },
+    {
+      path: '/students',
+      name: 'students',
+      meta: {
+        auth: true
+      },
+      component: () =>
+        import(/* webpackChunkName: "students" */ './views/Students.vue')
     },
     {
       path: '/holidays',

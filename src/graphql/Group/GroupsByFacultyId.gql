@@ -1,0 +1,8 @@
+query GroupsByFacultyId($facultyId: ID!) {
+  groups: groupsByFacultyId(facultyId: $facultyId) {
+    id
+    number
+    year
+    facultyId
+  }
+}

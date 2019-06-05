@@ -1,5 +1,5 @@
-query Groups($facultyId: ID!) {
-  groups: groupsByFacultyId(facultyId: $facultyId) {
+query Groups {
+  groups {
     id
     number
     year

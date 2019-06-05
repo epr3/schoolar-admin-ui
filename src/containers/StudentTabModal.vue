@@ -27,7 +27,6 @@
           placeholder="+40765444222"
           v-model="telephone"
         />
-        <base-select label="Group" :v="$v.groupId" v-model="groupId" :options="groupsSelect" />
       </form>
     </template>
     <template #modal-footer>
@@ -44,45 +43,28 @@ import errorHandler from '../utils/errorHandler';
 import POST_STUDENT from '../graphql/Student/PostStudent.gql';
 import STUDENTS_QUERY from '../graphql/Student/Students.gql';
 import UPDATE_STUDENT from '../graphql/Student/UpdateStudent.gql';
-import GROUPS_QUERY from '../graphql/Group/Groups.gql';
 
 import { validationMixin } from 'vuelidate';
 import { required } from 'vuelidate/lib/validators';
 
 import BaseInput from '@/components/BaseInput.vue';
-import BaseSelect from '@/components/BaseSelect.vue';
 import BaseButton from '@/components/BaseButton.vue';
 
 import BaseModalContent from '@/components/BaseModalContent.vue';
 export default {
-  name: 'student-modal',
+  name: 'student-tab-modal',
   data: () => ({
     name: '',
     surname: '',
     groupId: '',
     userId: '',
     telephone: '',
-    email: '',
-    groups: []
+    email: ''
   }),
-  apollo: {
-    groups: GROUPS_QUERY
-  },
   props: {
     student: {
       type: Object,
       default: null
-    }
-  },
-  computed: {
-    groupsSelect() {
-      return this.groups.length
-        ? this.groups.map(item => ({
-            id: item.id,
-            value: item.id,
-            label: item.number
-          }))
-        : [];
     }
   },
   mounted() {
@@ -210,7 +192,6 @@ export default {
   components: {
     BaseModalContent,
     BaseButton,
-    BaseSelect,
     BaseInput
   },
   validations: {
@@ -224,9 +205,6 @@ export default {
       required
     },
     telephone: {
-      required
-    },
-    groupId: {
       required
     }
   }

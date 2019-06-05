@@ -20,8 +20,13 @@
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/accounts" exact>
+            <router-link class="nav-link" to="/professors" exact>
               Professors
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/students" exact>
+              Students
             </router-link>
           </li>
           <li class="nav-item">

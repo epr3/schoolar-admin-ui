@@ -15,7 +15,10 @@
                 <base-button type="info" @click="editStudentAction(item)">
                   <font-awesome-icon icon="edit" />
                 </base-button>
-                <base-button type="danger" @click="deleteStudentAction(item.id, item.userId)">
+                <base-button
+                  type="danger"
+                  @click="deleteStudentAction(item.id, item.userId)"
+                >
                   <font-awesome-icon icon="trash" />
                 </base-button>
               </div>
@@ -28,43 +31,30 @@
 </template>
 
 <script>
-import gql from 'graphql-tag';
 import { mapMutations } from 'vuex';
 
 import errorHandler from '../utils/errorHandler';
 
-import STUDENTS_QUERY from '../graphql/Student/StudentsByGroup.gql';
+import STUDENTS_QUERY from '../graphql/Student/Students.gql';
 import DELETE_STUDENT from '../graphql/Student/DeleteStudent.gql';
+
+import AuthLayout from '@/layouts/AuthLayout.vue';
 
 import BaseTable from '@/components/BaseTable.vue';
 import BaseButton from '@/components/BaseButton.vue';
 
-import AuthLayout from '@/layouts/AuthLayout.vue';
-
 export default {
-  name: 'subject-tab',
-  data() {
-    return {
-      students: [],
-      routeParam: this.$route.params.groupId
-    };
-  },
-  apollo: {
-    students: {
-      query: gql`
-        ${STUDENTS_QUERY}
-      `,
-      variables() {
-        return {
-          groupId: this.routeParam
-        };
-      }
-    }
-  },
+  name: 'students',
+  data: () => ({
+    students: []
+  }),
   components: {
     BaseTable,
     BaseButton,
     AuthLayout
+  },
+  apollo: {
+    students: STUDENTS_QUERY
   },
   methods: {
     ...mapMutations({
@@ -73,12 +63,11 @@ export default {
     }),
     openModalAction(props) {
       this.openModal({
-        component: () => import('@/containers/StudentTabModal.vue'),
+        component: () => import('@/containers/StudentModal.vue'),
         props,
-        id: 'studentTab'
+        id: 'student'
       });
     },
-
     openConfirmationModal(props) {
       this.openModal({
         component: () => import('@/components/ConfirmationModal.vue'),
@@ -95,21 +84,17 @@ export default {
         modalCloseAction: () => this.modalClose('confirmation'),
         modalSuccessAction: async () => {
           try {
-            await this.$apollo.mutate({
+            this.$apollo.mutate({
               mutation: DELETE_STUDENT,
               variables: {
                 id,
                 userId
               },
               update: store => {
-                const data = store.readQuery({
-                  query: STUDENTS_QUERY,
-                  variables: { groupId: this.$route.params.groupId }
-                });
+                const data = store.readQuery({ query: STUDENTS_QUERY });
                 const response = data.students.filter(item => item.id !== id);
                 store.writeQuery({
                   query: STUDENTS_QUERY,
-                  variables: { groupId: this.$route.params.groupId },
                   data: { ...data, students: [...response] }
                 });
               }

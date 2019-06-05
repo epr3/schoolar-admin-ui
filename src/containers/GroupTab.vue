@@ -38,7 +38,7 @@ import { mapMutations } from 'vuex';
 
 import errorHandler from '../utils/errorHandler';
 
-import GROUPS_QUERY from '../graphql/Group/Groups.gql';
+import GROUPS_QUERY from '../graphql/Group/GroupsByFacultyId.gql';
 import DELETE_GROUP from '../graphql/Group/DeleteGroup.gql';
 
 import BaseTable from '@/components/BaseTable.vue';

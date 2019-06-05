@@ -1,5 +1,5 @@
-query Students($groupId: ID!) {
-  students: studentsByGroupId(groupId: $groupId) {
+query Students {
+  students {
     id
     email
     name
