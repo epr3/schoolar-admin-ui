@@ -162,7 +162,7 @@ export default {
       }
     }
   },
-  mixins: [validationMixin],
+  mixins: [validationMixin, loadingMixin],
   components: {
     BaseModalContent,
     BaseButton,
