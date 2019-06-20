@@ -46,7 +46,7 @@ import STUDENTS_QUERY from '../graphql/Student/Students.gql';
 import UPDATE_STUDENT from '../graphql/Student/UpdateStudent.gql';
 
 import { validationMixin } from 'vuelidate';
-import { required } from 'vuelidate/lib/validators';
+import { required, alpha, email } from 'vuelidate/lib/validators';
 
 import BaseInput from '@/components/BaseInput.vue';
 import BaseButton from '@/components/BaseButton.vue';
@@ -192,7 +192,7 @@ export default {
       }
     }
   },
-  mixins: [validationMixin],
+  mixins: [validationMixin, loadingMixin],
   components: {
     BaseModalContent,
     BaseButton,
@@ -200,13 +200,16 @@ export default {
   },
   validations: {
     name: {
-      required
+      required,
+      alpha
     },
     surname: {
-      required
+      required,
+      alpha
     },
     email: {
-      required
+      required,
+      email
     },
     telephone: {
       required

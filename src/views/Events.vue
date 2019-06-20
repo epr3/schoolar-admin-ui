@@ -17,6 +17,7 @@
                 :event="event"
                 :type="event.type"
                 :room="event.room"
+                :frequency="event.frequency"
                 :subject="event.subject"
                 :professor="event.professor"
                 :group="event.group"
@@ -108,6 +109,7 @@ export default {
             professor: `${item.professor.title} ${item.professor.name} ${
               item.professor.surname
             }`,
+            frequency: item.frequency,
             group: item.group.number,
             startDate: DateTime.fromISO(item.startDate).toFormat('dd-LL-yyyy'),
             endDate: DateTime.fromISO(item.endDate).toFormat('dd-LL-yyyy'),

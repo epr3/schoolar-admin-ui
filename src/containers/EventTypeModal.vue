@@ -26,7 +26,7 @@ import EVENT_TYPES_QUERY from '../graphql/EventType/EventTypes.gql';
 import UPDATE_EVENT_TYPE from '../graphql/EventType/UpdateEventType.gql';
 
 import { validationMixin } from 'vuelidate';
-import { required } from 'vuelidate/lib/validators';
+import { required, alpha } from 'vuelidate/lib/validators';
 
 import BaseInput from '@/components/BaseInput.vue';
 import BaseColorPicker from '@/components/BaseColorPicker.vue';
@@ -61,7 +61,8 @@ export default {
   },
   validations: {
     type: {
-      required
+      required,
+      alpha
     },
     color: {
       required

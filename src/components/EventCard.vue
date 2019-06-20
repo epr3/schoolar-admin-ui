@@ -23,6 +23,10 @@
         {{ room }}
       </p>
       <p class="card-text">
+        <font-awesome-icon icon="calendar-plus" />
+        {{ frequency }}
+      </p>
+      <p class="card-text">
         <font-awesome-icon icon="users" />
         {{ group }}
       </p>
@@ -67,6 +71,10 @@ export default {
       required: true
     },
     startDate: {
+      type: String,
+      required: true
+    },
+    frequency: {
       type: String,
       required: true
     },

@@ -43,7 +43,7 @@
 <script>
 import { mapMutations } from 'vuex';
 import { validationMixin } from 'vuelidate';
-import { required } from 'vuelidate/lib/validators';
+import { required, alphaNum } from 'vuelidate/lib/validators';
 import { DateTime } from 'luxon';
 
 import loadingMixin from '../mixins/loadingMixin';
@@ -169,7 +169,8 @@ export default {
   },
   validations: {
     name: {
-      required
+      required,
+      alphaNum
     },
     startDate: {
       required

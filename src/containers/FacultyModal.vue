@@ -30,7 +30,7 @@ import UPDATE_FACULTY from '../graphql/Faculty/UpdateFaculty.gql';
 import FACULTIES_QUERY from '../graphql/Faculty/Faculties.gql';
 
 import { validationMixin } from 'vuelidate';
-import { required } from 'vuelidate/lib/validators';
+import { required, alpha } from 'vuelidate/lib/validators';
 
 import BaseInput from '@/components/BaseInput.vue';
 import BaseButton from '@/components/BaseButton.vue';
@@ -60,7 +60,8 @@ export default {
   },
   validations: {
     name: {
-      required
+      required,
+      alpha
     }
   },
   methods: {
