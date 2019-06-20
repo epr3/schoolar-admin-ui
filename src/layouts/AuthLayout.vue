@@ -40,6 +40,9 @@
             </router-link>
           </li>
         </ul>
+        <div class="nav-item">
+          <base-button type="primary" @click="logout">Log out</base-button>
+        </div>
       </div>
     </nav>
     <div class="alert-list" v-if="errors.length">
@@ -66,8 +69,10 @@
 
 <script>
 import { mapState } from 'vuex';
+import { onLogout } from '../plugins/vue-apollo';
 
 import BaseAlert from '../components/BaseAlert';
+import BaseButton from '../components/BaseButton';
 import ModalContainer from '@/containers/ModalContainer.vue';
 
 export default {
@@ -80,11 +85,16 @@ export default {
   },
   components: {
     BaseAlert,
+    BaseButton,
     ModalContainer
   },
   methods: {
     toggleNavbar() {
       this.showNavbar = !this.showNavbar;
+    },
+    async logout() {
+      await onLogout(this.$apolloProvider.defaultClient);
+      this.$router.replace('/login');
     }
   }
 };

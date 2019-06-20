@@ -15,13 +15,14 @@
       </form>
     </template>
     <template #modal-footer>
-      <base-button @click="submitMethod" type="primary">Submit</base-button>
+      <base-button @click="submitMethod" type="primary" :disabled="loading">Submit</base-button>
     </template>
   </base-modal-content>
 </template>
 
 <script>
 import errorHandler from '../utils/errorHandler';
+import loadingMixin from '../mixins/loadingMixin';
 
 import { mapMutations } from 'vuex';
 import POST_FACULTY from '../graphql/Faculty/PostFaculty.gql';
@@ -51,7 +52,7 @@ export default {
     BaseButton,
     BaseModalContent
   },
-  mixins: [validationMixin],
+  mixins: [validationMixin, loadingMixin],
   mounted() {
     if (this.faculty) {
       this.name = this.faculty.name;
@@ -71,6 +72,7 @@ export default {
     },
     async submitMethod() {
       if (!this.$v.$invalid) {
+        this.loading = true;
         if (this.faculty) {
           try {
             await this.$apollo.mutate({
@@ -109,6 +111,8 @@ export default {
                 }
               }
             });
+            this.modalCloseAction();
+            this.name = '';
           } catch (e) {
             errorHandler(e);
           }
@@ -135,12 +139,13 @@ export default {
                 }
               }
             });
+            this.modalCloseAction();
+            this.name = '';
           } catch (e) {
             errorHandler(e);
           }
         }
-        this.modalCloseAction();
-        this.name = '';
+        this.loading = false;
       }
     }
   }

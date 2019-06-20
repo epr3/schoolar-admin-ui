@@ -8,7 +8,6 @@
               <div class="col-sm-4">
                 <base-button size="lg" type="primary" @click="openModalAction">Add Event Type</base-button>
               </div>
-              <div class="col-sm-8">Sort + per page</div>
             </template>
             <template #actions="{ item }">
               <div class="btn-group">

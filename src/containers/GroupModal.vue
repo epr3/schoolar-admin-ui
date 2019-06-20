@@ -10,7 +10,7 @@
       </form>
     </template>
     <template #modal-footer>
-      <base-button @click="submitMethod" type="primary">Submit</base-button>
+      <base-button @click="submitMethod" type="primary" :disabled="loading">Submit</base-button>
     </template>
   </base-modal-content>
 </template>
@@ -19,6 +19,7 @@
 import { mapMutations } from 'vuex';
 
 import errorHandler from '../utils/errorHandler';
+import loadingMixin from '../mixins/loadingMixin';
 
 import POST_GROUP from '../graphql/Group/PostGroup.gql';
 import GROUPS_QUERY from '../graphql/Group/GroupsByFacultyId.gql';
@@ -52,7 +53,7 @@ export default {
       this.facultyId = this.groupById.facultyId;
     }
   },
-  mixins: [validationMixin],
+  mixins: [validationMixin, loadingMixin],
   components: {
     BaseModalContent,
     BaseButton,
@@ -67,6 +68,7 @@ export default {
     },
     async submitMethod() {
       if (!this.$v.$invalid) {
+        this.loading = true;
         if (this.group) {
           try {
             await this.$apollo.mutate({
@@ -113,6 +115,7 @@ export default {
                 }
               }
             });
+            this.modalCloseAction();
           } catch (e) {
             errorHandler(e);
           }
@@ -150,11 +153,12 @@ export default {
                 }
               }
             });
+            this.modalCloseAction();
           } catch (e) {
             errorHandler(e);
           }
         }
-        this.modalCloseAction();
+        this.loading = false;
       }
     }
   },
