@@ -32,7 +32,7 @@ import POST_SUBJECT from '../graphql/Subject/PostSubject.gql';
 import UPDATE_SUBJECT from '../graphql/Subject/UpdateSubject.gql';
 
 import { validationMixin } from 'vuelidate';
-import { required, alpha, numeric, minValue } from 'vuelidate/lib/validators';
+import { required, alpha, integer, minValue } from 'vuelidate/lib/validators';
 
 import BaseInput from '@/components/BaseInput.vue';
 import BaseButton from '@/components/BaseButton.vue';
@@ -175,7 +175,7 @@ export default {
     },
     credits: {
       required,
-      numeric,
+      integer,
       minValue: minValue(0)
     }
   }
