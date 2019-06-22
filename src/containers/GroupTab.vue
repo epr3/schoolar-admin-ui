@@ -9,27 +9,53 @@
     <template #actions="{ item }">
       <div class="btn-group">
         <base-button type="info" @click="editGroupAction(item)">
-          <font-awesome-icon icon="edit" />
+          <font-awesome-icon icon="edit"/>
         </base-button>
         <base-button type="danger" @click="deleteGroupAction(item.id)">
-          <font-awesome-icon icon="trash" />
+          <font-awesome-icon icon="trash"/>
         </base-button>
         <base-button
           :routerPath="`/faculties/${$route.params.id}/groups/${item.id}/events`"
           type="primary"
         >
           <font-awesome-icon icon="calendar"/>
+          <div class="tooltip bs-tooltip-top" role="tooltip">
+            <div class="arrow"></div>
+            <div class="tooltip-inner">Events</div>
+          </div>
         </base-button>
+
         <base-button
           :routerPath="`/faculties/${$route.params.id}/groups/${item.id}/students`"
           type="secondary"
         >
-          <font-awesome-icon icon="user-graduate"/>
+          <font-awesome-icon icon="user-graduate" />
+          <div class="tooltip bs-tooltip-top" role="tooltip">
+            <div class="arrow"></div>
+            <div class="tooltip-inner">Students</div>
+          </div>
         </base-button>
       </div>
     </template>
   </base-table>
 </template>
+
+<style lang="scss" scoped>
+.btn:hover {
+  .tooltip {
+    opacity: 1;
+  }
+}
+.tooltip {
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  .arrow {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+</style>
 
 <script>
 import gql from 'graphql-tag';
