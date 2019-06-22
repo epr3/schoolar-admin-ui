@@ -1,5 +1,5 @@
 <template>
-  <base-table :items="groups">
+  <base-table :items="filteredGroups">
     <template #filter>
       <div class="col-sm-4">
         <base-button size="lg" type="primary" @click="openModalAction">Add Group</base-button>
@@ -29,7 +29,7 @@
           :routerPath="`/faculties/${$route.params.id}/groups/${item.id}/students`"
           type="secondary"
         >
-          <font-awesome-icon icon="user-graduate" />
+          <font-awesome-icon icon="user-graduate"/>
           <div class="tooltip bs-tooltip-top" role="tooltip">
             <div class="arrow"></div>
             <div class="tooltip-inner">Students</div>
@@ -75,7 +75,10 @@ export default {
   data() {
     return {
       groups: [],
-      routeParam: this.$route.params.id
+      routeParam: this.$route.params.id,
+      page: 1,
+      limit: 5,
+      search: ''
     };
   },
   apollo: {
@@ -88,6 +91,14 @@ export default {
           facultyId: this.routeParam
         };
       }
+    }
+  },
+  computed: {
+    filteredGroups() {
+      return this.groups.slice(
+        (this.page - 1) * this.limit,
+        this.page * this.limit
+      );
     }
   },
   components: {
