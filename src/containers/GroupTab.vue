@@ -6,13 +6,13 @@
       </div>
       <!-- <div class="col-sm-8">Sort + per page</div> -->
     </template>
-    <template #actions="{ item}">
+    <template #actions="{ item }">
       <div class="btn-group">
         <base-button type="info" @click="editGroupAction(item)">
-          <font-awesome-icon icon="edit"/>
+          <font-awesome-icon icon="edit" />
         </base-button>
         <base-button type="danger" @click="deleteGroupAction(item.id)">
-          <font-awesome-icon icon="trash"/>
+          <font-awesome-icon icon="trash" />
         </base-button>
         <base-button
           :routerPath="`/faculties/${$route.params.id}/groups/${item.id}/events`"

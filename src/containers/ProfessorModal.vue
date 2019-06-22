@@ -47,7 +47,7 @@ import PROFESSORS_QUERY from '../graphql/Professor/Professors.gql';
 import UPDATE_PROFESSOR from '../graphql/Professor/UpdateProfessor.gql';
 
 import { validationMixin } from 'vuelidate';
-import { required, alpha, email } from 'vuelidate/lib/validators';
+import { required, email } from 'vuelidate/lib/validators';
 
 import BaseInput from '@/components/BaseInput.vue';
 import BaseButton from '@/components/BaseButton.vue';
@@ -89,7 +89,7 @@ export default {
     async submitMethod() {
       if (!this.$v.$invalid) {
         this.loading = true;
-        if (this.id) {
+        if (this.professor) {
           try {
             await this.$apollo.mutate({
               mutation: UPDATE_PROFESSOR,
@@ -182,7 +182,7 @@ export default {
       }
     }
   },
-  mixins: [validationMixin],
+  mixins: [validationMixin, loadingMixin],
   components: {
     BaseModalContent,
     BaseButton,
@@ -190,12 +190,10 @@ export default {
   },
   validations: {
     name: {
-      required,
-      alpha
+      required
     },
     surname: {
-      required,
-      alpha
+      required
     },
     email: {
       required,

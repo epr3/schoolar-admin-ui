@@ -1,7 +1,8 @@
 <template>
   <div class="form-group">
+    <label v-if="label">{{ label }}</label>
     <select class="custom-select" v-model="model" :value="value">
-      <option :value="null">{{ label }}</option>
+      <option :value="null">None</option>
       <option v-for="item in options" :value="item.value" :key="item.id">{{
         item.label
       }}</option>

@@ -48,9 +48,9 @@ export default {
   },
   mounted() {
     if (this.group) {
-      this.number = this.groupById.number;
-      this.year = this.groupById.year;
-      this.facultyId = this.groupById.facultyId;
+      this.number = this.group.number;
+      this.year = this.group.year;
+      this.facultyId = this.group.facultyId;
     }
   },
   mixins: [validationMixin, loadingMixin],

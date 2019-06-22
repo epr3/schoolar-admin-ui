@@ -3,7 +3,7 @@
     <div class="container mt-2">
       <div class="card">
         <div class="card-body">
-          <base-table :items="students">
+          <base-table :items="studentItems">
             <template #filter>
               <div class="col-sm-4">
                 <base-button size="lg" type="primary" @click="openModalAction">Add Student</base-button>
@@ -13,13 +13,10 @@
             <template #actions="{ item }">
               <div class="btn-group">
                 <base-button type="info" @click="editStudentAction(item)">
-                  <font-awesome-icon icon="edit" />
+                  <font-awesome-icon icon="edit"/>
                 </base-button>
-                <base-button
-                  type="danger"
-                  @click="deleteStudentAction(item.id, item.userId)"
-                >
-                  <font-awesome-icon icon="trash" />
+                <base-button type="danger" @click="deleteStudentAction(item.id, item.userId)">
+                  <font-awesome-icon icon="trash"/>
                 </base-button>
               </div>
             </template>
@@ -55,6 +52,19 @@ export default {
   },
   apollo: {
     students: STUDENTS_QUERY
+  },
+  computed: {
+    studentItems() {
+      return this.students.map(item => ({
+        id: item.id,
+        email: item.email,
+        name: item.name,
+        surname: item.surname,
+        telephone: item.telephone,
+        groupId: item.groupId,
+        group: item.group.number
+      }));
+    }
   },
   methods: {
     ...mapMutations({

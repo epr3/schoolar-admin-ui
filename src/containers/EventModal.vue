@@ -116,13 +116,7 @@
 import gql from 'graphql-tag';
 import { mapMutations } from 'vuex';
 import { validationMixin } from 'vuelidate';
-import {
-  required,
-  minValue,
-  alpha,
-  integer,
-  alphaNum
-} from 'vuelidate/lib/validators';
+import { required, minValue, integer } from 'vuelidate/lib/validators';
 import { DateTime } from 'luxon';
 
 import errorHandler from '../utils/errorHandler';
@@ -353,12 +347,10 @@ export default {
       minValue: minValue(0)
     },
     frequency: {
-      required,
-      alpha
+      required
     },
     room: {
-      required,
-      alphaNum
+      required
     },
     userId: {
       required

@@ -32,7 +32,7 @@ import POST_SUBJECT from '../graphql/Subject/PostSubject.gql';
 import UPDATE_SUBJECT from '../graphql/Subject/UpdateSubject.gql';
 
 import { validationMixin } from 'vuelidate';
-import { required, alpha, integer, minValue } from 'vuelidate/lib/validators';
+import { required, integer, minValue } from 'vuelidate/lib/validators';
 
 import BaseInput from '@/components/BaseInput.vue';
 import BaseButton from '@/components/BaseButton.vue';
@@ -54,9 +54,9 @@ export default {
   },
   mounted() {
     if (this.subject) {
-      this.name = this.subjectById.name;
-      this.credits = this.subjectById.credits;
-      this.facultyId = this.subjectById.facultyId;
+      this.name = this.subject.name;
+      this.credits = this.subject.credits;
+      this.facultyId = this.subject.facultyId;
     }
   },
   methods: {
@@ -170,8 +170,7 @@ export default {
   },
   validations: {
     name: {
-      required,
-      alpha
+      required
     },
     credits: {
       required,
