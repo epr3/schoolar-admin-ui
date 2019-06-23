@@ -13,7 +13,11 @@
       </button>
     </div>
     <div class="card-body">
-      <h5 class="card-title">{{ subject }} - {{ type }}</h5>
+      <h5 class="card-title">{{ subject }}</h5>
+      <div class="card-text">
+        <font-awesome-icon icon="align-justify" />
+        {{ type }}
+      </div>
       <p class="card-text">
         <font-awesome-icon icon="user-tie" />
         {{ professor }}

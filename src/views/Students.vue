@@ -3,7 +3,7 @@
     <div class="container mt-2">
       <div class="card">
         <div class="card-body">
-          <base-table :items="studentItems">
+          <base-table :items="studentItems" :keys="['name', 'surname', 'email', 'group']">
             <template #filter>
               <div class="col-sm-4">
                 <base-button size="lg" type="primary" @click="openModalAction">Add Student</base-button>

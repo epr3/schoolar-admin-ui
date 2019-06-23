@@ -1,10 +1,9 @@
 <template>
-  <base-table :items="subjects">
+  <base-table :items="subjects" :keys="['name']">
     <template #filter>
       <div class="col-sm-4">
         <base-button size="lg" type="primary" @click="openModalAction">Add Subject</base-button>
       </div>
-      <!-- <div class="col-sm-8">Sort + per page</div> -->
     </template>
     <template #actions="{ item }">
       <div class="btn-group">

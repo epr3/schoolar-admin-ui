@@ -2,7 +2,7 @@
   <div class="form-group">
     <label v-if="label">{{ label }}</label>
     <select class="custom-select" v-model="model" :value="value">
-      <option :value="null">None</option>
+      <option v-if="hasNone" :value="null">None</option>
       <option v-for="item in options" :value="item.value" :key="item.id">{{
         item.label
       }}</option>
@@ -19,7 +19,7 @@ export default {
       required: true
     },
     value: {
-      type: String,
+      type: [String, Number],
       default: null
     },
     v: {
@@ -29,6 +29,10 @@ export default {
     options: {
       type: Array,
       required: true
+    },
+    hasNone: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {

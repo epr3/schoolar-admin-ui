@@ -3,7 +3,7 @@
     <div class="container mt-2">
       <div class="card">
         <div class="card-body">
-          <base-table :items="holidays">
+          <base-table :items="holidays" :keys="['name']">
             <template #filter>
               <div class="col-sm-4">
                 <base-button size="lg" type="primary" @click="openModalAction">Add Holiday</base-button>

@@ -1,5 +1,5 @@
 query Group($id: ID!) {
-  groupById(id: $id) {
+  group: groupById(id: $id) {
     id
     number
     year

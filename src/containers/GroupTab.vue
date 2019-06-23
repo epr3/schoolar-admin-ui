@@ -1,10 +1,9 @@
 <template>
-  <base-table :items="filteredGroups">
+  <base-table :items="groups" :keys="['number', 'year']">
     <template #filter>
       <div class="col-sm-4">
         <base-button size="lg" type="primary" @click="openModalAction">Add Group</base-button>
       </div>
-      <!-- <div class="col-sm-8">Sort + per page</div> -->
     </template>
     <template #actions="{ item }">
       <div class="btn-group">
@@ -75,10 +74,7 @@ export default {
   data() {
     return {
       groups: [],
-      routeParam: this.$route.params.id,
-      page: 1,
-      limit: 5,
-      search: ''
+      routeParam: this.$route.params.id
     };
   },
   apollo: {
@@ -91,14 +87,6 @@ export default {
           facultyId: this.routeParam
         };
       }
-    }
-  },
-  computed: {
-    filteredGroups() {
-      return this.groups.slice(
-        (this.page - 1) * this.limit,
-        this.page * this.limit
-      );
     }
   },
   components: {

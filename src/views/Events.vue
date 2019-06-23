@@ -3,11 +3,12 @@
     <div class="container-fluid mt-2">
       <div class="card">
         <div class="card-body">
+          <h5 v-if="group" class="card-title">Group {{ group.number }}</h5>
           <base-button type="primary" @click="openModalAction">Add Event</base-button>
         </div>
         <div class="card-body">
           <div class="row">
-            <div class="col" v-for="day in days" :key="day">{{ day }}</div>
+            <div class="col text-center" v-for="day in days" :key="day">{{ day }}</div>
           </div>
           <div class="row mt-3" v-if="eventsComputed">
             <div class="col" v-for="(item, index) in eventsComputed" :key="index">
@@ -44,6 +45,7 @@
 import gql from 'graphql-tag';
 import { mapMutations } from 'vuex';
 
+import GROUP_QUERY from '../graphql/Group/Group.gql';
 import EVENTS_QUERY from '../graphql/Event/Events.gql';
 import DELETE_EVENT from '../graphql/Event/DeleteEvent.gql';
 
@@ -71,10 +73,21 @@ export default {
         'Sunday'
       ],
       events: [],
-      routeParam: this.$route.params.groupId
+      routeParam: this.$route.params.groupId,
+      group: null
     };
   },
   apollo: {
+    group: {
+      query: gql`
+        ${GROUP_QUERY}
+      `,
+      variables() {
+        return {
+          id: this.routeParam
+        };
+      }
+    },
     events: {
       query: gql`
         ${EVENTS_QUERY}

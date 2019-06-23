@@ -3,12 +3,11 @@
     <div class="container mt-2">
       <div class="card">
         <div class="card-body">
-          <base-table :items="students">
+          <base-table :items="students" :keys="['name', 'surname', 'email']">
             <template #filter>
               <div class="col-sm-4">
                 <base-button size="lg" type="primary" @click="openModalAction">Add Student</base-button>
               </div>
-              <!-- <div class="col-sm-8">Sort + per page</div> -->
             </template>
             <template #actions="{ item }">
               <div class="btn-group">

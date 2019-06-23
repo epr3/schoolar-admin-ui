@@ -3,23 +3,19 @@
     <div class="container mt-2">
       <div class="card">
         <div class="card-body">
-          <base-table :items="professors">
+          <base-table :items="professors" :keys="['name', 'surname', 'email']">
             <template #filter>
               <div class="col-sm-4">
                 <base-button size="lg" type="primary" @click="openModalAction">Add Professor</base-button>
               </div>
-              <!-- <div class="col-sm-8">Sort + per page</div> -->
             </template>
             <template #actions="{ item }">
               <div class="btn-group">
                 <base-button type="info" @click="editProfessorAction(item)">
-                  <font-awesome-icon icon="edit" />
+                  <font-awesome-icon icon="edit"/>
                 </base-button>
-                <base-button
-                  type="danger"
-                  @click="deleteProfessorAction(item.id, item.userId)"
-                >
-                  <font-awesome-icon icon="trash" />
+                <base-button type="danger" @click="deleteProfessorAction(item.id, item.userId)">
+                  <font-awesome-icon icon="trash"/>
                 </base-button>
               </div>
             </template>
@@ -41,15 +37,18 @@ import DELETE_PROFESSOR from '../graphql/Professor/DeleteProfessor.gql';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 
 import BaseTable from '@/components/BaseTable.vue';
+import BaseInput from '@/components/BaseInput.vue';
 import BaseButton from '@/components/BaseButton.vue';
 
 export default {
   name: 'professors',
   data: () => ({
-    professors: []
+    professors: [],
+    searchedProfessors: []
   }),
   components: {
     BaseTable,
+    BaseInput,
     BaseButton,
     AuthLayout
   },

@@ -6,6 +6,7 @@ import './registerServiceWorker';
 import { createProvider } from './plugins/vue-apollo';
 import './plugins/portal-vue';
 import './plugins/font-awesome';
+import './plugins/vue-fuse';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
