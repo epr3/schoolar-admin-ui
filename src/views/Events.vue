@@ -111,6 +111,7 @@ export default {
       }
       return this.days.reduce((acc, val) => {
         acc[val] = this.events
+          .filter(item => item.eventType.isTest == 0)
           .filter(
             item => DateTime.fromISO(item.startDate).toFormat('cccc') === val
           )

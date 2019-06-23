@@ -3,5 +3,6 @@ query EventTypes {
     id
     type
     color
+    isTest
   }
 }

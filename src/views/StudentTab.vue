@@ -3,6 +3,7 @@
     <div class="container mt-2">
       <div class="card">
         <div class="card-body">
+          <h5 v-if="group" class="card-title px-4">Group {{ group.number }}</h5>
           <base-table :items="students" :keys="['name', 'surname', 'email']">
             <template #filter>
               <div class="col-sm-4">
@@ -32,6 +33,7 @@ import { mapMutations } from 'vuex';
 
 import errorHandler from '../utils/errorHandler';
 
+import GROUP_QUERY from '../graphql/Group/Group.gql';
 import STUDENTS_QUERY from '../graphql/Student/StudentsByGroup.gql';
 import DELETE_STUDENT from '../graphql/Student/DeleteStudent.gql';
 
@@ -45,10 +47,21 @@ export default {
   data() {
     return {
       students: [],
-      routeParam: this.$route.params.groupId
+      routeParam: this.$route.params.groupId,
+      group: null
     };
   },
   apollo: {
+    group: {
+      query: gql`
+        ${GROUP_QUERY}
+      `,
+      variables() {
+        return {
+          id: this.routeParam
+        };
+      }
+    },
     students: {
       query: gql`
         ${STUDENTS_QUERY}

@@ -7,7 +7,13 @@
       <form>
         <base-input label="Type" type="text" :v="$v.type" placeholder="Seminar" v-model="type"/>
         <base-color-picker label="Color" :v="$v.color" v-model="color"/>
-        <base-checkbox id="isTest" label="Is the type for tests?" :v="$v.isTest" :value="isTest"/>
+        <base-checkbox
+          v-model="isTest"
+          id="isTest"
+          label="Is it a test type?"
+          :v="$v.isTest"
+          :value="!!isTest"
+        />
       </form>
     </template>
     <template #modal-footer>
@@ -94,7 +100,8 @@ export default {
                 eventType: {
                   id: this.eventType.id,
                   type: this.type,
-                  color: this.color
+                  color: this.color,
+                  isTest: this.isTest
                 }
               },
               update: (store, { data: { updateEventType } }) => {
@@ -122,6 +129,7 @@ export default {
                   __typename: 'EventType',
                   color: this.color,
                   type: this.type,
+                  isTest: this.isTest,
                   id: null
                 }
               }
@@ -137,7 +145,8 @@ export default {
               variables: {
                 eventType: {
                   type: this.type,
-                  color: this.color
+                  color: this.color,
+                  isTest: this.isTest
                 }
               },
               update: (store, { data: { postEventType } }) => {
@@ -151,6 +160,7 @@ export default {
                   __typename: 'EventType',
                   color: this.color,
                   type: this.type,
+                  isTest: this.isTest,
                   id: null
                 }
               }

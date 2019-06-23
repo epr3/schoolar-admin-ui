@@ -32,7 +32,7 @@
             />
           </div>
         </div>
-        <div class="form-row">
+        <div class="form-row d-flex align-items-center">
           <div class="col">
             <base-select
               v-if="subjectSelect.length"
@@ -207,11 +207,13 @@ export default {
     },
 
     eventTypeSelect() {
-      return this.eventTypes.map(item => ({
-        id: item.id,
-        label: item.type,
-        value: item.id
-      }));
+      return this.eventTypes
+        .filter(item => item.isTest == 0)
+        .map(item => ({
+          id: item.id,
+          label: item.type,
+          value: item.id
+        }));
     }
   },
   methods: {

@@ -26,6 +26,7 @@ mutation PostEvent($event: EventInput!) {
     eventType {
       type
       color
+      isTest
     }
   }
 }

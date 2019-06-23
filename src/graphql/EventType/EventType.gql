@@ -3,5 +3,6 @@ query EventType($id: ID!) {
     id
     type
     color
+    isTest
   }
 }

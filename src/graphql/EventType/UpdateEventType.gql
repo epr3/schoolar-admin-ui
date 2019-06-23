@@ -3,5 +3,6 @@ mutation UpdateEventType($eventType: EventTypeInput!) {
     id
     type
     color
+    isTest
   }
 }
