@@ -37,18 +37,15 @@ import DELETE_PROFESSOR from '../graphql/Professor/DeleteProfessor.gql';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 
 import BaseTable from '@/components/BaseTable.vue';
-import BaseInput from '@/components/BaseInput.vue';
 import BaseButton from '@/components/BaseButton.vue';
 
 export default {
   name: 'professors',
   data: () => ({
-    professors: [],
-    searchedProfessors: []
+    professors: []
   }),
   components: {
     BaseTable,
-    BaseInput,
     BaseButton,
     AuthLayout
   },

@@ -6,7 +6,7 @@
       class="modal show fade"
       @click="modalClose(modal.id)"
     >
-      <div @click.stop class="modal-dialog">
+      <div @click.stop class="modal-dialog modal-xl">
         <component :is="modal.component" v-bind="modal.props" />
       </div>
     </div>

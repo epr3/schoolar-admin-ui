@@ -11,7 +11,8 @@ import {
   faUsers,
   faUserTie,
   faCalendarPlus,
-  faAlignJustify
+  faAlignJustify,
+  faPlus
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
@@ -26,7 +27,8 @@ library.add(
   faUsers,
   faUserTie,
   faCalendarPlus,
-  faAlignJustify
+  faAlignJustify,
+  faPlus
 );
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);

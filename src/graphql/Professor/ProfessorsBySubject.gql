@@ -1,0 +1,9 @@
+query ProfessorsBySubject($subjectId: ID!) {
+  professorsBySubject: professorsBySubjectId(subjectId: $subjectId) {
+    id
+    name
+    surname
+    title
+    userId
+  }
+}

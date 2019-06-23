@@ -1,0 +1,9 @@
+mutation PostProfessorSubject($subjectProfessor: SubjectProfessorInput!) {
+  postSubjectProfessor(subjectProfessor: $subjectProfessor) {
+    id
+    name
+    surname
+    title
+    userId
+  }
+}

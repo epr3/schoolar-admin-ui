@@ -13,10 +13,37 @@
         <base-button type="danger" @click="deleteSubjectAction(item.id)">
           <font-awesome-icon icon="trash"/>
         </base-button>
+        <base-button
+          :routerPath="`/faculties/${$route.params.id}/subjects/${item.id}/professors`"
+          type="primary"
+        >
+          <font-awesome-icon icon="user-tie"/>
+          <div class="tooltip bs-tooltip-top" role="tooltip">
+            <div class="arrow"></div>
+            <div class="tooltip-inner">Professors</div>
+          </div>
+        </base-button>
       </div>
     </template>
   </base-table>
 </template>
+
+<style lang="scss" scoped>
+.btn:hover {
+  .tooltip {
+    opacity: 1;
+  }
+}
+.tooltip {
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  .arrow {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+</style>
 
 <script>
 import gql from 'graphql-tag';
