@@ -7,6 +7,7 @@
       <form>
         <base-input label="Type" type="text" :v="$v.type" placeholder="Seminar" v-model="type"/>
         <base-color-picker label="Color" :v="$v.color" v-model="color"/>
+        <base-checkbox id="isTest" label="Is the type for tests?" :v="$v.isTest" :value="isTest"/>
       </form>
     </template>
     <template #modal-footer>
@@ -29,6 +30,7 @@ import { validationMixin } from 'vuelidate';
 import { required, alpha } from 'vuelidate/lib/validators';
 
 import BaseInput from '@/components/BaseInput.vue';
+import BaseCheckbox from '@/components/BaseCheckbox.vue';
 import BaseColorPicker from '@/components/BaseColorPicker.vue';
 import BaseButton from '@/components/BaseButton.vue';
 
@@ -38,12 +40,14 @@ export default {
   name: 'event-type-modal',
   data: () => ({
     type: '',
-    color: ''
+    color: '',
+    isTest: false
   }),
   mounted() {
     if (this.eventType) {
       this.type = this.eventType.type;
       this.color = this.eventType.color;
+      this.isTest = this.eventType.isTest;
     }
   },
   props: {
@@ -56,6 +60,7 @@ export default {
   components: {
     BaseModalContent,
     BaseColorPicker,
+    BaseCheckbox,
     BaseButton,
     BaseInput
   },
@@ -65,6 +70,9 @@ export default {
       alpha
     },
     color: {
+      required
+    },
+    isTest: {
       required
     }
   },

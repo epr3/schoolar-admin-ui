@@ -7,9 +7,5 @@ query Students {
     groupId
     telephone
     userId
-    group {
-      id
-      number
-    }
   }
 }

@@ -3,7 +3,7 @@
     <div class="container mt-2">
       <div class="card">
         <div class="card-body">
-          <base-table :items="eventTypes">
+          <base-table :items="eventTypes" :keys="['type']">
             <template #filter>
               <div class="col-sm-4">
                 <base-button size="lg" type="primary" @click="openModalAction">Add Event Type</base-button>

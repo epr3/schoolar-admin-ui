@@ -74,6 +74,7 @@
       </template>
     </table>
     <base-pagination
+      v-if="items.length"
       :pages-length="Math.ceil(items.length / limit)"
       :current-page="page"
       :page-action="pageAction"
