@@ -45,13 +45,13 @@
           </div>
           <div class="col">
             <base-select
-              v-if="professorSelect.length"
+              v-if="subjectId && professorSelect.length"
               label="Professor"
               :v="$v.userId"
               v-model="userId"
               :options="professorSelect"
             />
-            <base-button v-else type="info" @click="openProfessorModalAction">Create professor</base-button>
+            <base-button disabled v-else>Select a subject first!</base-button>
           </div>
           <div class="col">
             <base-select
@@ -122,7 +122,7 @@ import { DateTime } from 'luxon';
 import errorHandler from '../utils/errorHandler';
 import loadingMixin from '../mixins/loadingMixin';
 
-import PROFESSORS_QUERY from '../graphql/Professor/Professors.gql';
+import PROFESSORS_QUERY from '../graphql/Professor/ProfessorsBySubject.gql';
 import SUBJECTS_QUERY from '../graphql/Subject/Subjects.gql';
 import EVENT_TYPES_QUERY from '../graphql/EventType/EventTypes.gql';
 import EVENTS_QUERY from '../graphql/Event/Events.gql';
@@ -170,7 +170,6 @@ export default {
     }
   },
   apollo: {
-    professors: PROFESSORS_QUERY,
     subjects: {
       query: gql`
         ${SUBJECTS_QUERY}
@@ -191,11 +190,13 @@ export default {
   },
   computed: {
     professorSelect() {
-      return this.professors.map(item => ({
-        id: item.userId,
-        label: `${item.title} ${item.name} ${item.surname}`,
-        value: item.userId
-      }));
+      return this.professors.length
+        ? this.professors.map(item => ({
+            id: item.userId,
+            label: `${item.title} ${item.name} ${item.surname}`,
+            value: item.userId
+          }))
+        : [];
     },
 
     subjectSelect() {
@@ -374,6 +375,17 @@ export default {
     },
     eventTypeId: {
       required
+    }
+  },
+  watch: {
+    async subjectId(newVal, oldVal) {
+      if (newVal !== oldVal && newVal !== null) {
+        const response = await this.$apollo.query({
+          query: PROFESSORS_QUERY,
+          variables: { subjectId: newVal }
+        });
+        this.professors = response.data.professorsBySubject;
+      }
     }
   }
 };
