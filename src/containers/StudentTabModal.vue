@@ -42,7 +42,7 @@ import loadingMixin from '../mixins/loadingMixin';
 import errorHandler from '../utils/errorHandler';
 
 import POST_STUDENT from '../graphql/Student/PostStudent.gql';
-import STUDENTS_QUERY from '../graphql/Student/Students.gql';
+import STUDENTS_QUERY from '../graphql/Student/StudentsByGroup.gql';
 import UPDATE_STUDENT from '../graphql/Student/UpdateStudent.gql';
 
 import { validationMixin } from 'vuelidate';
@@ -83,7 +83,7 @@ export default {
       modalClose: 'Modal/CLOSE_MODAL'
     }),
     modalCloseAction() {
-      this.modalClose('student');
+      this.modalClose('studentTab');
     },
     async submitMethod() {
       if (!this.$v.$invalid) {

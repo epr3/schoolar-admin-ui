@@ -5,7 +5,7 @@
   >
     <template #modal-body>
       <form>
-        <base-input label="Name" type="text" :v="$v.name" placeholder="John" v-model="name"/>
+        <base-input label="Name" type="text" :v="$v.name" placeholder="John" v-model="name" />
         <base-input
           label="Surname"
           type="text"
@@ -136,15 +136,13 @@ export default {
               },
               update: (store, { data: { updateStudent } }) => {
                 const data = store.readQuery({
-                  query: STUDENTS_QUERY,
-                  variables: { groupId: this.$route.params.groupId }
+                  query: STUDENTS_QUERY
                 });
                 const itemIndex = data.students.findIndex(
                   item => item.id === updateStudent.id
                 );
                 store.writeQuery({
                   query: STUDENTS_QUERY,
-                  variables: { groupId: this.$route.params.groupId },
                   data: {
                     ...data,
                     students: data.students.map((item, index) => {

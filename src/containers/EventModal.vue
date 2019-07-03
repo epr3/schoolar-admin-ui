@@ -7,7 +7,7 @@
       <form>
         <div class="form-row">
           <div class="col">
-            <base-input label="Room" type="text" :v="$v.room" placeholder="2000" v-model="room"/>
+            <base-input label="Room" type="text" :v="$v.room" placeholder="2000" v-model="room" />
           </div>
           <div class="col">
             <base-input
@@ -261,8 +261,10 @@ export default {
                   eventTypeId: this.eventTypeId,
                   startDate: DateTime.fromJSDate(this.startDate).toISODate(),
                   endDate: DateTime.fromJSDate(this.endDate).toISODate(),
-                  startTime: DateTime.fromJSDate(this.startTime).toISOTime(),
-                  endTime: DateTime.fromJSDate(this.endTime).toISOTime(),
+                  startTime: DateTime.fromJSDate(this.startTime).toFormat(
+                    'HH:mm'
+                  ),
+                  endTime: DateTime.fromJSDate(this.endTime).toFormat('HH:mm'),
                   groupId: this.$route.params.groupId
                 }
               },
@@ -308,8 +310,10 @@ export default {
                   eventTypeId: this.eventTypeId,
                   startDate: DateTime.fromJSDate(this.startDate).toISODate(),
                   endDate: DateTime.fromJSDate(this.endDate).toISODate(),
-                  startTime: DateTime.fromJSDate(this.startTime).toISOTime(),
-                  endTime: DateTime.fromJSDate(this.endTime).toISOTime(),
+                  startTime: DateTime.fromJSDate(this.startTime).toFormat(
+                    'HH:mm'
+                  ),
+                  endTime: DateTime.fromJSDate(this.endTime).toFormat('HH:mm'),
                   groupId: this.$route.params.groupId
                 }
               },

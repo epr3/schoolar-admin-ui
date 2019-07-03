@@ -43,7 +43,7 @@ import BaseButton from '@/components/BaseButton.vue';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 
 export default {
-  name: 'subject-tab',
+  name: 'student-tab',
   data() {
     return {
       students: [],
